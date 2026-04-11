@@ -152,9 +152,8 @@ export default function OrderSection() {
 
     const endpoint = import.meta.env.VITE_FORMSPREE_ORDERS;
 
-    if (!endpoint || endpoint.includes('REPLACE_WITH')) {
-      // Dev fallback — log to console if Formspree isn't configured yet
-      console.log('202BBQ Order (Formspree not yet configured):', formspreePayload);
+    if (!endpoint || endpoint.includes('REPLACE_ME')) {
+      console.log('202BBQ Order (Formspree not configured):', formspreePayload);
       await new Promise(r => setTimeout(r, 800));
     } else {
       const res = await fetch(endpoint, {

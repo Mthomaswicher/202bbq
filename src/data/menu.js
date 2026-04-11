@@ -192,12 +192,12 @@ export const EVENTS = [
     id: 'bbq-battle',
     badge: '🏆 Competition',
     badgeClass: 'badge--gold',
-    title: 'DC BBQ Battle 2026',
-    date: 'Summer 2026 — details TBA',
-    location: 'Washington, D.C.',
-    desc: "We're competing this summer. Stay tuned for the exact date and location. Follow @202_bbq so you don't miss it.",
+    title: '34th Annual Giant BBQ Battle',
+    date: 'June 27–28, 2026',
+    location: 'Pennsylvania Ave NW (3rd–7th St), Washington, D.C.',
+    desc: "We're competing at DC's biggest BBQ event — the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
     featured: true,
-    cta: 'https://www.instagram.com/202_bbq',
+    cta: 'https://bbqindc.com/',
   },
 ];
 
@@ -224,6 +224,6 @@ export const FAQS = [
   },
   {
     q: "Can I find you anywhere besides ordering online?",
-    a: "Yes! Beyond weekend orders, we do popups and farmers markets around DC. We're also competing in the DC BBQ Battle this summer. Follow @202_bbq on Instagram — that's where we announce all live locations and drop times.",
+    a: "Yes! Beyond weekend orders, we do popups and farmers markets around DC. We're also competing in the 34th Annual Giant BBQ Battle on June 27–28, 2026 on Historic Pennsylvania Avenue NW. Come find us there. Follow @202_bbq on Instagram for all live location announcements.",
   },
 ];

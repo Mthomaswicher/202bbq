@@ -24,7 +24,7 @@ export default function AboutSection() {
           <p>
             Every week we smoke in small batches over hardwood. No shortcuts. No gas. No fillers.
             You'll find us at farmers markets, city popups, and competing at the{' '}
-            <strong style={{ color: 'var(--fire)' }}>DC BBQ Battle this summer</strong>.
+            <a href="https://bbqindc.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fire)', fontWeight: 700 }}>34th Annual Giant BBQ Battle — June 27–28</a>.
             Named 202 because this is a <em>Washington thing.</em>
           </p>
 
