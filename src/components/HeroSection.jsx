@@ -71,7 +71,7 @@ export default function HeroSection() {
       </div>
 
       <div className="hero-watermark" aria-hidden="true">
-        <img src="/logo.png" alt="" role="presentation" />
+        <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" role="presentation" />
       </div>
     </section>
   );

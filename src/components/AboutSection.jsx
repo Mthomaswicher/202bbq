@@ -5,7 +5,7 @@ export default function AboutSection() {
         {/* Visual */}
         <div className="about-visual" aria-hidden="true">
           <div className="about-logo-ring">
-            <img src="/logo.png" alt="" role="presentation" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="" role="presentation" />
           </div>
         </div>
 

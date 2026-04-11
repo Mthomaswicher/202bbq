@@ -66,7 +66,7 @@ export default function Header() {
       <div className="container header-inner">
         {/* Logo */}
         <a href="#" className="logo-link" aria-label="202BBQ home" onClick={e => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-          <img src="/logo.png" alt="202BBQ" className="logo-img" width="40" height="40" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="202BBQ" className="logo-img" width="40" height="40" />
           <div className="logo-wordmark">
             <span className="logo-name">202BBQ</span>
             <span className="logo-tagline">Where the Grill Meets the Hill</span>

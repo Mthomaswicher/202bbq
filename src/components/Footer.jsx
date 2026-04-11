@@ -19,7 +19,7 @@ export default function Footer() {
         <div className="footer-main">
           {/* Brand */}
           <div className="footer-brand">
-            <img src="/logo.png" alt="202BBQ logo" className="footer-logo" width="52" height="52" />
+            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="202BBQ logo" className="footer-logo" width="52" height="52" />
             <div>
               <div className="footer-name">202BBQ</div>
               <div className="footer-tagline">Where the Grill Meets the Hill</div>
