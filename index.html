@@ -3,19 +3,316 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="202BBQ — DC-born small-batch BBQ catering. Order trays online, find us at farmers markets, popups, and the DC BBQ Battle this summer." />
-  <meta property="og:title" content="202BBQ | Where the Grill Meets the Hill" />
-  <meta property="og:description" content="Real smoke. Real flavor. DC-born BBQ catering, farmers markets, and popups around the city." />
-  <meta property="og:image" content="/logo.png" />
-  <title>202BBQ | Where the Grill Meets the Hill</title>
+  <meta name="theme-color" content="#0B0906" />
+  <meta name="color-scheme" content="dark" />
+
+  <!-- Primary SEO -->
+  <title>202BBQ | DC BBQ Catering & Weekend Trays | Washington, D.C.</title>
+  <meta name="description" content="202BBQ is DC-born small-batch BBQ catering. Order brisket, ribs, pulled pork, wings, and sides by the tray for weekend pickup or delivery across Washington, D.C. and the DMV. Find us at DC farmers markets, popups, and the 2026 Giant BBQ Battle." />
+  <meta name="keywords" content="DC BBQ, Washington DC barbecue, BBQ catering DC, brisket DC, pulled pork DC, smoked ribs DC, DMV BBQ catering, BBQ tray order DC, DC farmers market BBQ, Capitol Hill BBQ, DC BBQ Battle, 202BBQ" />
+  <meta name="author" content="202BBQ" />
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow" />
+  <meta name="geo.region" content="US-DC" />
+  <meta name="geo.placename" content="Washington, D.C." />
+  <meta name="rating" content="General" />
+
+  <!-- Canonical -->
+  <link rel="canonical" href="https://mthomaswicher.github.io/202bbq/" />
+
+  <!-- Open Graph (Facebook, LinkedIn, iMessage) -->
+  <meta property="og:type" content="restaurant.restaurant" />
+  <meta property="og:site_name" content="202BBQ" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:url" content="https://mthomaswicher.github.io/202bbq/" />
+  <meta property="og:title" content="202BBQ | DC BBQ Catering & Weekend Trays" />
+  <meta property="og:description" content="DC-born small-batch BBQ catering. Brisket, ribs, pulled pork, wings & sides — smoked low and slow. Weekend pickup, DMV delivery, and DC popups." />
+  <meta property="og:image" content="https://mthomaswicher.github.io/202bbq/logo.png" />
+  <meta property="og:image:secure_url" content="https://mthomaswicher.github.io/202bbq/logo.png" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="202BBQ logo — DC-born small-batch BBQ catering" />
+
+  <!-- Twitter / X -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="202BBQ | DC BBQ Catering & Weekend Trays" />
+  <meta name="twitter:description" content="DC-born small-batch BBQ catering. Brisket, ribs, pulled pork, wings & sides — smoked low and slow." />
+  <meta name="twitter:image" content="https://mthomaswicher.github.io/202bbq/logo.png" />
+  <meta name="twitter:image:alt" content="202BBQ logo" />
+
+  <!-- Icons -->
   <link rel="icon" href="/202bbq/assets/logo-DNKPoYuO.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/202bbq/assets/logo-DNKPoYuO.png" />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+
+  <!-- GitHub Pages SPA redirect rehydrator: pairs with public/404.html -->
+  <script>
+    (function (l) {
+      if (l.search[1] === '/') {
+        var decoded = l.search.slice(1).split('&').map(function (s) {
+          return s.replace(/~and~/g, '&');
+        }).join('?');
+        window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+      }
+    })(window.location);
+  </script>
+
+  <!-- Structured data: Restaurant / LocalBusiness -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "@id": "https://mthomaswicher.github.io/202bbq/#restaurant",
+    "name": "202BBQ",
+    "alternateName": "202 BBQ",
+    "description": "DC-born small-batch BBQ catering. Smoked low and slow over hardwood. Weekend tray orders for pickup and delivery, plus popups and farmers markets around Washington, D.C.",
+    "slogan": "Where the Grill Meets the Hill",
+    "url": "https://mthomaswicher.github.io/202bbq/",
+    "logo": "https://mthomaswicher.github.io/202bbq/logo.png",
+    "image": "https://mthomaswicher.github.io/202bbq/logo.png",
+    "telephone": "+1-202-997-8912",
+    "priceRange": "$$",
+    "servesCuisine": ["Barbecue", "American", "Southern"],
+    "areaServed": [
+      { "@type": "City", "name": "Washington", "sameAs": "https://en.wikipedia.org/wiki/Washington,_D.C." },
+      { "@type": "AdministrativeArea", "name": "DMV (DC, Maryland, Virginia)" }
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Washington",
+      "addressRegion": "DC",
+      "addressCountry": "US"
+    },
+    "sameAs": [
+      "https://www.instagram.com/202_bbq"
+    ],
+    "openingHoursSpecification": [
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
+        "description": "Online order window open",
+        "opens": "00:00",
+        "closes": "23:59"
+      },
+      {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": ["Saturday", "Sunday"],
+        "description": "Pickup and delivery",
+        "opens": "10:00",
+        "closes": "20:00"
+      }
+    ],
+    "hasMenu": {
+      "@type": "Menu",
+      "name": "202BBQ Tray Menu",
+      "url": "https://mthomaswicher.github.io/202bbq/#menu",
+      "hasMenuSection": [
+        {
+          "@type": "MenuSection",
+          "name": "Beef",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Brisket", "description": "17–18 lb whole brisket smoked overnight over hardwood.", "offers": { "@type": "Offer", "price": "235.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Brisket Burnt Ends", "description": "Whole brisket smoked overnight, cut into caramelized burnt end cubes and finished in house sauce.", "offers": { "@type": "Offer", "price": "200.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Chuck Roast Burnt Ends", "description": "Chuck roast smoked and finished in our house sauce.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Ox Tails", "description": "Slow-smoked then braised until fall-off-the-bone tender.", "offers": { "@type": "Offer", "price": "185.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Smoked Burgers", "description": "Hand-pressed beef patties smoked low and slow.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Ribeyes", "description": "Thick-cut ribeyes with Hill Rub, smoked to medium-rare.", "offers": { "@type": "Offer", "price": "45.00", "priceCurrency": "USD" } }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Pork",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Pulled Pork", "description": "Bone-in pork shoulder smoked 14+ hours.", "offers": { "@type": "Offer", "price": "165.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Pork Ribs", "description": "St. Louis spare ribs rubbed and smoked.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Chicken",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Wings", "description": "Whole wings smoked with Hill Rub.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Thighs", "description": "Bone-in, skin-on smoked chicken thighs.", "offers": { "@type": "Offer", "price": "140.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Drumsticks", "description": "Smoked drumsticks with crispy seasoned skin.", "offers": { "@type": "Offer", "price": "140.00", "priceCurrency": "USD" } }
+          ]
+        },
+        {
+          "@type": "MenuSection",
+          "name": "Sides & More",
+          "hasMenuItem": [
+            { "@type": "MenuItem", "name": "Smoked Salmon", "description": "Atlantic salmon cold-smoked over cherry wood.", "offers": { "@type": "Offer", "price": "330.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Half Smokes", "description": "DC's own beef and pork half-smoke sausages.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Mac and Cheese", "description": "Three-cheese baked mac topped with brisket bits.", "offers": { "@type": "Offer", "price": "175.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Collard Greens", "description": "Slow-braised Southern-style with smoked turkey neck.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Mashed Potatoes", "description": "Buttery, creamy mashed potatoes.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
+            { "@type": "MenuItem", "name": "Kickin' Coleslaw", "description": "Creamy vinegar slaw with jalapeño and celery seed.", "offers": { "@type": "Offer", "price": "120.00", "priceCurrency": "USD" } }
+          ]
+        }
+      ]
+    },
+    "acceptsReservations": "False",
+    "servesCuisine": "Barbecue"
+  }
+  </script>
+
+  <!-- Structured data: Organization -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "@id": "https://mthomaswicher.github.io/202bbq/#organization",
+    "name": "202BBQ",
+    "url": "https://mthomaswicher.github.io/202bbq/",
+    "logo": "https://mthomaswicher.github.io/202bbq/logo.png",
+    "sameAs": ["https://www.instagram.com/202_bbq"],
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+1-202-997-8912",
+      "contactType": "customer service",
+      "areaServed": "US-DC",
+      "availableLanguage": ["English"]
+    }
+  }
+  </script>
+
+  <!-- Structured data: WebSite with SearchAction sitelinks search box -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "@id": "https://mthomaswicher.github.io/202bbq/#website",
+    "url": "https://mthomaswicher.github.io/202bbq/",
+    "name": "202BBQ",
+    "description": "DC-born small-batch BBQ catering. Weekend tray orders, popups, and farmers markets in Washington, D.C.",
+    "publisher": { "@id": "https://mthomaswicher.github.io/202bbq/#organization" },
+    "inLanguage": "en-US"
+  }
+  </script>
+
+  <!-- Structured data: FAQ -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "When can I place an order?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Orders are open Monday through Thursday each week. Everything is smoked fresh overnight Friday so your order is ready Saturday and Sunday. We close the order window Thursday night."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between a Full Tray and a Half Tray?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A Full Tray feeds approximately 30–40 people. A Half Tray feeds 15–20. Perfect for house parties to office events."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do you deliver, or is it pickup only?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both. 202BBQ offers pickup and delivery throughout the DMV area. A delivery fee may apply based on location."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does Market Price mean?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Some items like Beef Ribs and Lamb Chops are priced at market because cost fluctuates weekly. After you submit an order request, 202BBQ will confirm the exact price before finalizing."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my order confirmed when I submit the form?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Not quite — the form sends 202BBQ a request, and they personally confirm your order within a few hours, along with pickup/delivery details."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where can I find 202BBQ besides online ordering?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "202BBQ does popups and farmers markets around Washington, D.C., and is competing in the 34th Annual Giant BBQ Battle on June 27–28, 2026 on Pennsylvania Avenue NW. Follow @202_bbq on Instagram for locations."
+        }
+      }
+    ]
+  }
+  </script>
+
+  <!-- Structured data: Event (DC BBQ Battle 2026) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Event",
+    "name": "34th Annual Giant BBQ Battle — 202BBQ Competing",
+    "startDate": "2026-06-27",
+    "endDate": "2026-06-28",
+    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+    "eventStatus": "https://schema.org/EventScheduled",
+    "location": {
+      "@type": "Place",
+      "name": "Pennsylvania Avenue NW (3rd–7th St)",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Pennsylvania Ave NW",
+        "addressLocality": "Washington",
+        "addressRegion": "DC",
+        "addressCountry": "US"
+      }
+    },
+    "image": "https://mthomaswicher.github.io/202bbq/logo.png",
+    "description": "202BBQ is competing at DC's biggest BBQ event — two days, top pitmasters, 100+ food samples, and live music.",
+    "organizer": {
+      "@type": "Organization",
+      "name": "Giant National Capital Barbecue Battle",
+      "url": "https://bbqindc.com/"
+    },
+    "performer": { "@id": "https://mthomaswicher.github.io/202bbq/#organization" }
+  }
+  </script>
   <script type="module" crossorigin src="/202bbq/assets/index-CwQF8BsT.js"></script>
   <link rel="stylesheet" crossorigin href="/202bbq/assets/index-DCXQvZnD.css">
 </head>
 <body>
   <div id="root"></div>
+
+  <!-- Crawlable fallback for search engines and no-JS clients -->
+  <noscript>
+    <div style="max-width:720px;margin:2rem auto;padding:1.25rem;font-family:system-ui,sans-serif;line-height:1.55;color:#222;">
+      <h1>202BBQ — DC-Born Small-Batch BBQ Catering</h1>
+      <p><strong>Where the Grill Meets the Hill.</strong> 202BBQ is a Washington, D.C. BBQ catering company smoking brisket, pulled pork, ribs, wings, and Southern sides low and slow over hardwood. We serve weekend tray orders with pickup and delivery across the DMV, plus popups and farmers markets around the city.</p>
+      <h2>How ordering works</h2>
+      <ol>
+        <li>Order online Monday–Thursday.</li>
+        <li>We smoke overnight Friday.</li>
+        <li>Pickup or delivery Saturday and Sunday.</li>
+      </ol>
+      <h2>Menu highlights</h2>
+      <ul>
+        <li>Brisket, Brisket Burnt Ends, Chuck Roast Burnt Ends, Ox Tails, Beef Ribs, Ribeyes</li>
+        <li>Pulled Pork, St. Louis Pork Ribs</li>
+        <li>Smoked Wings, Thighs, Drumsticks</li>
+        <li>Half Smokes, Mac &amp; Cheese, Collard Greens, Kickin' Coleslaw, Mashed Potatoes, Smoked Salmon</li>
+      </ul>
+      <h2>Contact</h2>
+      <p>Phone: <a href="tel:2029978912">202-997-8912</a> · Instagram: <a href="https://www.instagram.com/202_bbq">@202_bbq</a></p>
+      <p>Competing at the 34th Annual Giant BBQ Battle, June 27–28, 2026, Pennsylvania Avenue NW, Washington, D.C.</p>
+      <p><em>Please enable JavaScript to place an order online.</em></p>
+    </div>
+  </noscript>
+
 </body>
 </html>

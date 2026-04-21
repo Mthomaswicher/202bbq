@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mthomaswicher.github.io/202bbq/sitemap.xml
