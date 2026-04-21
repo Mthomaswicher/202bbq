@@ -1,5 +1,17 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useToast } from '../context/ToastContext.jsx';
+import REVIEWS from '../data/reviews.json';
+
+function Stars({ value, size = 'md' }) {
+  const full = Math.round(value);
+  return (
+    <span className={`stars stars-${size}`} aria-label={`${value} out of 5 stars`}>
+      {[1, 2, 3, 4, 5].map(n => (
+        <span key={n} className={n <= full ? 'star-fill' : 'star-empty'} aria-hidden="true">★</span>
+      ))}
+    </span>
+  );
+}
 
 function StarPicker({ value, onChange }) {
   const [hovered, setHovered] = useState(0);
@@ -30,6 +42,73 @@ function StarPicker({ value, onChange }) {
   );
 }
 
+function formatDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d)) return '';
+  return d.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+}
+
+function ReviewCard({ review }) {
+  return (
+    <article className="review-card" itemScope itemType="https://schema.org/Review">
+      <header className="review-card-head">
+        <div>
+          <div className="review-card-name" itemProp="author" itemScope itemType="https://schema.org/Person">
+            <span itemProp="name">{review.name}</span>
+          </div>
+          {review.location && <div className="review-card-loc">{review.location}</div>}
+        </div>
+        <Stars value={review.rating} size="sm" />
+      </header>
+      <p className="review-card-text" itemProp="reviewBody">"{review.text}"</p>
+      <footer className="review-card-foot">
+        {review.date && (
+          <time dateTime={review.date} itemProp="datePublished">{formatDate(review.date)}</time>
+        )}
+        {review.source === 'google' && <span className="review-card-badge">via Google</span>}
+        {review.source === 'instagram' && <span className="review-card-badge">via Instagram</span>}
+      </footer>
+      <meta itemProp="reviewRating" content={review.rating} />
+    </article>
+  );
+}
+
+function ReviewsJsonLd({ reviews, avg }) {
+  if (!reviews.length) return null;
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Restaurant',
+    '@id': 'https://202barbecue.com/#restaurant',
+    name: '202BBQ',
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: avg.toFixed(1),
+      reviewCount: reviews.length,
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: reviews.map(r => ({
+      '@type': 'Review',
+      author: { '@type': 'Person', name: r.name },
+      datePublished: r.date,
+      reviewBody: r.text,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: r.rating,
+        bestRating: '5',
+        worstRating: '1',
+      },
+    })),
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+
 export default function ReviewSection() {
   const { addToast } = useToast();
 
@@ -39,6 +118,11 @@ export default function ReviewSection() {
   const [touched, setTouched]     = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+
+  const avgRating = useMemo(() => {
+    if (!REVIEWS.length) return 0;
+    return REVIEWS.reduce((s, r) => s + (r.rating || 0), 0) / REVIEWS.length;
+  }, []);
 
   const set = (key, val) => {
     setFields(f => ({ ...f, [key]: val }));
@@ -102,12 +186,30 @@ export default function ReviewSection() {
       <div className="container">
         <div className="section-header">
           <p className="section-eyebrow">Spread the Smoke</p>
-          <h2 className="section-title" id="review-heading">Share Your Experience</h2>
+          <h2 className="section-title" id="review-heading">What Folks Are Saying</h2>
           <p className="section-sub">
-            Had 202BBQ? We'd love to hear from you. Your feedback helps us grow and helps
-            other DC folks find us.
+            Real words from real customers across DC and the DMV. Had 202BBQ yourself? Leave a review below.
           </p>
         </div>
+
+        {REVIEWS.length > 0 && (
+          <>
+            <ReviewsJsonLd reviews={REVIEWS} avg={avgRating} />
+            <div className="review-summary" role="group" aria-label="Customer rating summary">
+              <div className="review-summary-rating">
+                <span className="review-summary-score">{avgRating.toFixed(1)}</span>
+                <Stars value={avgRating} size="md" />
+              </div>
+              <p className="review-summary-count">
+                Based on {REVIEWS.length} customer review{REVIEWS.length !== 1 ? 's' : ''}
+              </p>
+            </div>
+
+            <div className="review-grid">
+              {REVIEWS.map(r => <ReviewCard key={r.id} review={r} />)}
+            </div>
+          </>
+        )}
 
         <div className="review-layout">
           {/* Left: why it matters */}
@@ -147,7 +249,7 @@ export default function ReviewSection() {
               <div className="review-success" role="status" aria-live="polite">
                 <div className="review-success-icon" aria-hidden="true">🙏</div>
                 <h3>Thank you!</h3>
-                <p>We appreciate you taking the time. Your review means a lot to us.</p>
+                <p>We'll read it and post the best ones on the site. Your review means a lot.</p>
                 <button
                   className="btn btn-ghost"
                   onClick={() => { setSubmitted(false); setFields({ name: '', review: '' }); setRating(0); setTouched({}); }}
@@ -218,7 +320,7 @@ export default function ReviewSection() {
                     <line x1="12" y1="8" x2="12" y2="12"/>
                     <line x1="12" y1="16" x2="12.01" y2="16"/>
                   </svg>
-                  Reviews are submitted directly to us. We read every one.
+                  Reviews are submitted to us for approval, then posted above.
                 </div>
 
                 <button

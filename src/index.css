@@ -683,8 +683,115 @@ fieldset { border: none; }
   margin-bottom: 8px;
 }
 
+/* ---- Aggregate summary ---- */
+.review-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  margin: 8px auto 40px;
+  padding: 24px 32px;
+  background: var(--surface-2);
+  border: 1px solid var(--border-warm);
+  border-radius: var(--radius-lg);
+  max-width: 420px;
+  text-align: center;
+}
+.review-summary-rating {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.review-summary-score {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  line-height: 1;
+  color: var(--fire);
+  letter-spacing: 0.02em;
+}
+.review-summary-count {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* ---- Star display (read-only) ---- */
+.stars {
+  display: inline-flex;
+  gap: 2px;
+  line-height: 1;
+}
+.stars-sm { font-size: 1rem; }
+.stars-md { font-size: 1.5rem; }
+.stars .star-fill  { color: var(--fire); }
+.stars .star-empty { color: var(--text-dim); }
+
+/* ---- Review cards ---- */
+.review-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-bottom: 56px;
+}
+.review-card {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform var(--transition), border-color var(--transition);
+}
+.review-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-warm);
+}
+.review-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+.review-card-name {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.review-card-loc {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+.review-card-text {
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text);
+  font-style: italic;
+  flex: 1;
+}
+.review-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+.review-card-badge {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  background: var(--ember-dim);
+  color: var(--fire);
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
 @media (max-width: 768px) {
   .review-layout { grid-template-columns: 1fr; }
+  .review-grid   { grid-template-columns: 1fr; }
 }
 
 /* ---- MENU ---- */
