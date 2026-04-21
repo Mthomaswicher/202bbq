@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://mthomaswicher.github.io/202bbq/sitemap.xml
+Sitemap: https://202barbecue.com/sitemap.xml
