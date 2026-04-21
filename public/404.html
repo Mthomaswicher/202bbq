@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="robots" content="noindex, follow" />
   <title>202BBQ — Page redirecting…</title>
-  <link rel="icon" href="/202bbq/logo.png" type="image/png" />
+  <link rel="icon" href="/logo.png" type="image/png" />
   <script>
-    // GitHub Pages SPA redirect: rewrite any sub-path to the SPA with a
-    // query/hash fragment so the client router can render the right section.
+    // GitHub Pages SPA redirect: rewrite any sub-path to the SPA at root with
+    // a query fragment so the client router can render the right section.
     (function () {
-      var segmentCount = 1; // repo name "202bbq"
+      var segmentCount = 0; // custom domain served from root
       var l = window.location;
       l.replace(
         l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
@@ -25,7 +25,7 @@
 <body>
   <noscript>
     <h1>202BBQ</h1>
-    <p>This page has moved. <a href="/202bbq/">Go to the 202BBQ home page.</a></p>
+    <p>This page has moved. <a href="/">Go to the 202BBQ home page.</a></p>
   </noscript>
 </body>
 </html>
