@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useCallback } from 'react';
+import { track } from '../lib/analytics.js';
 
 const CartContext = createContext(null);
 
@@ -27,6 +28,19 @@ export function CartProvider({ children }) {
         ? { ...prev[key], qty: prev[key].qty + 1 }
         : { item, size, price, qty: 1 },
     }));
+
+    track('add_to_cart', {
+      currency: 'USD',
+      value: typeof price === 'number' ? price : 0,
+      items: [{
+        item_id: item.id,
+        item_name: item.name,
+        item_variant: size,
+        price: typeof price === 'number' ? price : 0,
+        quantity: 1,
+      }],
+    });
+
     return item.name;
   }, []);
 

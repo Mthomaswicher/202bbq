@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useToast } from '../context/ToastContext.jsx';
+import { track } from '../lib/analytics.js';
 import REVIEWS from '../data/reviews.json';
 
 function Stars({ value, size = 'md' }) {
@@ -176,6 +177,8 @@ export default function ReviewSection() {
         return;
       }
     }
+
+    track('submit_review', { rating });
 
     setSubmitting(false);
     setSubmitted(true);

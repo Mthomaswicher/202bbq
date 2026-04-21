@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
+import { track } from '../lib/analytics.js';
 
 const fmt = n => (typeof n === 'number' ? `$${n.toFixed(2)}` : String(n));
 
@@ -168,6 +169,15 @@ export default function OrderSection() {
         return;
       }
     }
+
+    track('generate_lead', {
+      currency: 'USD',
+      value: Number(cartTotal.toFixed(2)),
+      fulfillment,
+      day,
+      item_count: cartCount,
+      has_market_price_items: hasMpItems,
+    });
 
     setSubmitting(false);
     setSubmitted(true);

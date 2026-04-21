@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
+import { track } from '../lib/analytics.js';
 
 function IconInstagram() {
   return (
@@ -85,12 +86,14 @@ export default function Header() {
             ))}
             <li>
               <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer"
-                 className="nav-icon-btn" aria-label="Follow 202BBQ on Instagram">
+                 className="nav-icon-btn" aria-label="Follow 202BBQ on Instagram"
+                 onClick={() => track('instagram_click', { location: 'header' })}>
                 <IconInstagram />
               </a>
             </li>
             <li>
-              <a href="tel:2029978912" className="nav-icon-btn" aria-label="Call 202-997-8912">
+              <a href="tel:2029978912" className="nav-icon-btn" aria-label="Call 202-997-8912"
+                 onClick={() => track('contact', { method: 'phone', location: 'header' })}>
                 <IconPhone />
               </a>
             </li>
@@ -135,8 +138,8 @@ export default function Header() {
             {label}
           </a>
         ))}
-        <a href="tel:2029978912" onClick={() => setMenuOpen(false)}>📞 202-997-8912</a>
-        <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" onClick={() => setMenuOpen(false)}>
+        <a href="tel:2029978912" onClick={() => { setMenuOpen(false); track('contact', { method: 'phone', location: 'mobile_nav' }); }}>📞 202-997-8912</a>
+        <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" onClick={() => { setMenuOpen(false); track('instagram_click', { location: 'mobile_nav' }); }}>
           Instagram @202_bbq
         </a>
       </nav>

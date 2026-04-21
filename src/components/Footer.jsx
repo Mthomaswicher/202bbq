@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { track } from '../lib/analytics.js';
 
 function smoothScrollTo(id) {
   const el = document.getElementById(id);
@@ -35,6 +36,7 @@ export default function Footer() {
                 rel="noopener noreferrer"
                 className="footer-social-btn"
                 aria-label="Follow 202BBQ on Instagram"
+                onClick={() => track('instagram_click', { location: 'footer' })}
               >
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <rect x="2" y="2" width="20" height="20" rx="5"/>
@@ -42,7 +44,8 @@ export default function Footer() {
                   <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
                 </svg>
               </a>
-              <a href="tel:2029978912" className="footer-social-btn" aria-label="Call 202-997-8912">
+              <a href="tel:2029978912" className="footer-social-btn" aria-label="Call 202-997-8912"
+                 onClick={() => track('contact', { method: 'phone', location: 'footer' })}>
                 <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.84 12 19.79 19.79 0 0 1 1.77 3.41 2 2 0 0 1 3.74 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.67a16 16 0 0 0 6 6l1.03-1.03a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
@@ -73,7 +76,8 @@ export default function Footer() {
               <li><strong>Fri:</strong> We're smoking!</li>
               <li><strong>Sat–Sun:</strong> Pickup &amp; delivery</li>
             </ul>
-            <a href="tel:2029978912" className="footer-phone" style={{ marginTop: 16 }}>
+            <a href="tel:2029978912" className="footer-phone" style={{ marginTop: 16 }}
+               onClick={() => track('contact', { method: 'phone', location: 'footer_column' })}>
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                 <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.84 12 19.79 19.79 0 0 1 1.77 3.41 2 2 0 0 1 3.74 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.67a16 16 0 0 0 6 6l1.03-1.03a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
               </svg>
