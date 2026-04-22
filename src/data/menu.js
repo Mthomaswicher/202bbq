@@ -201,6 +201,21 @@ export const EVENTS = [
   },
 ];
 
+export const TESTIMONIALS = [
+  {
+    quote: "THE best barbecue you will ever have in DC. The brisket, ribs, and smoked meats rival the best BBQ spots from Kansas City or Austin.",
+    author: 'Beau W.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
+    quote: "I ordered an entire 17lb brisket and it was literally the most juicy and tender brisket I have ever had in my life! Highly recommend!",
+    author: 'Sam F.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+];
+
 export const FAQS = [
   {
     q: "When can I place an order?",
