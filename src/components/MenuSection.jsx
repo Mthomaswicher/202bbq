@@ -27,7 +27,6 @@ function MenuCard({ item }) {
   return (
     <article className="menu-card" aria-label={item.name}>
       <div className="menu-card-top">
-        <div className="menu-card-emoji" aria-hidden="true">{item.emoji}</div>
         <h3 className="menu-card-name">
           {item.name}
           {item.unit && <span className="menu-card-unit">(per steak)</span>}
@@ -115,7 +114,7 @@ export default function MenuSection() {
 
         {/* Tabs */}
         <div className="menu-tabs" role="tablist" aria-label="Menu categories">
-          {MENU_CATEGORIES.map(({ key, label, emoji }) => (
+          {MENU_CATEGORIES.map(({ key, label }) => (
             <button
               key={key}
               role="tab"
@@ -125,7 +124,6 @@ export default function MenuSection() {
               id={`tab-${key}`}
               onClick={() => setActiveTab(key)}
             >
-              <span className="menu-tab-emoji">{emoji}</span>
               {label}
             </button>
           ))}

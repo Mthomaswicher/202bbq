@@ -6,8 +6,8 @@ export default function AnnouncementBar() {
     <div className="announcement-bar" role="status" aria-label="Site announcement">
       <p>
         {isOpen
-          ? <>🔥 <strong>Orders are open!</strong> Order Mon–Thu for Sat &amp; Sun pickup or delivery &nbsp;·&nbsp;</>
-          : <>⏰ Order window closed — reopens Monday &nbsp;·&nbsp;</>
+          ? <><strong>Orders are open!</strong> Order Mon–Thu for Sat &amp; Sun pickup or delivery &nbsp;·&nbsp;</>
+          : <>Order window closed — reopens Monday &nbsp;·&nbsp;</>
         }
         <a href="tel:2029978912">202-997-8912</a>
         &nbsp;·&nbsp;

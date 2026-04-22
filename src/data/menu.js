@@ -180,17 +180,17 @@ export const MENU = {
 };
 
 export const MENU_CATEGORIES = [
-  { key: 'beef',    label: 'Beef',       emoji: '🥩' },
-  { key: 'pork',    label: 'Pork',       emoji: '🍖' },
-  { key: 'chicken', label: 'Chicken',    emoji: '🍗' },
-  { key: 'sides',   label: 'Sides & More', emoji: '🥗' },
+  { key: 'beef',    label: 'Beef' },
+  { key: 'pork',    label: 'Pork' },
+  { key: 'chicken', label: 'Chicken' },
+  { key: 'sides',   label: 'Sides & More' },
 ];
 
 // Events: only include confirmed real events. Add entries here when dates/locations are confirmed.
 export const EVENTS = [
   {
     id: 'bbq-battle',
-    badge: '🏆 Competition',
+    badge: 'Competition',
     badgeClass: 'badge--gold',
     title: '34th Annual Giant BBQ Battle',
     date: 'June 27–28, 2026',

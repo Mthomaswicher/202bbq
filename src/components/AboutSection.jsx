@@ -29,10 +29,10 @@ export default function AboutSection() {
           </p>
 
           <div className="about-chips" aria-label="Our values">
-            <span className="chip">🪵 Hardwood smoked</span>
-            <span className="chip">🏙️ DC born &amp; raised</span>
-            <span className="chip">⚖️ Small batch</span>
-            <span className="chip">✅ Fully licensed</span>
+            <span className="chip">Hardwood smoked</span>
+            <span className="chip">DC born &amp; raised</span>
+            <span className="chip">Small batch</span>
+            <span className="chip">Fully licensed</span>
           </div>
 
           <div className="about-ctas">
