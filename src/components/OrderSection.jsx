@@ -190,11 +190,31 @@ export default function OrderSection() {
       <section className="order-section" id="order">
         <div className="container">
           <div className="order-success" role="alert" aria-live="assertive">
-            <div className="success-icon" aria-hidden="true">🔥</div>
             <h2 ref={successRef} tabIndex={-1}>Order Request Received!</h2>
             <p>We got it! Expect a confirmation to your email shortly. Get ready for some serious BBQ this weekend.</p>
+
+            <div className="deposit-notice">
+              <p className="deposit-notice-heading">One more step — secure your order with a $20 deposit</p>
+              <p className="deposit-notice-sub">Send $20 via any of the following to hold your spot. Orders without a deposit are not guaranteed.</p>
+              <ul className="deposit-methods" aria-label="Payment options">
+                <li>
+                  <span className="deposit-method-label">CashApp</span>
+                  <span className="deposit-method-value">$2029978912</span>
+                </li>
+                <li>
+                  <span className="deposit-method-label">Venmo</span>
+                  <span className="deposit-method-value">@2029978912</span>
+                </li>
+                <li>
+                  <span className="deposit-method-label">Zelle</span>
+                  <span className="deposit-method-value">202-997-8912</span>
+                </li>
+              </ul>
+              <p className="deposit-notice-note">Include your name in the payment note so we can match it to your order.</p>
+            </div>
+
             <div className="success-actions">
-              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>Back to Menu</button>
+              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>Place Another Order</button>
               <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
                 Follow @202_bbq
               </a>

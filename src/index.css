@@ -1359,6 +1359,65 @@ fieldset { border: none; }
 .order-success p { font-size: 1rem; color: var(--text-muted); max-width: 480px; margin: 0 auto 32px; }
 .success-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
+.deposit-notice {
+  background: rgba(220, 90, 30, 0.08);
+  border: 1px solid rgba(220, 90, 30, 0.35);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin: 0 auto 36px;
+  max-width: 480px;
+  text-align: left;
+}
+.deposit-notice-heading {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--fire);
+  margin: 0 0 8px;
+  letter-spacing: 0.02em;
+}
+.deposit-notice-sub {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}
+.deposit-methods {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.deposit-methods li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.deposit-method-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.deposit-method-value {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+  font-family: monospace;
+  letter-spacing: 0.03em;
+}
+.deposit-notice-note {
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin: 0;
+  font-style: italic;
+}
+
 /* ---- CART DRAWER ---- */
 .cart-overlay {
   position: fixed;
