@@ -203,6 +203,12 @@ export const EVENTS = [
 
 export const TESTIMONIALS = [
   {
+    quote: "Matt catered our grand opening for 70+ guests and it was an absolute hit. Guests raved about the brisket and coleslaw — many went back for seconds. 100% recommend for catering!",
+    author: 'Jerod L.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
     quote: "THE best barbecue you will ever have in DC. The brisket, ribs, and smoked meats rival the best BBQ spots from Kansas City or Austin.",
     author: 'Beau W.',
     location: 'Washington, DC',
