@@ -209,6 +209,18 @@ export const TESTIMONIALS = [
     stars: 5,
   },
   {
+    quote: "Ordered the smoked salmon and it was moist and delicious.",
+    author: 'Ashley C.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
+    quote: "Matt puts his heart and soul into producing the most amazing smoked meats! Brisket, smoked pork butt, and chicken legs are my faves. Highly recommend!",
+    author: 'Stevan S.',
+    location: 'Washington, DC',
+    stars: 4,
+  },
+  {
     quote: "I ordered an entire 17lb brisket and it was literally the most juicy and tender brisket I have ever had in my life! Highly recommend!",
     author: 'Sam F.',
     location: 'Washington, DC',

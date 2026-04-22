@@ -1,5 +1,21 @@
 [
   {
+    "id": "ashley-c-2026-04-22",
+    "name": "Ashley C.",
+    "rating": 5,
+    "text": "Ordered the smoked salmon and it was moist and delicious.",
+    "date": "2026-04-22",
+    "source": "direct"
+  },
+  {
+    "id": "stevan-s-2026-04-22",
+    "name": "Stevan S.",
+    "rating": 4,
+    "text": "Matt puts his heart and soul into producing the most amazing smoked meats! My faves are the brisket, smoked pork butt, and the chicken legs! This is one small business that deserves ALL the accolades. Highly recommend!",
+    "date": "2026-04-22",
+    "source": "direct"
+  },
+  {
     "id": "beau-w-2026-04-22",
     "name": "Beau W.",
     "rating": 5,
