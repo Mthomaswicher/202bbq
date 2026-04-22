@@ -199,11 +199,11 @@ export default function OrderSection() {
               <ul className="deposit-methods" aria-label="Payment options">
                 <li>
                   <span className="deposit-method-label">CashApp</span>
-                  <span className="deposit-method-value">$2029978912</span>
+                  <span className="deposit-method-value">202-997-8912</span>
                 </li>
                 <li>
                   <span className="deposit-method-label">Venmo</span>
-                  <span className="deposit-method-value">@2029978912</span>
+                  <span className="deposit-method-value">202-997-8912</span>
                 </li>
                 <li>
                   <span className="deposit-method-label">Zelle</span>
