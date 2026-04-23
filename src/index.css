@@ -1696,6 +1696,77 @@ fieldset { border: none; }
   font-style: italic;
 }
 
+.deposit-order-ref {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(0,0,0,0.25);
+  border: 1px dashed rgba(255,255,255,0.14);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin: 0 0 16px;
+  font-size: 0.78rem;
+}
+.deposit-order-ref span {
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+.deposit-order-ref code {
+  color: var(--text);
+  font-family: monospace;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.deposit-pay-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 10px;
+}
+
+.deposit-secure-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: var(--text-dim);
+  margin: 0 0 16px;
+}
+.deposit-secure-note svg { color: var(--success, #4ade80); flex-shrink: 0; }
+
+.deposit-alt-methods {
+  margin-top: 8px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+  padding-top: 14px;
+}
+.deposit-alt-methods summary {
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  padding: 6px 0;
+  list-style: none;
+  user-select: none;
+  transition: color var(--transition-fast);
+}
+.deposit-alt-methods summary::-webkit-details-marker { display: none; }
+.deposit-alt-methods summary:hover { color: var(--ember); }
+.deposit-alt-methods summary::before {
+  content: '▸';
+  display: inline-block;
+  margin-right: 8px;
+  transition: transform var(--transition-fast);
+  color: var(--ember);
+}
+.deposit-alt-methods[open] summary::before { transform: rotate(90deg); }
+.deposit-alt-methods .deposit-methods { margin-top: 12px; }
+
 /* ---- CART DRAWER ---- */
 .cart-overlay {
   position: fixed;

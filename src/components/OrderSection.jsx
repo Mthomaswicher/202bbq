@@ -76,12 +76,23 @@ function validate(name, value, isDelivery) {
   return '';
 }
 
+function makeOrderRef() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `202-${yy}${mm}${dd}-${rand}`;
+}
+
 export default function OrderSection() {
   const { cart, cartCount, cartTotal, hasMpItems, clearCart } = useCart();
   const { addToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [isDelivery, setIsDelivery] = useState(false);
+  const [orderRef, setOrderRef] = useState('');
+  const [submittedEmail, setSubmittedEmail] = useState('');
 
   const [fields, setFields] = useState({ fname: '', lname: '', email: '', phone: '', address: '', notes: '' });
   const [errors, setErrors] = useState({});
@@ -135,9 +146,12 @@ export default function OrderSection() {
       return `${qty}× ${item.name} (${sizeLabel}) — ${lineTotal}`;
     }).join('\n');
 
+    const thisOrderRef = makeOrderRef();
+
     const formspreePayload = {
-      _subject: `New Order Request — ${fields.fname} ${fields.lname}`,
+      _subject: `New Order Request — ${fields.fname} ${fields.lname} (${thisOrderRef})`,
       _replyto: fields.email,
+      OrderRef:    thisOrderRef,
       Name:        `${fields.fname} ${fields.lname}`,
       Email:       fields.email,
       Phone:       fields.phone,
@@ -183,12 +197,30 @@ export default function OrderSection() {
       day,
       item_count: cartCount,
       has_market_price_items: hasMpItems,
+      order_ref: thisOrderRef,
     });
 
+    setOrderRef(thisOrderRef);
+    setSubmittedEmail(fields.email);
     setSubmitting(false);
     setSubmitted(true);
     clearCart();
     setTimeout(() => successRef.current?.focus(), 100);
+  };
+
+  const stripeDepositLink = import.meta.env.VITE_STRIPE_DEPOSIT_LINK;
+  const stripeConfigured = stripeDepositLink && !stripeDepositLink.includes('REPLACE_ME');
+  const stripeUrl = stripeConfigured
+    ? `${stripeDepositLink}${stripeDepositLink.includes('?') ? '&' : '?'}prefilled_email=${encodeURIComponent(submittedEmail)}&client_reference_id=${encodeURIComponent(orderRef)}`
+    : '';
+
+  const handleDepositClick = () => {
+    track('begin_checkout', {
+      currency: 'USD',
+      value: 20,
+      payment_method: 'stripe',
+      order_ref: orderRef,
+    });
   };
 
   if (submitted) {
@@ -201,22 +233,76 @@ export default function OrderSection() {
 
             <div className="deposit-notice">
               <p className="deposit-notice-heading">One more step — secure your order with a $20 deposit</p>
-              <p className="deposit-notice-sub">Send $20 via any of the following to hold your spot. Orders without a deposit are not guaranteed.</p>
-              <ul className="deposit-methods" aria-label="Payment options">
-                <li>
-                  <span className="deposit-method-label">CashApp</span>
-                  <span className="deposit-method-value">202-997-8912</span>
-                </li>
-                <li>
-                  <span className="deposit-method-label">Venmo</span>
-                  <span className="deposit-method-value">202-997-8912</span>
-                </li>
-                <li>
-                  <span className="deposit-method-label">Zelle</span>
-                  <span className="deposit-method-value">202-997-8912</span>
-                </li>
-              </ul>
-              <p className="deposit-notice-note">Include your name in the payment note so we can match it to your order.</p>
+              <p className="deposit-notice-sub">
+                Your $20 deposit holds your spot. The remainder is paid at pickup or delivery. Orders without a deposit are not guaranteed.
+              </p>
+
+              {orderRef && (
+                <p className="deposit-order-ref">
+                  <span>Order reference</span>
+                  <code>{orderRef}</code>
+                </p>
+              )}
+
+              {stripeConfigured ? (
+                <>
+                  <a
+                    href={stripeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-lg btn-full deposit-pay-btn"
+                    onClick={handleDepositClick}
+                  >
+                    Pay $20 Deposit Securely
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ marginLeft: 8 }}>
+                      <path d="M7 17L17 7M17 7H8M17 7v9"/>
+                    </svg>
+                  </a>
+                  <p className="deposit-secure-note">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Secure payment powered by Stripe · Card, Apple Pay, Google Pay
+                  </p>
+                  <details className="deposit-alt-methods">
+                    <summary>Prefer to pay another way?</summary>
+                    <ul className="deposit-methods" aria-label="Alternate payment options">
+                      <li>
+                        <span className="deposit-method-label">CashApp</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                      <li>
+                        <span className="deposit-method-label">Venmo</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                      <li>
+                        <span className="deposit-method-label">Zelle</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                    </ul>
+                    <p className="deposit-notice-note">Include your order reference in the payment note so we can match it to your order.</p>
+                  </details>
+                </>
+              ) : (
+                <>
+                  <ul className="deposit-methods" aria-label="Payment options">
+                    <li>
+                      <span className="deposit-method-label">CashApp</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                    <li>
+                      <span className="deposit-method-label">Venmo</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                    <li>
+                      <span className="deposit-method-label">Zelle</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                  </ul>
+                  <p className="deposit-notice-note">Include your name in the payment note so we can match it to your order.</p>
+                </>
+              )}
             </div>
 
             <div className="success-actions">
