@@ -1,14 +1,48 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { MENU, MENU_CATEGORIES } from '../data/menu.js';
 import { useCart } from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
+import { burstEmbers } from '../lib/emberBurst.js';
 
 const fmt = n => (typeof n === 'number' ? `$${n.toFixed(0)}` : String(n));
+
+function useTilt() {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    if (reduced) return;
+    let raf = 0;
+    const onMove = e => {
+      const r = el.getBoundingClientRect();
+      const x = (e.clientX - r.left) / r.width - 0.5;
+      const y = (e.clientY - r.top) / r.height - 0.5;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        el.style.transform = `perspective(900px) rotateX(${-y * 5}deg) rotateY(${x * 5}deg) translateY(-4px)`;
+      });
+    };
+    const onLeave = () => {
+      cancelAnimationFrame(raf);
+      el.style.transform = '';
+    };
+    el.addEventListener('mousemove', onMove);
+    el.addEventListener('mouseleave', onLeave);
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener('mousemove', onMove);
+      el.removeEventListener('mouseleave', onLeave);
+    };
+  }, []);
+  return ref;
+}
 
 function MenuCard({ item }) {
   const { addToCart } = useCart();
   const { addToast } = useToast();
   const [added, setAdded] = useState('');
+  const tiltRef = useTilt();
 
   const isRibeyes  = Boolean(item.unit);
   const fullAvail  = item.full !== null;
@@ -16,22 +50,24 @@ function MenuCard({ item }) {
   const fullIsMp   = item.full === 'MP';
   const halfIsMp   = item.half === 'MP';
 
-  const handleAdd = useCallback((size) => {
+  const handleAdd = useCallback((size, e) => {
     const name = addToCart(item, size);
     const label = size === 'full' ? 'Full Tray' : size === 'half' ? 'Half Tray' : size === 'each' ? 'per steak' : 'Market Price';
     addToast(`${name} (${label}) added to cart`, 'success');
     setAdded(size);
     setTimeout(() => setAdded(''), 1400);
+    if (e && size !== 'mp') {
+      burstEmbers(e.clientX, e.clientY);
+    }
   }, [item, addToCart, addToast]);
 
   return (
-    <article className="menu-card" aria-label={item.name}>
+    <article className="menu-card" aria-label={item.name} ref={tiltRef}>
       <div className="menu-card-top">
         <h3 className="menu-card-name">
           {item.name}
           {item.unit && <span className="menu-card-unit">(per steak)</span>}
         </h3>
-        <p className="menu-card-desc">{item.desc}</p>
       </div>
 
       <div className="menu-card-prices">
@@ -66,7 +102,7 @@ function MenuCard({ item }) {
         {isRibeyes && (
           <button
             className={`add-btn${added === 'each' ? ' added' : ''}`}
-            onClick={() => handleAdd('each')}
+            onClick={(e) => handleAdd('each', e)}
             aria-label={`Add ${item.name} per steak to cart`}
           >
             {added === 'each' ? '✔ Added' : '+ Add (per steak)'}
@@ -75,23 +111,23 @@ function MenuCard({ item }) {
 
         {!isRibeyes && fullAvail && (
           fullIsMp
-            ? <button className="add-btn is-mp" onClick={() => handleAdd('mp')} aria-label={`Request full tray of ${item.name}`}>Request Full Tray</button>
-            : <button className={`add-btn${added === 'full' ? ' added' : ''}`} onClick={() => handleAdd('full')} aria-label={`Add full tray of ${item.name} for ${fmt(item.full)}`}>
+            ? <button className="add-btn is-mp" onClick={(e) => handleAdd('mp', e)} aria-label={`Request full tray of ${item.name}`}>Request Full Tray</button>
+            : <button className={`add-btn${added === 'full' ? ' added' : ''}`} onClick={(e) => handleAdd('full', e)} aria-label={`Add full tray of ${item.name} for ${fmt(item.full)}`}>
                 {added === 'full' ? '✔ Added' : '+ Full Tray'}
               </button>
         )}
 
         {!isRibeyes && halfAvail && (
           halfIsMp
-            ? <button className="add-btn is-mp" onClick={() => handleAdd('mp')} aria-label={`Request half tray of ${item.name}`}>Request Half Tray</button>
-            : <button className={`add-btn${added === 'half' ? ' added' : ''}`} onClick={() => handleAdd('half')} aria-label={`Add half tray of ${item.name} for ${fmt(item.half)}`}>
+            ? <button className="add-btn is-mp" onClick={(e) => handleAdd('mp', e)} aria-label={`Request half tray of ${item.name}`}>Request Half Tray</button>
+            : <button className={`add-btn${added === 'half' ? ' added' : ''}`} onClick={(e) => handleAdd('half', e)} aria-label={`Add half tray of ${item.name} for ${fmt(item.half)}`}>
                 {added === 'half' ? '✔ Added' : '+ Half Tray'}
               </button>
         )}
 
         {/* MP-only with no half */}
         {!isRibeyes && fullIsMp && !halfAvail && (
-          <button className="add-btn is-mp" onClick={() => handleAdd('mp')}>Request a Quote</button>
+          <button className="add-btn is-mp" onClick={(e) => handleAdd('mp', e)}>Request a Quote</button>
         )}
       </div>
     </article>

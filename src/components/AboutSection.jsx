@@ -1,6 +1,9 @@
+import CherryBlossoms from './CherryBlossoms.jsx';
+
 export default function AboutSection() {
   return (
     <section className="about-section" id="about" aria-labelledby="about-heading">
+      <CherryBlossoms count={20} spawnOnClick={true} repel={true} variant="full" />
       <div className="container about-inner">
         {/* Visual */}
         <div className="about-visual" aria-hidden="true">

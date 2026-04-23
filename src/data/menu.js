@@ -189,6 +189,17 @@ export const MENU_CATEGORIES = [
 // Events: only include confirmed real events. Add entries here when dates/locations are confirmed.
 export const EVENTS = [
   {
+    id: 'annies-ace-demo',
+    badge: 'Live Demo',
+    badgeClass: 'badge--ember',
+    title: "Live Fire Demo at Annie's Ace Hardware",
+    date: 'Sunday, April 26, 2026 · 10am–2pm',
+    location: "Annie's Ace Hardware · 3405 8th St NE, Washington, DC 20017",
+    desc: "Come watch us fire up the Big Green Egg and smoke three whole chickens — free samples for everyone who stops by. Talk pitmaster shop, pick up tips for your own setup, and meet the 202BBQ team in person.",
+    featured: true,
+    cta: 'https://www.instagram.com/202_bbq',
+  },
+  {
     id: 'bbq-battle',
     badge: 'Competition',
     badgeClass: 'badge--gold',

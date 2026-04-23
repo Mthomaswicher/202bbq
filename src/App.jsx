@@ -1,6 +1,7 @@
 import { CartProvider } from './context/CartContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
 import AnnouncementBar from './components/AnnouncementBar.jsx';
+import ScrollProgress from './components/ScrollProgress.jsx';
 import Header from './components/Header.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import EventsSection from './components/EventsSection.jsx';
@@ -20,6 +21,7 @@ export default function App() {
     <ToastProvider>
       <CartProvider>
         <a href="#main-content" className="skip-link">Skip to main content</a>
+        <ScrollProgress />
         <AnnouncementBar />
         <Header />
         <CartDrawer />
