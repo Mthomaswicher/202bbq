@@ -157,15 +157,21 @@ export default function OrderSection() {
       console.log('202BBQ Order (Formspree not configured):', formspreePayload);
       await new Promise(r => setTimeout(r, 800));
     } else {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(formspreePayload),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(formspreePayload),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setSubmitting(false);
+          addToast(data?.error || "Submit failed — please try again or call 202-997-8912 to order by phone.", 'error');
+          return;
+        }
+      } catch (err) {
         setSubmitting(false);
-        addToast(data?.error || 'Something went wrong. Please call us at 202-997-8912.', 'error');
+        addToast("Network issue — check your connection, try again, or call 202-997-8912.", 'error');
         return;
       }
     }
@@ -248,12 +254,12 @@ export default function OrderSection() {
             <div className="form-section">
               <p className="form-legend"><span className="form-legend-icon">👤</span> Your Information</p>
               <div className="form-row">
-                <Field id="fname" label="First Name" placeholder="Sam"   value={fields.fname} onChange={v => setField('fname', v)} onBlur={() => blur('fname')} error={errors.fname} required />
-                <Field id="lname" label="Last Name"  placeholder="Smith" value={fields.lname} onChange={v => setField('lname', v)} onBlur={() => blur('lname')} error={errors.lname} required />
+                <Field id="fname" label="First Name" placeholder="Sam"   autoComplete="given-name"  value={fields.fname} onChange={v => setField('fname', v)} onBlur={() => blur('fname')} error={errors.fname} required />
+                <Field id="lname" label="Last Name"  placeholder="Smith" autoComplete="family-name" value={fields.lname} onChange={v => setField('lname', v)} onBlur={() => blur('lname')} error={errors.lname} required />
               </div>
-              <Field id="email" label="Email Address" type="email" placeholder="sam@email.com" hint="Order confirmation sent here."
+              <Field id="email" label="Email Address" type="email" placeholder="sam@email.com" hint="Order confirmation sent here." autoComplete="email" inputMode="email"
                 value={fields.email} onChange={v => setField('email', v)} onBlur={() => blur('email')} error={errors.email} required />
-              <Field id="phone" label="Phone Number"  type="tel"   placeholder="(202) 555-0100" hint="For updates and delivery coordination."
+              <Field id="phone" label="Phone Number"  type="tel"   placeholder="(202) 555-0100" hint="For updates and delivery coordination." autoComplete="tel" inputMode="tel"
                 value={fields.phone} onChange={v => setField('phone', v)} onBlur={() => blur('phone')} error={errors.phone} required />
             </div>
 
@@ -280,7 +286,7 @@ export default function OrderSection() {
               </div>
 
               {isDelivery && (
-                <Field id="address" label="Delivery Address" placeholder="1600 Pennsylvania Ave NW, Washington, DC"
+                <Field id="address" label="Delivery Address" placeholder="1600 Pennsylvania Ave NW, Washington, DC" autoComplete="street-address"
                   value={fields.address} onChange={v => setField('address', v)} onBlur={() => blur('address')} error={errors.address} required />
               )}
 
@@ -342,7 +348,7 @@ export default function OrderSection() {
   );
 }
 
-function Field({ id, label, type = 'text', placeholder, hint, value, onChange, onBlur, error, required }) {
+function Field({ id, label, type = 'text', placeholder, hint, value, onChange, onBlur, error, required, autoComplete, inputMode }) {
   return (
     <div className="form-group">
       <label htmlFor={id}>
@@ -357,6 +363,8 @@ function Field({ id, label, type = 'text', placeholder, hint, value, onChange, o
         onChange={e => onChange(e.target.value)}
         onBlur={onBlur}
         required={required}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
         aria-required={required}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={`${hint ? `h-${id} ` : ''}${error ? `e-${id}` : ''}`}

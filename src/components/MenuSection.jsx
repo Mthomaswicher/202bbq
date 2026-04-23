@@ -13,6 +13,8 @@ function useTilt() {
     if (!el) return;
     const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
     if (reduced) return;
+    const canHover = window.matchMedia?.('(hover: hover) and (pointer: fine)')?.matches;
+    if (!canHover) return;
     let raf = 0;
     const onMove = e => {
       const r = el.getBoundingClientRect();

@@ -40,14 +40,42 @@ function smoothScrollTo(id) {
 }
 
 export default function Header() {
-  const { cartCount, openCart } = useCart();
+  const { cartCount, cartOpen, openCart } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   // Close mobile menu on resize
   useEffect(() => {
     const onResize = () => { if (window.innerWidth > 768) setMenuOpen(false); };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Close mobile menu on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  // Scroll-spy: which section is in view
+  useEffect(() => {
+    const ids = ['menu', 'events', 'about', 'order'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActiveSection(visible[0].target.id);
+      },
+      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   const navLinks = [
@@ -79,7 +107,12 @@ export default function Header() {
           <ul role="list">
             {navLinks.map(({ label, id }) => (
               <li key={id}>
-                <a href={`#${id}`} onClick={e => { e.preventDefault(); handleNavClick(id); }}>
+                <a
+                  href={`#${id}`}
+                  onClick={e => { e.preventDefault(); handleNavClick(id); }}
+                  className={activeSection === id ? 'is-active' : undefined}
+                  aria-current={activeSection === id ? 'location' : undefined}
+                >
                   {label}
                 </a>
               </li>
@@ -106,7 +139,8 @@ export default function Header() {
             className="cart-btn"
             onClick={openCart}
             aria-label={`View cart, ${cartCount} item${cartCount !== 1 ? 's' : ''}`}
-            aria-expanded={false}
+            aria-expanded={cartOpen}
+            aria-controls="cart-drawer"
           >
             <IconBag />
             {cartCount > 0 && (
@@ -134,7 +168,13 @@ export default function Header() {
         aria-hidden={!menuOpen}
       >
         {navLinks.map(({ label, id }) => (
-          <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); handleNavClick(id); }}>
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={e => { e.preventDefault(); handleNavClick(id); }}
+            className={activeSection === id ? 'is-active' : undefined}
+            aria-current={activeSection === id ? 'location' : undefined}
+          >
             {label}
           </a>
         ))}

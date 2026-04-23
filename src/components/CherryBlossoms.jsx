@@ -39,12 +39,14 @@ export default function CherryBlossoms({ count = 18, spawnOnClick = true, repel 
     const container = containerRef.current;
     if (!container) return;
     const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+    const isSmall = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 768px)')?.matches;
+    const effectiveCount = isSmall ? Math.max(4, Math.floor(count * 0.5)) : count;
 
     const getRect = () => container.getBoundingClientRect();
     const initRect = getRect();
     if (!initRect.width || !initRect.height) return;
 
-    petalsRef.current = Array.from({ length: count }, () => makePetal(initRect.width, initRect.height));
+    petalsRef.current = Array.from({ length: effectiveCount }, () => makePetal(initRect.width, initRect.height));
     petalsRef.current.forEach(p => {
       const el = document.createElement('div');
       el.className = 'blossom';
