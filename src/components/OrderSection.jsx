@@ -185,7 +185,7 @@ export default function OrderSection() {
         }
       } catch (err) {
         setSubmitting(false);
-        addToast("Network issue. Check your connection, try again, or call 202-997-8912.", 'error');
+        addToast("Blocked by an ad blocker or browser extension. Try disabling it, or call/text 202-997-8912 to order.", 'error');
         return;
       }
     }
