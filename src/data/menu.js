@@ -205,7 +205,7 @@ export const EVENTS = [
     badgeClass: 'badge--gold',
     title: '34th Annual Giant BBQ Battle',
     date: 'June 27–28, 2026',
-    location: 'Pennsylvania Ave NW (3rd–7th St), Washington, D.C.',
+    location: 'Pennsylvania Ave NW · Washington, DC',
     desc: "We're competing at DC's biggest BBQ event — the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
     featured: true,
     cta: 'https://bbqindc.com/',
