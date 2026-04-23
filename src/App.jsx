@@ -15,12 +15,14 @@ import InstagramSection from './components/InstagramSection.jsx';
 import Footer from './components/Footer.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import ToastContainer from './components/ToastContainer.jsx';
+import SmokerCursor from './components/SmokerCursor.jsx';
 
 export default function App() {
   return (
     <ToastProvider>
       <CartProvider>
         <a href="#main-content" className="skip-link">Skip to main content</a>
+        <SmokerCursor />
         <ScrollProgress />
         <AnnouncementBar />
         <Header />
