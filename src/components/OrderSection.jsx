@@ -16,7 +16,7 @@ function AvailabilityBadge() {
     msg = '✔ Orders are open! Submit your request below for this weekend.';
     cls = 'open';
   } else if (isFriday) {
-    msg = '⏰ Order window closed — we\'re smoking tonight! Orders reopen Monday.';
+    msg = '⏰ Order window closed. We\'re smoking tonight! Orders reopen Monday.';
     cls = 'closed';
   } else {
     msg = `🔥 Happy ${isSat ? 'Saturday' : 'Sunday'}! Enjoy. Orders for next weekend open Monday.`;
@@ -76,12 +76,23 @@ function validate(name, value, isDelivery) {
   return '';
 }
 
+function makeOrderRef() {
+  const now = new Date();
+  const yy = String(now.getFullYear()).slice(2);
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `202-${yy}${mm}${dd}-${rand}`;
+}
+
 export default function OrderSection() {
   const { cart, cartCount, cartTotal, hasMpItems, clearCart } = useCart();
   const { addToast } = useToast();
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [isDelivery, setIsDelivery] = useState(false);
+  const [orderRef, setOrderRef] = useState('');
+  const [submittedEmail, setSubmittedEmail] = useState('');
 
   const [fields, setFields] = useState({ fname: '', lname: '', email: '', phone: '', address: '', notes: '' });
   const [errors, setErrors] = useState({});
@@ -132,16 +143,19 @@ export default function OrderSection() {
     const itemLines = Object.values(cart).map(({ item, size, price, qty }) => {
       const sizeLabel = size === 'full' ? 'Full Tray' : size === 'half' ? 'Half Tray' : size === 'each' ? 'Per Steak' : 'Market Price';
       const lineTotal = typeof price === 'number' ? `$${(price * qty).toFixed(2)}` : 'MP (to be quoted)';
-      return `${qty}× ${item.name} (${sizeLabel}) — ${lineTotal}`;
+      return `${qty}× ${item.name} (${sizeLabel}): ${lineTotal}`;
     }).join('\n');
 
+    const thisOrderRef = makeOrderRef();
+
     const formspreePayload = {
-      _subject: `New Order Request — ${fields.fname} ${fields.lname}`,
+      _subject: `New Order Request from ${fields.fname} ${fields.lname} (${thisOrderRef})`,
       _replyto: fields.email,
+      OrderRef:    thisOrderRef,
       Name:        `${fields.fname} ${fields.lname}`,
       Email:       fields.email,
       Phone:       fields.phone,
-      Fulfillment: fulfillment === 'delivery' ? `Delivery — ${fields.address}` : 'Pickup',
+      Fulfillment: fulfillment === 'delivery' ? `Delivery to ${fields.address}` : 'Pickup',
       Day:         day.charAt(0).toUpperCase() + day.slice(1),
       Items:       itemLines,
       Subtotal:    hasMpItems
@@ -151,21 +165,27 @@ export default function OrderSection() {
       Submitted:   new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = import.meta.env.VITE_FORMSPREE_ORDERS;
+    const endpoint = (import.meta.env.VITE_FORMSPREE_ORDERS || '').replace(/^<|>$/g, '').trim();
 
     if (!endpoint || endpoint.includes('REPLACE_ME')) {
       console.log('202BBQ Order (Formspree not configured):', formspreePayload);
       await new Promise(r => setTimeout(r, 800));
     } else {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(formspreePayload),
-      });
-      if (!res.ok) {
-        const data = await res.json().catch(() => ({}));
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+          body: JSON.stringify(formspreePayload),
+        });
+        if (!res.ok) {
+          const data = await res.json().catch(() => ({}));
+          setSubmitting(false);
+          addToast(data?.error || "Submit failed. Please try again or call 202-997-8912 to order by phone.", 'error');
+          return;
+        }
+      } catch (err) {
         setSubmitting(false);
-        addToast(data?.error || 'Something went wrong. Please call us at 202-997-8912.', 'error');
+        addToast("Blocked by an ad blocker or browser extension. Try disabling it, or call/text 202-997-8912 to order.", 'error');
         return;
       }
     }
@@ -177,12 +197,30 @@ export default function OrderSection() {
       day,
       item_count: cartCount,
       has_market_price_items: hasMpItems,
+      order_ref: thisOrderRef,
     });
 
+    setOrderRef(thisOrderRef);
+    setSubmittedEmail(fields.email);
     setSubmitting(false);
     setSubmitted(true);
     clearCart();
     setTimeout(() => successRef.current?.focus(), 100);
+  };
+
+  const stripeDepositLink = import.meta.env.VITE_STRIPE_DEPOSIT_LINK;
+  const stripeConfigured = stripeDepositLink && !stripeDepositLink.includes('REPLACE_ME');
+  const stripeUrl = stripeConfigured
+    ? `${stripeDepositLink}${stripeDepositLink.includes('?') ? '&' : '?'}prefilled_email=${encodeURIComponent(submittedEmail)}&client_reference_id=${encodeURIComponent(orderRef)}`
+    : '';
+
+  const handleDepositClick = () => {
+    track('begin_checkout', {
+      currency: 'USD',
+      value: 20,
+      payment_method: 'stripe',
+      order_ref: orderRef,
+    });
   };
 
   if (submitted) {
@@ -190,11 +228,85 @@ export default function OrderSection() {
       <section className="order-section" id="order">
         <div className="container">
           <div className="order-success" role="alert" aria-live="assertive">
-            <div className="success-icon" aria-hidden="true">🔥</div>
             <h2 ref={successRef} tabIndex={-1}>Order Request Received!</h2>
             <p>We got it! Expect a confirmation to your email shortly. Get ready for some serious BBQ this weekend.</p>
+
+            <div className="deposit-notice">
+              <p className="deposit-notice-heading">One more step: secure your order with a $20 deposit</p>
+              <p className="deposit-notice-sub">
+                Your $20 deposit holds your spot. The remainder is paid at pickup or delivery. Orders without a deposit are not guaranteed.
+              </p>
+
+              {orderRef && (
+                <p className="deposit-order-ref">
+                  <span>Order reference</span>
+                  <code>{orderRef}</code>
+                </p>
+              )}
+
+              {stripeConfigured ? (
+                <>
+                  <a
+                    href={stripeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-primary btn-lg btn-full deposit-pay-btn"
+                    onClick={handleDepositClick}
+                  >
+                    Pay $20 Deposit Securely
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ marginLeft: 8 }}>
+                      <path d="M7 17L17 7M17 7H8M17 7v9"/>
+                    </svg>
+                  </a>
+                  <p className="deposit-secure-note">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                      <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    Secure payment powered by Stripe · Card, Apple Pay, Google Pay
+                  </p>
+                  <details className="deposit-alt-methods">
+                    <summary>Prefer to pay another way?</summary>
+                    <ul className="deposit-methods" aria-label="Alternate payment options">
+                      <li>
+                        <span className="deposit-method-label">CashApp</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                      <li>
+                        <span className="deposit-method-label">Venmo</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                      <li>
+                        <span className="deposit-method-label">Zelle</span>
+                        <span className="deposit-method-value">202-997-8912</span>
+                      </li>
+                    </ul>
+                    <p className="deposit-notice-note">Include your order reference in the payment note so we can match it to your order.</p>
+                  </details>
+                </>
+              ) : (
+                <>
+                  <ul className="deposit-methods" aria-label="Payment options">
+                    <li>
+                      <span className="deposit-method-label">CashApp</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                    <li>
+                      <span className="deposit-method-label">Venmo</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                    <li>
+                      <span className="deposit-method-label">Zelle</span>
+                      <span className="deposit-method-value">202-997-8912</span>
+                    </li>
+                  </ul>
+                  <p className="deposit-notice-note">Include your name in the payment note so we can match it to your order.</p>
+                </>
+              )}
+            </div>
+
             <div className="success-actions">
-              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>Back to Menu</button>
+              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>Place Another Order</button>
               <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
                 Follow @202_bbq
               </a>
@@ -228,12 +340,12 @@ export default function OrderSection() {
             <div className="form-section">
               <p className="form-legend"><span className="form-legend-icon">👤</span> Your Information</p>
               <div className="form-row">
-                <Field id="fname" label="First Name" placeholder="Sam"   value={fields.fname} onChange={v => setField('fname', v)} onBlur={() => blur('fname')} error={errors.fname} required />
-                <Field id="lname" label="Last Name"  placeholder="Smith" value={fields.lname} onChange={v => setField('lname', v)} onBlur={() => blur('lname')} error={errors.lname} required />
+                <Field id="fname" label="First Name" placeholder="Sam"   autoComplete="given-name"  value={fields.fname} onChange={v => setField('fname', v)} onBlur={() => blur('fname')} error={errors.fname} required />
+                <Field id="lname" label="Last Name"  placeholder="Smith" autoComplete="family-name" value={fields.lname} onChange={v => setField('lname', v)} onBlur={() => blur('lname')} error={errors.lname} required />
               </div>
-              <Field id="email" label="Email Address" type="email" placeholder="sam@email.com" hint="Order confirmation sent here."
+              <Field id="email" label="Email Address" type="email" placeholder="sam@email.com" hint="Order confirmation sent here." autoComplete="email" inputMode="email"
                 value={fields.email} onChange={v => setField('email', v)} onBlur={() => blur('email')} error={errors.email} required />
-              <Field id="phone" label="Phone Number"  type="tel"   placeholder="(202) 555-0100" hint="For updates and delivery coordination."
+              <Field id="phone" label="Phone Number"  type="tel"   placeholder="(202) 555-0100" hint="For updates and delivery coordination." autoComplete="tel" inputMode="tel"
                 value={fields.phone} onChange={v => setField('phone', v)} onBlur={() => blur('phone')} error={errors.phone} required />
             </div>
 
@@ -260,7 +372,7 @@ export default function OrderSection() {
               </div>
 
               {isDelivery && (
-                <Field id="address" label="Delivery Address" placeholder="1600 Pennsylvania Ave NW, Washington, DC"
+                <Field id="address" label="Delivery Address" placeholder="1600 Pennsylvania Ave NW, Washington, DC" autoComplete="street-address"
                   value={fields.address} onChange={v => setField('address', v)} onBlur={() => blur('address')} error={errors.address} required />
               )}
 
@@ -322,7 +434,7 @@ export default function OrderSection() {
   );
 }
 
-function Field({ id, label, type = 'text', placeholder, hint, value, onChange, onBlur, error, required }) {
+function Field({ id, label, type = 'text', placeholder, hint, value, onChange, onBlur, error, required, autoComplete, inputMode }) {
   return (
     <div className="form-group">
       <label htmlFor={id}>
@@ -337,6 +449,8 @@ function Field({ id, label, type = 'text', placeholder, hint, value, onChange, o
         onChange={e => onChange(e.target.value)}
         onBlur={onBlur}
         required={required}
+        autoComplete={autoComplete}
+        inputMode={inputMode}
         aria-required={required}
         aria-invalid={error ? 'true' : 'false'}
         aria-describedby={`${hint ? `h-${id} ` : ''}${error ? `e-${id}` : ''}`}

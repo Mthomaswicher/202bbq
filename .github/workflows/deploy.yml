@@ -29,6 +29,8 @@ jobs:
         env:
           VITE_FORMSPREE_ORDERS: ${{ secrets.VITE_FORMSPREE_ORDERS }}
           VITE_FORMSPREE_REVIEWS: ${{ secrets.VITE_FORMSPREE_REVIEWS }}
+          VITE_FORMSPREE_CONTACT: ${{ secrets.VITE_FORMSPREE_CONTACT }}
+          VITE_STRIPE_DEPOSIT_LINK: ${{ secrets.VITE_STRIPE_DEPOSIT_LINK }}
 
       - name: Deploy
         run: |

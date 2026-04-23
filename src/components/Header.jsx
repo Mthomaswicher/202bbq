@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useCart } from '../context/CartContext.jsx';
+import { useTheme } from '../context/ThemeContext.jsx';
 import { track } from '../lib/analytics.js';
 
 function IconInstagram() {
@@ -40,14 +41,43 @@ function smoothScrollTo(id) {
 }
 
 export default function Header() {
-  const { cartCount, openCart } = useCart();
+  const { cartCount, cartOpen, openCart } = useCart();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('');
 
   // Close mobile menu on resize
   useEffect(() => {
     const onResize = () => { if (window.innerWidth > 768) setMenuOpen(false); };
     window.addEventListener('resize', onResize);
     return () => window.removeEventListener('resize', onResize);
+  }, []);
+
+  // Close mobile menu on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuOpen(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [menuOpen]);
+
+  // Scroll-spy: which section is in view
+  useEffect(() => {
+    const ids = ['menu', 'events', 'about', 'order'];
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter(e => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+        if (visible[0]) setActiveSection(visible[0].target.id);
+      },
+      { rootMargin: '-40% 0px -50% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
   }, []);
 
   const navLinks = [
@@ -79,7 +109,12 @@ export default function Header() {
           <ul role="list">
             {navLinks.map(({ label, id }) => (
               <li key={id}>
-                <a href={`#${id}`} onClick={e => { e.preventDefault(); handleNavClick(id); }}>
+                <a
+                  href={`#${id}`}
+                  onClick={e => { e.preventDefault(); handleNavClick(id); }}
+                  className={activeSection === id ? 'is-active' : undefined}
+                  aria-current={activeSection === id ? 'location' : undefined}
+                >
                   {label}
                 </a>
               </li>
@@ -103,10 +138,30 @@ export default function Header() {
         {/* Cart + Mobile Toggle */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <button
+            className="nav-icon-btn theme-toggle"
+            onClick={toggleTheme}
+            aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          >
+            {theme === 'dark' ? (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+              </svg>
+            )}
+          </button>
+          <button
             className="cart-btn"
             onClick={openCart}
             aria-label={`View cart, ${cartCount} item${cartCount !== 1 ? 's' : ''}`}
-            aria-expanded={false}
+            aria-expanded={cartOpen}
+            aria-controls="cart-drawer"
           >
             <IconBag />
             {cartCount > 0 && (
@@ -134,7 +189,13 @@ export default function Header() {
         aria-hidden={!menuOpen}
       >
         {navLinks.map(({ label, id }) => (
-          <a key={id} href={`#${id}`} onClick={e => { e.preventDefault(); handleNavClick(id); }}>
+          <a
+            key={id}
+            href={`#${id}`}
+            onClick={e => { e.preventDefault(); handleNavClick(id); }}
+            className={activeSection === id ? 'is-active' : undefined}
+            aria-current={activeSection === id ? 'location' : undefined}
+          >
             {label}
           </a>
         ))}

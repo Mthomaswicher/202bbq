@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { track } from '../lib/analytics.js';
+import CherryBlossoms from './CherryBlossoms.jsx';
 
 function smoothScrollTo(id) {
   const el = document.getElementById(id);
@@ -16,6 +17,7 @@ export default function Footer() {
 
   return (
     <footer className="site-footer" role="contentinfo">
+      <CherryBlossoms count={8} spawnOnClick={true} repel={true} variant="subtle" />
       <div className="container">
         <div className="footer-main">
           {/* Brand */}

@@ -1,5 +1,5 @@
 /* =============================================
-   202BBQ — App Logic
+   202BBQ App Logic
    ============================================= */
 'use strict';
 
@@ -29,7 +29,7 @@ const MENU = {
     {
       id: 'beef-ribs',
       name: 'Beef Ribs',
-      desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours. Pricing varies by market — call to quote.',
+      desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours. Pricing varies by market. Call to quote.',
       full: 'MP', half: 'MP',
     },
     {
@@ -76,7 +76,7 @@ const MENU = {
     {
       id: 'drumsticks',
       name: 'Drumsticks',
-      desc: 'Smoked drumsticks with a crispy seasoned skin. Great for crowds — finger food done right.',
+      desc: 'Smoked drumsticks with a crispy seasoned skin. Great for crowds. Finger food done right.',
       full: 140, half: 90,
     },
   ],
@@ -102,7 +102,7 @@ const MENU = {
     {
       id: 'lamb-chops',
       name: 'Lamb Chops',
-      desc: 'Frenched lamb chops seasoned with herbs and smoked. Priced at market — contact us for availability and quote.',
+      desc: 'Frenched lamb chops seasoned with herbs and smoked. Priced at market. Contact us for availability and quote.',
       full: 'MP', half: null,
     },
     {
@@ -132,7 +132,7 @@ const MENU = {
     {
       id: 'seafood-salad',
       name: 'Seafood Salad',
-      desc: 'Fresh mixed seafood salad — shrimp, crab, and more — tossed in a light, herbed dressing.',
+      desc: 'Fresh mixed seafood salad with shrimp, crab, and more, tossed in a light, herbed dressing.',
       full: 250, half: null,
     },
   ],
@@ -352,11 +352,11 @@ function buildCard(item) {
   const fullIsMp   = item.full === 'MP';
   const halfIsMp   = item.half === 'MP';
 
-  const fullPriceHtml = !fullAvail ? '<span class="price-unavail">—</span>' :
+  const fullPriceHtml = !fullAvail ? '<span class="price-unavail">N/A</span>' :
     fullIsMp ? '<span class="price-value is-mp">Call</span>' :
     `<span class="price-value">${fmt(item.full)}</span>`;
 
-  const halfPriceHtml = !halfAvail ? '<span class="price-unavail">—</span>' :
+  const halfPriceHtml = !halfAvail ? '<span class="price-unavail">N/A</span>' :
     halfIsMp ? '<span class="price-value is-mp">Call</span>' :
     `<span class="price-value">${fmt(item.half)}</span>`;
 
@@ -555,7 +555,7 @@ function initOrderForm() {
       submittedAt: new Date().toISOString(),
     };
 
-    // Log for now — swap in fetch() to your backend / Formspree / Netlify Forms
+    // Log for now. Swap in fetch() to your backend / Formspree / Netlify Forms
     console.log('202BBQ Order Request:', JSON.stringify(payload, null, 2));
     // Example backend call:
     // fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })

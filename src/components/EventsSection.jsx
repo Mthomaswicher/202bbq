@@ -28,7 +28,7 @@ export default function EventsSection() {
           <p className="section-eyebrow">Find Us in the Wild</p>
           <h2 className="section-title" id="events-heading">Popups, Markets &amp; More</h2>
           <p className="section-sub">
-            Beyond the online order — catch us live around the city. Follow{' '}
+            Beyond the online order, catch us live around the city. Follow{' '}
             <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="inline-link">@202_bbq</a>{' '}
             for real-time location drops.
           </p>

@@ -64,6 +64,7 @@ export default function CartDrawer() {
 
       {/* Drawer */}
       <div
+        id="cart-drawer"
         className={`cart-drawer${cartOpen ? ' open' : ''}`}
         role="dialog"
         aria-modal="true"

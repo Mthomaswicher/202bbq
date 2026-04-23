@@ -11,7 +11,7 @@ export default function ProofStrip() {
           <div className="proof-item" key={i}>
             <span className="proof-stars">{'★'.repeat(t.stars)}</span>
             <span className="proof-quote"><q>{t.quote}</q></span>
-            <span className="proof-author">— {t.author}, {t.location}</span>
+            <span className="proof-author">{t.author}, {t.location}</span>
           </div>
         ))}
       </div>

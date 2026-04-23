@@ -1,6 +1,8 @@
 import { CartProvider } from './context/CartContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import AnnouncementBar from './components/AnnouncementBar.jsx';
+import ScrollProgress from './components/ScrollProgress.jsx';
 import Header from './components/Header.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import EventsSection from './components/EventsSection.jsx';
@@ -11,15 +13,20 @@ import FaqSection from './components/FaqSection.jsx';
 import OrderSection from './components/OrderSection.jsx';
 import ReviewSection from './components/ReviewSection.jsx';
 import InstagramSection from './components/InstagramSection.jsx';
+import ContactSection from './components/ContactSection.jsx';
 import Footer from './components/Footer.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import ToastContainer from './components/ToastContainer.jsx';
+import SmokerCursor from './components/SmokerCursor.jsx';
 
 export default function App() {
   return (
+    <ThemeProvider>
     <ToastProvider>
       <CartProvider>
         <a href="#main-content" className="skip-link">Skip to main content</a>
+        <SmokerCursor />
+        <ScrollProgress />
         <AnnouncementBar />
         <Header />
         <CartDrawer />
@@ -33,10 +40,12 @@ export default function App() {
           <FaqSection />
           <OrderSection />
           <ReviewSection />
+          <ContactSection />
           <InstagramSection />
         </main>
         <Footer />
       </CartProvider>
     </ToastProvider>
+    </ThemeProvider>
   );
 }

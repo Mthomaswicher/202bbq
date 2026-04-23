@@ -37,7 +37,7 @@ export const MENU = {
       id: 'beef-ribs',
       name: 'Beef Ribs',
       emoji: '🦴',
-      desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours. Pricing varies by market — call to quote.',
+      desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours. Pricing varies by market. Call to quote.',
       full: 'MP',
       half: 'MP',
     },
@@ -98,7 +98,7 @@ export const MENU = {
       id: 'drumsticks',
       name: 'Drumsticks',
       emoji: '🍗',
-      desc: 'Smoked drumsticks with a crispy seasoned skin. Great for crowds — finger food done right.',
+      desc: 'Smoked drumsticks with a crispy seasoned skin. Great for crowds. Finger food done right.',
       full: 140,
       half: 90,
     },
@@ -132,7 +132,7 @@ export const MENU = {
       id: 'lamb-chops',
       name: 'Lamb Chops',
       emoji: '🍖',
-      desc: 'Frenched lamb chops (rack of 8 bones) seasoned with herbs and smoked. Priced at market — contact us for availability and quote.',
+      desc: 'Frenched lamb chops (rack of 8 bones) seasoned with herbs and smoked. Priced at market. Contact us for availability and quote.',
       full: 'MP',
       half: 'MP',
     },
@@ -172,7 +172,7 @@ export const MENU = {
       id: 'seafood-salad',
       name: 'Seafood Salad',
       emoji: '🦐',
-      desc: 'Fresh mixed seafood salad — shrimp, crab, and more — tossed in a light, herbed dressing.',
+      desc: 'Fresh mixed seafood salad with shrimp, crab, and more, tossed in a light, herbed dressing.',
       full: 250,
       half: null,
     },
@@ -180,35 +180,79 @@ export const MENU = {
 };
 
 export const MENU_CATEGORIES = [
-  { key: 'beef',    label: 'Beef',       emoji: '🥩' },
-  { key: 'pork',    label: 'Pork',       emoji: '🍖' },
-  { key: 'chicken', label: 'Chicken',    emoji: '🍗' },
-  { key: 'sides',   label: 'Sides & More', emoji: '🥗' },
+  { key: 'beef',    label: 'Beef' },
+  { key: 'pork',    label: 'Pork' },
+  { key: 'chicken', label: 'Chicken' },
+  { key: 'sides',   label: 'Sides & More' },
 ];
 
 // Events: only include confirmed real events. Add entries here when dates/locations are confirmed.
 export const EVENTS = [
   {
+    id: 'annies-ace-demo',
+    badge: 'Live Demo',
+    badgeClass: 'badge--ember',
+    title: "Live Fire Demo at Annie's Ace Hardware",
+    date: 'Sunday, April 26, 2026 · 10am–2pm',
+    location: "Annie's Ace Hardware · 3405 8th St NE, Washington, DC 20017",
+    desc: "Come watch us fire up the Big Green Egg and smoke three whole chickens. Free samples for everyone who stops by. Talk pitmaster shop, pick up tips for your own setup, and meet the 202BBQ team in person.",
+    featured: true,
+    cta: 'https://www.instagram.com/202_bbq',
+  },
+  {
     id: 'bbq-battle',
-    badge: '🏆 Competition',
+    badge: 'Competition',
     badgeClass: 'badge--gold',
     title: '34th Annual Giant BBQ Battle',
     date: 'June 27–28, 2026',
-    location: 'Pennsylvania Ave NW (3rd–7th St), Washington, D.C.',
-    desc: "We're competing at DC's biggest BBQ event — the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
+    location: 'Pennsylvania Ave NW · Washington, DC',
+    desc: "We're competing at DC's biggest BBQ event, the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
     featured: true,
     cta: 'https://bbqindc.com/',
+  },
+];
+
+export const TESTIMONIALS = [
+  {
+    quote: "Matt catered our grand opening for 70+ guests and it was an absolute hit. Guests raved about the brisket and coleslaw, and many went back for seconds. 100% recommend for catering!",
+    author: 'Jerod L.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
+    quote: "THE best barbecue you will ever have in DC. The brisket, ribs, and smoked meats rival the best BBQ spots from Kansas City or Austin.",
+    author: 'Beau W.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
+    quote: "Ordered the smoked salmon and it was moist and delicious.",
+    author: 'Ashley C.',
+    location: 'Washington, DC',
+    stars: 5,
+  },
+  {
+    quote: "Matt puts his heart and soul into producing the most amazing smoked meats! Brisket, smoked pork butt, and chicken legs are my faves. Highly recommend!",
+    author: 'Stevan S.',
+    location: 'Washington, DC',
+    stars: 4,
+  },
+  {
+    quote: "I ordered an entire 17lb brisket and it was literally the most juicy and tender brisket I have ever had in my life! Highly recommend!",
+    author: 'Sam F.',
+    location: 'Washington, DC',
+    stars: 5,
   },
 ];
 
 export const FAQS = [
   {
     q: "When can I place an order?",
-    a: "Orders are open Monday through Thursday each week. Everything is smoked fresh overnight Friday so your order is ready Saturday and Sunday. We close the order window Thursday night — no exceptions, so plan ahead!",
+    a: "Orders are open Monday through Thursday each week. Everything is smoked fresh overnight Friday so your order is ready Saturday and Sunday. We close the order window Thursday night, no exceptions, so plan ahead!",
   },
   {
     q: "What's the difference between a Full Tray and Half Tray?",
-    a: "A Full Tray feeds approximately 30–40 people. A Half Tray feeds 15–20. Perfect for everything from house parties to office events. If you're unsure about quantity, call us — we're happy to help you plan.",
+    a: "A Full Tray feeds approximately 30–40 people. A Half Tray feeds 15–20. Perfect for everything from house parties to office events. If you're unsure about quantity, call us. We're happy to help you plan.",
   },
   {
     q: "Do you deliver, or is it pickup only?",
@@ -220,7 +264,7 @@ export const FAQS = [
   },
   {
     q: "Is my order confirmed when I submit the form?",
-    a: "Not quite — the form sends us a request, and we'll personally confirm your order within a few hours. You're not locked in until you hear from us. We'll also confirm pickup/delivery details and any market-price totals at that time.",
+    a: "Not quite. The form sends us a request, and we'll personally confirm your order within a few hours. You're not locked in until you hear from us. We'll also confirm pickup/delivery details and any market-price totals at that time.",
   },
   {
     q: "Can I find you anywhere besides ordering online?",
