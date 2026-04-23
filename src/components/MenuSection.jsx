@@ -31,7 +31,6 @@ function MenuCard({ item }) {
           {item.name}
           {item.unit && <span className="menu-card-unit">(per steak)</span>}
         </h3>
-        <p className="menu-card-desc">{item.desc}</p>
       </div>
 
       <div className="menu-card-prices">
