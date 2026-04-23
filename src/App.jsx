@@ -38,8 +38,8 @@ export default function App() {
           <FaqSection />
           <OrderSection />
           <ReviewSection />
-          <InstagramSection />
           <ContactSection />
+          <InstagramSection />
         </main>
         <Footer />
       </CartProvider>
