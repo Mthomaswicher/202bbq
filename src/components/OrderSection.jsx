@@ -165,7 +165,7 @@ export default function OrderSection() {
       Submitted:   new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = import.meta.env.VITE_FORMSPREE_ORDERS;
+    const endpoint = (import.meta.env.VITE_FORMSPREE_ORDERS || '').replace(/^<|>$/g, '').trim();
 
     if (!endpoint || endpoint.includes('REPLACE_ME')) {
       console.log('202BBQ Order (Formspree not configured):', formspreePayload);

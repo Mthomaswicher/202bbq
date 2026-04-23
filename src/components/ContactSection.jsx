@@ -100,7 +100,7 @@ export default function ContactSection() {
       Submitted:  new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = import.meta.env.VITE_FORMSPREE_CONTACT;
+    const endpoint = (import.meta.env.VITE_FORMSPREE_CONTACT || '').replace(/^<|>$/g, '').trim();
 
     if (!endpoint || endpoint.includes('REPLACE_ME')) {
       console.log('202BBQ Contact Inquiry (Formspree not configured):', payload);
