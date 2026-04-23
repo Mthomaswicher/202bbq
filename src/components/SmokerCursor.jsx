@@ -78,71 +78,71 @@ export default function SmokerCursor() {
       s.ellipse(60, 100, 50, 5, 0, 0, Math.PI * 2);
       s.fill();
 
-      s.fillStyle = '#1a1a1a';
+      s.fillStyle = '#3a3a3a';
       s.fillRect(22, 75, 4, 22);
       s.fillRect(92, 75, 4, 22);
       s.fillRect(55, 78, 4, 19);
 
       const barrelGrad = s.createLinearGradient(0, 35, 0, 82);
-      barrelGrad.addColorStop(0, '#4a3228');
-      barrelGrad.addColorStop(0.3, '#2a1a12');
-      barrelGrad.addColorStop(1, '#1a0e08');
+      barrelGrad.addColorStop(0, '#8a5a3a');
+      barrelGrad.addColorStop(0.3, '#6a3a22');
+      barrelGrad.addColorStop(1, '#3a1e0e');
       s.fillStyle = barrelGrad;
       roundRect(s, 12, 38, 80, 42, 18);
       s.fill();
 
-      s.fillStyle = 'rgba(255,180,120,0.15)';
+      s.fillStyle = 'rgba(255,200,140,0.22)';
       roundRect(s, 16, 40, 72, 6, 3);
       s.fill();
 
-      s.strokeStyle = 'rgba(0,0,0,0.5)';
+      s.strokeStyle = 'rgba(255,180,100,0.18)';
       s.lineWidth = 1;
       s.beginPath();
       s.moveTo(52, 39);
       s.lineTo(52, 79);
       s.stroke();
 
-      s.fillStyle = '#0a0a0a';
+      s.fillStyle = '#2a2a2a';
       roundRect(s, 44, 34, 16, 5, 2);
       s.fill();
 
       const fireGrad = s.createLinearGradient(0, 55, 0, 80);
-      fireGrad.addColorStop(0, '#3a241a');
-      fireGrad.addColorStop(1, '#120804');
+      fireGrad.addColorStop(0, '#6a3a22');
+      fireGrad.addColorStop(1, '#2a1008');
       s.fillStyle = fireGrad;
       roundRect(s, 88, 52, 22, 28, 4);
       s.fill();
 
-      s.fillStyle = '#0a0503';
+      s.fillStyle = '#1a0a05';
       roundRect(s, 92, 58, 14, 16, 2);
       s.fill();
       const emberGrad = s.createRadialGradient(99, 66, 0, 99, 66, 8);
-      emberGrad.addColorStop(0, 'rgba(255,160,60,0.9)');
-      emberGrad.addColorStop(0.4, 'rgba(220,90,30,0.5)');
+      emberGrad.addColorStop(0, 'rgba(255,180,60,1.0)');
+      emberGrad.addColorStop(0.4, 'rgba(232,93,4,0.75)');
       emberGrad.addColorStop(1, 'rgba(180,40,10,0)');
       s.fillStyle = emberGrad;
       s.fillRect(88, 55, 22, 22);
 
-      s.fillStyle = '#aaa';
+      s.fillStyle = '#ccc';
       s.beginPath();
       s.arc(72, 44, 3, 0, Math.PI * 2);
       s.fill();
-      s.fillStyle = '#222';
+      s.fillStyle = '#555';
       s.beginPath();
       s.arc(72, 44, 2, 0, Math.PI * 2);
       s.fill();
 
       const chimGrad = s.createLinearGradient(15, 0, 30, 0);
-      chimGrad.addColorStop(0, '#1a1a1a');
-      chimGrad.addColorStop(0.5, '#3a3a3a');
-      chimGrad.addColorStop(1, '#1a1a1a');
+      chimGrad.addColorStop(0, '#3a3a3a');
+      chimGrad.addColorStop(0.5, '#6a6a6a');
+      chimGrad.addColorStop(1, '#3a3a3a');
       s.fillStyle = chimGrad;
       s.fillRect(18, 8, 9, 32);
 
-      s.fillStyle = '#2a2a2a';
+      s.fillStyle = '#555';
       s.fillRect(15, 6, 15, 4);
 
-      s.fillStyle = 'rgba(255,255,255,0.15)';
+      s.fillStyle = 'rgba(255,255,255,0.25)';
       s.fillRect(15, 6, 15, 1);
     }
 
@@ -198,7 +198,7 @@ export default function SmokerCursor() {
         maxLife: 50 + Math.random() * 50,
         rot: Math.random() * Math.PI * 2,
         rotSpeed: (Math.random() - 0.5) * 0.01,
-        alpha0: 0.08 + Math.random() * 0.08,
+        alpha0: 0.18 + Math.random() * 0.14,
       });
     }
 
@@ -282,7 +282,11 @@ export default function SmokerCursor() {
       ctx.globalAlpha = 1;
 
       if (visible && hasMoved) {
+        ctx.shadowColor = 'rgba(232,93,4,0.55)';
+        ctx.shadowBlur = 14;
         ctx.drawImage(smoker, mouseX - CHIMNEY_X, mouseY - CHIMNEY_Y, SMOKER_W, SMOKER_H);
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
       }
 
       rafId = requestAnimationFrame(frame);
