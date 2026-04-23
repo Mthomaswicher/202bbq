@@ -12,6 +12,7 @@ import FaqSection from './components/FaqSection.jsx';
 import OrderSection from './components/OrderSection.jsx';
 import ReviewSection from './components/ReviewSection.jsx';
 import InstagramSection from './components/InstagramSection.jsx';
+import ContactSection from './components/ContactSection.jsx';
 import Footer from './components/Footer.jsx';
 import CartDrawer from './components/CartDrawer.jsx';
 import ToastContainer from './components/ToastContainer.jsx';
@@ -38,6 +39,7 @@ export default function App() {
           <OrderSection />
           <ReviewSection />
           <InstagramSection />
+          <ContactSection />
         </main>
         <Footer />
       </CartProvider>
