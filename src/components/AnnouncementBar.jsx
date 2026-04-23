@@ -7,7 +7,7 @@ export default function AnnouncementBar() {
       <p>
         {isOpen
           ? <><strong>Orders are open!</strong> Order Mon–Thu for Sat &amp; Sun pickup or delivery &nbsp;·&nbsp;</>
-          : <>Order window closed — reopens Monday &nbsp;·&nbsp;</>
+          : <>Order window closed. Reopens Monday &nbsp;·&nbsp;</>
         }
         <a href="tel:2029978912">202-997-8912</a>
         &nbsp;·&nbsp;

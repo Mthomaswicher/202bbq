@@ -153,7 +153,7 @@ export default function ReviewSection() {
     setSubmitting(true);
 
     const formspreePayload = {
-      _subject: `New Review — ${fields.name.trim()} (${rating}★)`,
+      _subject: `New Review from ${fields.name.trim()} (${rating}★)`,
       Name:      fields.name.trim(),
       Rating:    `${'★'.repeat(rating)}${'☆'.repeat(5 - rating)} (${rating}/5)`,
       Review:    fields.review.trim(),
@@ -240,7 +240,7 @@ export default function ReviewSection() {
                   <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="inline-link">
                     @202_bbq
                   </a>
-                  {' '}— we share our favorites.
+                  {' '}and we'll share our favorites.
                 </p>
               </div>
             </div>

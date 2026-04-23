@@ -21,13 +21,13 @@ export default function AboutSection() {
           </h2>
           <p>
             202BBQ started with a backyard, a used smoker, and an obsession with getting it right.
-            We're a DC-born, fully licensed operation fueled by a love for real barbecue — the kind
+            We're a DC-born, fully licensed operation fueled by a love for real barbecue, the kind
             that takes all night to make and disappears in minutes.
           </p>
           <p>
             Every week we smoke in small batches over hardwood. No shortcuts. No gas. No fillers.
             You'll find us at farmers markets, city popups, and competing at the{' '}
-            <a href="https://bbqindc.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fire)', fontWeight: 700 }}>34th Annual Giant BBQ Battle — June 27–28</a>.
+            <a href="https://bbqindc.com/" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--fire)', fontWeight: 700 }}>34th Annual Giant BBQ Battle on June 27–28</a>.
             Named 202 because this is a <em>Washington thing.</em>
           </p>
 

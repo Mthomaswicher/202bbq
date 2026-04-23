@@ -77,7 +77,7 @@ function MenuCard({ item }) {
         <div className="price-col">
           <span className="price-label">{isRibeyes ? 'Per Steak' : 'Full Tray*'}</span>
           {!fullAvail
-            ? <span className="price-na">—</span>
+            ? <span className="price-na">N/A</span>
             : fullIsMp
               ? <span className="price-value is-mp">Call</span>
               : <span className="price-value">{fmt(item.full)}</span>
@@ -90,7 +90,7 @@ function MenuCard({ item }) {
           <div className="price-col">
             <span className="price-label">Half Tray</span>
             {!halfAvail
-              ? <span className="price-na">—</span>
+              ? <span className="price-na">N/A</span>
               : halfIsMp
                 ? <span className="price-value is-mp">Call</span>
                 : <span className="price-value">{fmt(item.half)}</span>

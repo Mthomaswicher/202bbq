@@ -46,7 +46,7 @@ export default function HeroSection() {
           </h1>
 
           <p className="hero-sub">
-            DC-born small-batch BBQ. Smoked low &amp; slow over hardwood — at your door, at the market, or at the popup.
+            DC-born small-batch BBQ. Smoked low &amp; slow over hardwood, at your door, at the market, or at the popup.
             Order trays online every week.
           </p>
 

@@ -1,5 +1,5 @@
 /* =============================================
-   202BBQ — Design System
+   202BBQ Design System
    ============================================= */
 
 /* ---- RESET ---- */
@@ -566,7 +566,7 @@ fieldset { border: none; }
   justify-self: end;
 }
 
-/* Sunburst rays — conic-gradient wedges faded by radial mask */
+/* Sunburst rays: conic-gradient wedges faded by radial mask */
 .hero-rays {
   position: absolute;
   inset: -8%;
@@ -594,7 +594,7 @@ fieldset { border: none; }
   to   { transform: rotate(360deg); }
 }
 
-/* Photo card — single centered, cross-fades every 2s via is-active class */
+/* Photo card: single centered, cross-fades every 2s via is-active class */
 .hero-photo {
   position: absolute;
   top: 50%;

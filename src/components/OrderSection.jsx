@@ -16,7 +16,7 @@ function AvailabilityBadge() {
     msg = '✔ Orders are open! Submit your request below for this weekend.';
     cls = 'open';
   } else if (isFriday) {
-    msg = '⏰ Order window closed — we\'re smoking tonight! Orders reopen Monday.';
+    msg = '⏰ Order window closed. We\'re smoking tonight! Orders reopen Monday.';
     cls = 'closed';
   } else {
     msg = `🔥 Happy ${isSat ? 'Saturday' : 'Sunday'}! Enjoy. Orders for next weekend open Monday.`;
@@ -143,19 +143,19 @@ export default function OrderSection() {
     const itemLines = Object.values(cart).map(({ item, size, price, qty }) => {
       const sizeLabel = size === 'full' ? 'Full Tray' : size === 'half' ? 'Half Tray' : size === 'each' ? 'Per Steak' : 'Market Price';
       const lineTotal = typeof price === 'number' ? `$${(price * qty).toFixed(2)}` : 'MP (to be quoted)';
-      return `${qty}× ${item.name} (${sizeLabel}) — ${lineTotal}`;
+      return `${qty}× ${item.name} (${sizeLabel}): ${lineTotal}`;
     }).join('\n');
 
     const thisOrderRef = makeOrderRef();
 
     const formspreePayload = {
-      _subject: `New Order Request — ${fields.fname} ${fields.lname} (${thisOrderRef})`,
+      _subject: `New Order Request from ${fields.fname} ${fields.lname} (${thisOrderRef})`,
       _replyto: fields.email,
       OrderRef:    thisOrderRef,
       Name:        `${fields.fname} ${fields.lname}`,
       Email:       fields.email,
       Phone:       fields.phone,
-      Fulfillment: fulfillment === 'delivery' ? `Delivery — ${fields.address}` : 'Pickup',
+      Fulfillment: fulfillment === 'delivery' ? `Delivery to ${fields.address}` : 'Pickup',
       Day:         day.charAt(0).toUpperCase() + day.slice(1),
       Items:       itemLines,
       Subtotal:    hasMpItems
@@ -180,12 +180,12 @@ export default function OrderSection() {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           setSubmitting(false);
-          addToast(data?.error || "Submit failed — please try again or call 202-997-8912 to order by phone.", 'error');
+          addToast(data?.error || "Submit failed. Please try again or call 202-997-8912 to order by phone.", 'error');
           return;
         }
       } catch (err) {
         setSubmitting(false);
-        addToast("Network issue — check your connection, try again, or call 202-997-8912.", 'error');
+        addToast("Network issue. Check your connection, try again, or call 202-997-8912.", 'error');
         return;
       }
     }
@@ -232,7 +232,7 @@ export default function OrderSection() {
             <p>We got it! Expect a confirmation to your email shortly. Get ready for some serious BBQ this weekend.</p>
 
             <div className="deposit-notice">
-              <p className="deposit-notice-heading">One more step — secure your order with a $20 deposit</p>
+              <p className="deposit-notice-heading">One more step: secure your order with a $20 deposit</p>
               <p className="deposit-notice-sub">
                 Your $20 deposit holds your spot. The remainder is paid at pickup or delivery. Orders without a deposit are not guaranteed.
               </p>
