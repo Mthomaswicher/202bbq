@@ -1,5 +1,6 @@
 import { CartProvider } from './context/CartContext.jsx';
 import { ToastProvider } from './context/ToastContext.jsx';
+import { ThemeProvider } from './context/ThemeContext.jsx';
 import AnnouncementBar from './components/AnnouncementBar.jsx';
 import ScrollProgress from './components/ScrollProgress.jsx';
 import Header from './components/Header.jsx';
@@ -20,6 +21,7 @@ import SmokerCursor from './components/SmokerCursor.jsx';
 
 export default function App() {
   return (
+    <ThemeProvider>
     <ToastProvider>
       <CartProvider>
         <a href="#main-content" className="skip-link">Skip to main content</a>
@@ -44,5 +46,6 @@ export default function App() {
         <Footer />
       </CartProvider>
     </ToastProvider>
+    </ThemeProvider>
   );
 }

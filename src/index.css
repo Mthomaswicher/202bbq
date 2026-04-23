@@ -72,6 +72,55 @@ fieldset { border: none; }
   --header-h: 68px;
 }
 
+/* ---- LIGHT MODE TOKENS ---- */
+[data-theme="light"] {
+  --bg:          #F5EFE4;
+  --surface:     #FFFFFF;
+  --surface-2:   #EDE6D8;
+  --surface-3:   #E2D9C8;
+  --border:      rgba(0,0,0,0.09);
+  --border-warm: rgba(232,93,4,0.28);
+
+  --ember-dim:   rgba(232,93,4,0.08);
+  --ember-glow:  rgba(232,93,4,0.15);
+
+  --text:        #1C1208;
+  --text-muted:  #5C4A34;
+  --text-dim:    #9A876E;
+
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.10);
+  --shadow-md:   0 8px 24px rgba(0,0,0,0.14);
+  --shadow-lg:   0 20px 48px rgba(0,0,0,0.18);
+}
+
+/* Header: lighter glass effect in light mode */
+[data-theme="light"] .site-header {
+  background: rgba(245,239,228,0.92);
+  border-bottom-color: rgba(0,0,0,0.08);
+}
+
+/* Mobile nav */
+[data-theme="light"] .mobile-nav {
+  background: var(--surface);
+  border-bottom-color: var(--border);
+}
+
+/* Announcement bar stays ember — no change needed */
+
+/* Cart drawer */
+[data-theme="light"] .cart-drawer {
+  background: var(--surface);
+  border-left-color: var(--border);
+}
+[data-theme="light"] .cart-footer {
+  background: var(--surface-2);
+}
+
+/* Theme toggle icon color in light mode */
+[data-theme="light"] .theme-toggle {
+  color: var(--text-muted);
+}
+
 /* ---- FOCUS STATES (keyboard users) ---- */
 :focus { outline: none; }
 :focus-visible {
