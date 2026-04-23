@@ -73,27 +73,44 @@ fieldset { border: none; }
 }
 
 /* ---- LIGHT MODE TOKENS ---- */
+/*
+  All foreground tokens verified ≥ 4.6:1 on every light surface
+  (worst case --surface-2 #EDE6D8, L=0.801) per WCAG AA.
+*/
 [data-theme="light"] {
+  /* Surfaces */
   --bg:          #F5EFE4;
   --surface:     #FFFFFF;
   --surface-2:   #EDE6D8;
   --surface-3:   #E2D9C8;
   --border:      rgba(0,0,0,0.09);
-  --border-warm: rgba(232,93,4,0.28);
+  --border-warm: rgba(175,70,3,0.28);
 
-  --ember-dim:   rgba(232,93,4,0.08);
-  --ember-glow:  rgba(232,93,4,0.15);
+  /* Accent — darkened for WCAG AA text contrast on light surfaces */
+  --ember:       #AF4603;  /* 4.99/5.69/4.61:1 on bg/surface/surface-2 */
+  --fire:        #975704;  /* 5.00/5.70/4.62:1 */
+  --gold:        #7E6305;  /* 5.00/5.70/4.62:1 */
+  --ember-dim:   rgba(175,70,3,0.09);
+  --ember-glow:  rgba(175,70,3,0.16);
+  --shadow-glow: 0 0 40px rgba(175,70,3,0.18);
 
-  --text:        #1C1208;
-  --text-muted:  #5C4A34;
-  --text-dim:    #9A876E;
+  /* Text */
+  --text:        #1C1208;  /* 17.1/19.5/15.8:1 — all pass */
+  --text-muted:  #5C4A34;  /* 7.57/8.62/6.99:1 — all pass */
+  --text-dim:    #746451;  /* 4.99/5.69/4.61:1 — all pass */
 
-  --shadow-sm:   0 2px 8px rgba(0,0,0,0.10);
-  --shadow-md:   0 8px 24px rgba(0,0,0,0.14);
-  --shadow-lg:   0 20px 48px rgba(0,0,0,0.18);
+  /* Status (text use) */
+  --success:     #147639;  /* 4.99/5.68/4.61:1 */
+  --error:       #CD1212;  /* 5.01/5.71/4.63:1 */
+  --info:        #1D4ED8;  /* passes on all light surfaces */
+
+  /* Shadows */
+  --shadow-sm:   0 2px 8px rgba(0,0,0,0.08);
+  --shadow-md:   0 8px 24px rgba(0,0,0,0.12);
+  --shadow-lg:   0 20px 48px rgba(0,0,0,0.16);
 }
 
-/* Header: lighter glass effect in light mode */
+/* Header */
 [data-theme="light"] .site-header {
   background: rgba(245,239,228,0.92);
   border-bottom-color: rgba(0,0,0,0.08);
@@ -105,21 +122,48 @@ fieldset { border: none; }
   border-bottom-color: var(--border);
 }
 
-/* Announcement bar stays ember — no change needed */
-
 /* Cart drawer */
-[data-theme="light"] .cart-drawer {
-  background: var(--surface);
-  border-left-color: var(--border);
-}
-[data-theme="light"] .cart-footer {
-  background: var(--surface-2);
+[data-theme="light"] .cart-drawer { background: var(--surface); border-left-color: var(--border); }
+[data-theme="light"] .cart-footer { background: var(--surface-2); }
+
+/* Info toast: keep dark bg so white text stays readable */
+[data-theme="light"] .toast.info {
+  background: #1e3a5f;
+  border-color: rgba(29,78,216,0.3);
 }
 
-/* Theme toggle icon color in light mode */
-[data-theme="light"] .theme-toggle {
-  color: var(--text-muted);
+/* Availability badges — hardcoded colors overridden */
+[data-theme="light"] .avail-badge.open {
+  background: rgba(20,118,57,0.10);
+  color: #147639;
+  border-color: rgba(20,118,57,0.25);
 }
+[data-theme="light"] .avail-badge.closed {
+  background: rgba(205,18,18,0.08);
+  color: #CD1212;
+  border-color: rgba(205,18,18,0.20);
+}
+
+/* Event & review badges — hardcoded green overridden */
+[data-theme="light"] .badge--green { background: rgba(20,118,57,0.10); color: #147639; }
+
+/* Hero gradient — remove hardcoded dark endpoint */
+[data-theme="light"] .hero-bg {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(175,70,3,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 80%, rgba(151,87,4,0.07) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg) 0%, #E8DFD0 100%);
+}
+
+/* Hero grid lines — white lines invisible on light bg */
+[data-theme="light"] .hero-grid-overlay {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px);
+}
+
+/* Theme toggle */
+[data-theme="light"] .theme-toggle { color: var(--text-muted); }
 
 /* ---- FOCUS STATES (keyboard users) ---- */
 :focus { outline: none; }
