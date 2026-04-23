@@ -79,14 +79,24 @@ fieldset { border: none; }
   --surface-2:   #EDE6D8;
   --surface-3:   #E2D9C8;
   --border:      rgba(0,0,0,0.09);
-  --border-warm: rgba(232,93,4,0.28);
+  --border-warm: rgba(173,63,0,0.28);
 
-  --ember-dim:   rgba(232,93,4,0.08);
-  --ember-glow:  rgba(232,93,4,0.15);
+  /* Darker brand colors for WCAG AA text contrast on light backgrounds */
+  --ember:       #AD3F00;  /* 5.3:1 on --bg, 6.0:1 on --surface */
+  --fire:        #B84000;  /* 4.9:1 on --bg, 5.6:1 on --surface */
+  --gold:        #7C5C00;  /* 5.5:1 on --bg */
+
+  /* Darker semantic colors for WCAG AA compliance */
+  --success:     #166534;  /* 6.4:1 on --bg */
+  --error:       #B91C1C;  /* 5.9:1 on --bg */
+  --info:        #1D4ED8;  /* 5.9:1 on --bg */
+
+  --ember-dim:   rgba(173,63,0,0.08);
+  --ember-glow:  rgba(173,63,0,0.15);
 
   --text:        #1C1208;
-  --text-muted:  #5C4A34;
-  --text-dim:    #9A876E;
+  --text-muted:  #5C4A34;  /* 6.9:1 on --bg */
+  --text-dim:    #6B5A48;  /* 5.8:1 on --bg — was #9A876E (2.8:1, failed) */
 
   --shadow-sm:   0 2px 8px rgba(0,0,0,0.10);
   --shadow-md:   0 8px 24px rgba(0,0,0,0.14);
@@ -119,6 +129,55 @@ fieldset { border: none; }
 /* Theme toggle icon color in light mode */
 [data-theme="light"] .theme-toggle {
   color: var(--text-muted);
+}
+
+/* ---- LIGHT MODE: COMPONENT ACCESSIBILITY FIXES ---- */
+
+/* Hero background: replace hardcoded dark gradient end */
+[data-theme="light"] .hero-bg {
+  background:
+    radial-gradient(ellipse at 70% 30%, rgba(173,63,0,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 80%, rgba(184,64,0,0.04) 0%, transparent 50%),
+    linear-gradient(180deg, var(--bg) 0%, #E8DED0 100%);
+}
+[data-theme="light"] .hero-grid-overlay {
+  background-image:
+    linear-gradient(rgba(0,0,0,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,0.03) 1px, transparent 1px);
+}
+
+/* Badge green text: #4ADE80 has 2.1:1 on light — override to dark green */
+[data-theme="light"] .badge--green {
+  color: #166534;
+}
+
+/* Availability badges: bright #4ADE80 / #F87171 fail on light bg */
+[data-theme="light"] .avail-badge.open {
+  color: #166534;
+  border-color: rgba(22,101,52,0.3);
+}
+[data-theme="light"] .avail-badge.closed {
+  color: #991B1B;
+  border-color: rgba(153,27,27,0.3);
+}
+
+/* Toast info: uses var(--surface-3) bg (#E2D9C8) with white text — 1.3:1, fails */
+[data-theme="light"] .toast.info {
+  background: #374151;
+  border-color: rgba(0,0,0,0.15);
+}
+
+/* Deposit block: rgba(255,255,255,…) overlays are invisible on light bg */
+[data-theme="light"] .deposit-methods li {
+  background: rgba(0,0,0,0.03);
+  border-color: rgba(0,0,0,0.10);
+}
+[data-theme="light"] .deposit-order-ref {
+  background: rgba(0,0,0,0.06);
+  border-color: rgba(0,0,0,0.18);
+}
+[data-theme="light"] .deposit-alt-methods {
+  border-top-color: rgba(0,0,0,0.12);
 }
 
 /* ---- FOCUS STATES (keyboard users) ---- */
