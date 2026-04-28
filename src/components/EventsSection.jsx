@@ -67,7 +67,7 @@ export default function EventsSection() {
               className="collab-banner-logo"
             />
             <div className="collab-banner-text">
-              <span className="collab-banner-eyebrow">New Partnership</span>
+              <span className="collab-banner-eyebrow">New Popup Collab</span>
               <p>
                 202BBQ is teaming up with{' '}
                 <a href="https://rightproper.com" target="_blank" rel="noopener noreferrer" className="inline-link">

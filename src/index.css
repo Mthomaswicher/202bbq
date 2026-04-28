@@ -789,6 +789,61 @@ fieldset { border: none; }
   .hero-rays, .hero-pin { animation: none; }
 }
 
+/* ---- HERO PARALLAX ---- */
+.hero-parallax {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hp-layer {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
+}
+.hp-skyline-svg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: clamp(180px, 42vh, 440px);
+}
+
+/* Cherry blossoms */
+.hp-blossom {
+  position: absolute;
+  border-radius: 50% 0 50% 50%;
+  background: rgba(255, 148, 168, 0.62);
+  box-shadow: 0 0 5px rgba(255, 130, 155, 0.3);
+  animation: hp-blossom-drift linear infinite;
+}
+@keyframes hp-blossom-drift {
+  0%   { transform: translate(0, -12px) rotate(0deg);    opacity: 0;    }
+  8%   { opacity: 0.9; }
+  92%  { opacity: 0.5; }
+  100% { transform: translate(30px, 95px) rotate(210deg); opacity: 0; }
+}
+
+/* Rising embers */
+.hp-ember-dot {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: var(--ember);
+  box-shadow: 0 0 8px 2px rgba(232, 93, 4, 0.65);
+  animation: hp-ember-rise ease-out infinite;
+}
+@keyframes hp-ember-rise {
+  0%   { transform: translate(0, 0) scale(1);          opacity: 1; }
+  100% { transform: translate(18px, -210px) scale(0.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hp-blossom, .hp-ember-dot { animation: none; opacity: 0; }
+}
+
 /* ---- EVENTS ---- */
 .events-section {
   padding: var(--section-py) 0;

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import HeroParallax from './HeroParallax.jsx';
 
 function smoothScrollTo(id) {
   const el = document.getElementById(id);
@@ -35,6 +36,8 @@ export default function HeroSection() {
       <div className="hero-watermark" aria-hidden="true">
         <img src={`${base}logo.png`} alt="" role="presentation" />
       </div>
+
+      <HeroParallax />
 
       <div className="container hero-layout">
         <div className="hero-content">
