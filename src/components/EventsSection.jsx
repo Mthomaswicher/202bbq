@@ -61,6 +61,11 @@ export default function EventsSection() {
 
         {showCollabBanner && (
           <div className="collab-banner">
+            <img
+              src="/right-proper-logo.png"
+              alt="Right Proper Brewing Company"
+              className="collab-banner-logo"
+            />
             <div className="collab-banner-text">
               <span className="collab-banner-eyebrow">New Partnership</span>
               <p>

@@ -907,7 +907,17 @@ fieldset { border: none; }
   border: 1px solid rgba(96,165,250,0.25);
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg, rgba(96,165,250,0.07) 0%, rgba(52,211,153,0.04) 100%);
-  padding: 18px 22px;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.collab-banner-logo {
+  height: 52px;
+  width: auto;
+  flex-shrink: 0;
+  mix-blend-mode: screen;
+  opacity: 0.9;
 }
 .collab-banner-eyebrow {
   display: block;
@@ -923,6 +933,10 @@ fieldset { border: none; }
   color: var(--text-muted);
   margin: 0;
   line-height: 1.6;
+}
+@media (max-width: 480px) {
+  .collab-banner { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .collab-banner-logo { height: 40px; }
 }
 
 /* Collab badge */
