@@ -1,0 +1,11 @@
+name = "202bbq-deposit"
+main = "src/index.js"
+compatibility_date = "2026-04-01"
+
+[vars]
+SUCCESS_URL = "https://202barbecue.com/?deposit=success"
+CANCEL_URL  = "https://202barbecue.com/?deposit=cancel"
+
+# Set the Stripe secret key with:
+#   npx wrangler secret put STRIPE_SECRET_KEY
+# (use sk_test_... for testing, sk_live_... for production)
