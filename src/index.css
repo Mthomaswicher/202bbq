@@ -876,6 +876,83 @@ fieldset { border: none; }
   margin-top: 4px;
 }
 
+/* Event tabs */
+.events-tabs {
+  display: flex;
+  margin-top: 32px;
+  border-bottom: 1px solid var(--border);
+}
+.events-tab {
+  padding: 10px 22px;
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-muted);
+  font-family: var(--font-body);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color var(--transition), border-color var(--transition);
+  margin-bottom: -1px;
+}
+.events-tab:hover { color: var(--text); }
+.events-tab.active {
+  color: var(--ember);
+  border-bottom-color: var(--ember);
+}
+
+/* Right Proper collab banner */
+.collab-banner {
+  margin-top: 28px;
+  border: 1px solid rgba(96,165,250,0.25);
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, rgba(96,165,250,0.07) 0%, rgba(52,211,153,0.04) 100%);
+  padding: 18px 22px;
+}
+.collab-banner-eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #60A5FA;
+  margin-bottom: 6px;
+}
+.collab-banner-text p {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Collab badge */
+.badge--collab { background: rgba(96,165,250,0.12); color: #60A5FA; }
+
+/* Collab event card */
+.event-card.collab {
+  border-color: rgba(96,165,250,0.3);
+  background: linear-gradient(135deg, var(--surface-2) 0%, rgba(96,165,250,0.05) 100%);
+}
+.event-card.collab::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #60A5FA, #34D399);
+}
+.event-card.collab:hover { border-color: rgba(96,165,250,0.5); }
+
+/* Past events tab */
+.events-grid.past-tab .event-card { opacity: 0.75; }
+.events-grid.past-tab .event-card:hover { opacity: 1; }
+
+.events-empty {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  padding: 48px 0;
+}
+
 /* ---- REVIEW SECTION ---- */
 .review-section {
   padding: var(--section-py) 0;

@@ -187,17 +187,45 @@ export const MENU_CATEGORIES = [
 ];
 
 // Events: only include confirmed real events. Add entries here when dates/locations are confirmed.
-export const EVENTS = [
+export const UPCOMING_EVENTS = [
   {
-    id: 'annies-ace-demo',
-    badge: 'Live Demo',
-    badgeClass: 'badge--ember',
-    title: "Live Fire Demo at Annie's Ace Hardware",
-    date: 'Sunday, April 26, 2026 · 10am–2pm',
-    location: "Annie's Ace Hardware · 3405 8th St NE, Washington, DC 20017",
-    desc: "Come watch us fire up the Big Green Egg and smoke three whole chickens. Free samples for everyone who stops by. Talk pitmaster shop, pick up tips for your own setup, and meet the 202BBQ team in person.",
+    id: 'right-proper-may-16',
+    badge: 'Pop-up',
+    badgeClass: 'badge--collab',
+    title: '202BBQ × Right Proper',
+    date: 'Saturday, May 16 · 1–6pm',
+    location: 'Right Proper Brewing · Washington, DC',
+    desc: "Kick off the collab at Right Proper Brewing. Come for the craft beer, stay for the smoked meats. We'll be set up outside from 1–6pm — first of many dates this spring and summer.",
     featured: true,
-    cta: 'https://www.instagram.com/202_bbq',
+    cta: 'https://rightproper.com',
+    collab: 'right-proper',
+    ctaLabel: 'Visit Right Proper',
+  },
+  {
+    id: 'right-proper-may-30',
+    badge: 'Pop-up',
+    badgeClass: 'badge--collab',
+    title: '202BBQ × Right Proper',
+    date: 'Saturday, May 30 · 1–6pm',
+    location: 'Right Proper Brewing · Washington, DC',
+    desc: "Round two. More smoked meats, more craft beer, better weather. Drop by Right Proper from 1–6pm and grab a plate.",
+    featured: false,
+    cta: 'https://rightproper.com',
+    collab: 'right-proper',
+    ctaLabel: 'Visit Right Proper',
+  },
+  {
+    id: 'right-proper-jun-6',
+    badge: 'Pop-up',
+    badgeClass: 'badge--collab',
+    title: '202BBQ × Right Proper',
+    date: 'Saturday, June 6 · 1–6pm',
+    location: 'Right Proper Brewing · Washington, DC',
+    desc: "Summer's here and so are we. Catch 202BBQ at Right Proper from 1–6pm. More dates dropping throughout the season — follow @202_bbq to stay up to date.",
+    featured: false,
+    cta: 'https://rightproper.com',
+    collab: 'right-proper',
+    ctaLabel: 'Visit Right Proper',
   },
   {
     id: 'bbq-battle',
@@ -209,8 +237,26 @@ export const EVENTS = [
     desc: "We're competing at DC's biggest BBQ event, the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
     featured: true,
     cta: 'https://bbqindc.com/',
+    ctaLabel: 'Follow for Updates',
   },
 ];
+
+export const PAST_EVENTS = [
+  {
+    id: 'annies-ace-demo',
+    badge: 'Live Demo',
+    badgeClass: 'badge--ember',
+    title: "Live Fire Demo at Annie's Ace Hardware",
+    date: 'Sunday, April 26, 2026 · 10am–2pm',
+    location: "Annie's Ace Hardware · 3405 8th St NE, Washington, DC 20017",
+    desc: "We fired up the Big Green Egg and smoked three whole chickens. Free samples, pitmaster Q&A, and a great turnout. Thanks to everyone who stopped by!",
+    featured: true,
+    cta: 'https://www.instagram.com/202_bbq',
+    ctaLabel: 'See the Recap',
+  },
+];
+
+export const EVENTS = UPCOMING_EVENTS;
 
 export const TESTIMONIALS = [
   {

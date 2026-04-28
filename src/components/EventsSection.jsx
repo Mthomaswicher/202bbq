@@ -1,4 +1,5 @@
-import { EVENTS } from '../data/menu.js';
+import { useState } from 'react';
+import { UPCOMING_EVENTS, PAST_EVENTS } from '../data/menu.js';
 
 function CalendarIcon() {
   return (
@@ -21,6 +22,11 @@ function MapIcon() {
 }
 
 export default function EventsSection() {
+  const [activeTab, setActiveTab] = useState('upcoming');
+  const isPast = activeTab === 'past';
+  const events = isPast ? PAST_EVENTS : UPCOMING_EVENTS;
+  const showCollabBanner = !isPast && UPCOMING_EVENTS.some(e => e.collab === 'right-proper');
+
   return (
     <section className="events-section" id="events" aria-labelledby="events-heading">
       <div className="container">
@@ -34,37 +40,78 @@ export default function EventsSection() {
           </p>
         </div>
 
-        <div className="events-grid">
-          {EVENTS.map(event => (
-            <article
-              key={event.id}
-              className={`event-card${event.featured ? ' featured' : ''}`}
-              aria-label={event.title}
-            >
-              <span className={`event-badge ${event.badgeClass}`}>{event.badge}</span>
-
-              <h3>{event.title}</h3>
-
-              <div className="event-meta">
-                <span><CalendarIcon /> {event.date}</span>
-                <span><MapIcon /> {event.location}</span>
-              </div>
-
-              <p>{event.desc}</p>
-
-              {event.cta && (
-                <a
-                  href={event.cta}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn btn-ghost event-cta"
-                >
-                  Follow for Updates
-                </a>
-              )}
-            </article>
-          ))}
+        <div className="events-tabs" role="tablist" aria-label="Events tabs">
+          <button
+            role="tab"
+            aria-selected={activeTab === 'upcoming'}
+            className={`events-tab${activeTab === 'upcoming' ? ' active' : ''}`}
+            onClick={() => setActiveTab('upcoming')}
+          >
+            Upcoming
+          </button>
+          <button
+            role="tab"
+            aria-selected={activeTab === 'past'}
+            className={`events-tab${activeTab === 'past' ? ' active' : ''}`}
+            onClick={() => setActiveTab('past')}
+          >
+            Past Events
+          </button>
         </div>
+
+        {showCollabBanner && (
+          <div className="collab-banner">
+            <div className="collab-banner-text">
+              <span className="collab-banner-eyebrow">New Partnership</span>
+              <p>
+                202BBQ is teaming up with{' '}
+                <a href="https://rightproper.com" target="_blank" rel="noopener noreferrer" className="inline-link">
+                  Right Proper Brewing
+                </a>{' '}
+                for a series of pop-ups this spring and summer. Grab a pint, grab some 'cue — more dates dropping soon.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {events.length === 0 ? (
+          <p className="events-empty">No events to show here yet.</p>
+        ) : (
+          <div className={`events-grid${isPast ? ' past-tab' : ''}`}>
+            {events.map(event => (
+              <article
+                key={event.id}
+                className={[
+                  'event-card',
+                  event.collab ? 'collab' : event.featured ? 'featured' : '',
+                ].filter(Boolean).join(' ')}
+                aria-label={event.title}
+              >
+                <span className={`event-badge ${event.badgeClass}`}>{event.badge}</span>
+
+                <h3>{event.title}</h3>
+
+                <div className="event-meta">
+                  <span><CalendarIcon /> {event.date}</span>
+                  <span><MapIcon /> {event.location}</span>
+                </div>
+
+                <p>{event.desc}</p>
+
+                {event.cta && (
+                  <a
+                    href={event.cta}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn btn-ghost event-cta"
+                  >
+                    {event.ctaLabel || 'Learn More'}
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );
