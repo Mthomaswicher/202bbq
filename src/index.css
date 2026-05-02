@@ -974,6 +974,10 @@ fieldset { border: none; }
   mix-blend-mode: screen;
   opacity: 0.9;
 }
+[data-theme="light"] .collab-banner-logo {
+  mix-blend-mode: multiply;
+  filter: invert(1);
+}
 .collab-banner-eyebrow {
   display: block;
   font-size: 0.68rem;
