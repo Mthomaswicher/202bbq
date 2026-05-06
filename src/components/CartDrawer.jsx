@@ -141,29 +141,22 @@ export default function CartDrawer() {
       Submitted: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const shippingEndpoint = (import.meta.env.VITE_FORMSPREE_SHIPPING || '').replace(/^<|>$/g, '').trim();
-    const fallbackEndpoint = (import.meta.env.VITE_FORMSPREE_ORDERS  || '').replace(/^<|>$/g, '').trim();
-    const endpoint = (!shippingEndpoint || shippingEndpoint.includes('REPLACE_ME'))
-      ? fallbackEndpoint
-      : shippingEndpoint;
+    const envEndpoint = (import.meta.env.VITE_FORMSPREE_SHIPPING || '').replace(/^<|>$/g, '').trim();
+    const endpoint = (envEndpoint && !envEndpoint.includes('REPLACE_ME'))
+      ? envEndpoint
+      : 'https://formspree.io/f/xkoyzglo';
 
-    if (!endpoint || endpoint.includes('REPLACE_ME')) {
-      console.warn('202BBQ: VITE_FORMSPREE_SHIPPING is not configured. Set it in GitHub Secrets.');
-      console.log('Shipping order payload:', payload);
-      await new Promise(r => setTimeout(r, 600));
-    } else {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) { setSubmitting(false); addToast('Submit failed. Please try again.', 'error'); return; }
-      } catch {
-        setSubmitting(false);
-        addToast('Network error. Please try again.', 'error');
-        return;
-      }
+    try {
+      const res = await fetch(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) { setSubmitting(false); addToast('Submit failed. Please try again.', 'error'); return; }
+    } catch {
+      setSubmitting(false);
+      addToast('Network error. Please try again.', 'error');
+      return;
     }
 
     // Open Stripe link(s) grouped by pack type
