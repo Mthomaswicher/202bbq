@@ -24,8 +24,9 @@ export default function ShippingSection() {
   const [qty, setQty]       = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted]   = useState(false);
-  const [orderRef, setOrderRef]     = useState('');
+  const [orderRef, setOrderRef]         = useState('');
   const [submittedEmail, setSubmittedEmail] = useState('');
+  const [submittedPack, setSubmittedPack]   = useState(null);
   const [fields, setFields] = useState({ fname: '', lname: '', email: '', phone: '', address: '', city: '', state: '', zip: '', notes: '' });
   const [errors, setErrors] = useState({});
   const [touched, setTouched] = useState({});
@@ -93,18 +94,46 @@ export default function ShippingSection() {
 
     setOrderRef(ref);
     setSubmittedEmail(fields.email);
+    setSubmittedPack(pack);
     setSubmitting(false);
     setSubmitted(true);
   };
 
   if (submitted) {
+    const stripeUrl = submittedPack?.stripeLink
+      ? `${submittedPack.stripeLink}?prefilled_email=${encodeURIComponent(submittedEmail)}&client_reference_id=${encodeURIComponent(orderRef)}`
+      : null;
+
     return (
       <section className="shipping-section" id="shipping">
         <div className="container">
           <div className="ship-success">
             <div className="ship-success-icon" aria-hidden="true">📦</div>
-            <h2>Order Request Received!</h2>
-            <p>We'll reach out to <strong>{submittedEmail}</strong> within 24 hours to confirm and collect payment.</p>
+            <h2>Almost done — complete your payment!</h2>
+            <p>Your order details have been received. Click below to pay securely via Stripe and lock in your order.</p>
+
+            {stripeUrl && (
+              <>
+                <a
+                  href={stripeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn btn-primary btn-lg ship-pay-btn"
+                >
+                  Pay ${submittedPack.price * qty} Securely
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ marginLeft: 8 }}>
+                    <path d="M7 17L17 7M17 7H8M17 7v9"/>
+                  </svg>
+                </a>
+                <p className="ship-secure-note">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  Secure checkout · Card, Apple Pay, Google Pay
+                </p>
+              </>
+            )}
+
             <p className="ship-ref">Order ref: <code>{orderRef}</code></p>
             <button className="btn btn-ghost" onClick={() => {
               setSubmitted(false);
