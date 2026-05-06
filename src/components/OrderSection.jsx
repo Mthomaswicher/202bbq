@@ -28,7 +28,7 @@ function AvailabilityBadge() {
 
 function OrderSummary() {
   const { cart, cartTotal, hasMpItems } = useCart();
-  const entries = Object.values(cart);
+  const entries = Object.values(cart).filter(e => e.type !== 'shipping');
   const hasItems = entries.length > 0;
 
   return (
@@ -118,7 +118,8 @@ export default function OrderSection() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (cartCount === 0) { addToast('Add items to your order first.', 'error'); return; }
+    const localCount = Object.values(cart).filter(e => e.type !== 'shipping').reduce((s, { qty }) => s + qty, 0);
+    if (localCount === 0) { addToast('Add local menu items to your order first.', 'error'); return; }
     if (!fulfillment)    { addToast('Please choose pickup or delivery.', 'error'); return; }
     if (!day)            { addToast('Please choose Saturday or Sunday.', 'error'); return; }
 
@@ -139,8 +140,8 @@ export default function OrderSection() {
 
     setSubmitting(true);
 
-    // Format cart items as a readable list for the email
-    const itemLines = Object.values(cart).map(({ item, size, price, qty }) => {
+    // Format local cart items as a readable list for the email
+    const itemLines = Object.values(cart).filter(e => e.type !== 'shipping').map(({ item, size, price, qty }) => {
       const sizeLabel = size === 'full' ? 'Full Tray' : size === 'half' ? 'Half Tray' : size === 'each' ? 'Per Steak' : 'Market Price';
       const lineTotal = typeof price === 'number' ? `$${(price * qty).toFixed(2)}` : 'MP (to be quoted)';
       return `${qty}× ${item.name} (${sizeLabel}): ${lineTotal}`;

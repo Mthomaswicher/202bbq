@@ -53,7 +53,7 @@ function MenuCard({ item }) {
   const halfIsMp   = item.half === 'MP';
 
   const handleAdd = useCallback((size, e) => {
-    const name = addToCart(item, size);
+    const name = addToCart(item, size, { type: 'local' });
     const label = size === 'full' ? 'Full Tray' : size === 'half' ? 'Half Tray' : size === 'each' ? 'per steak' : 'Market Price';
     addToast(`${name} (${label}) added to cart`, 'success');
     setAdded(size);
