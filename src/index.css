@@ -1081,7 +1081,7 @@ fieldset { border: none; }
 
 .ship-pack-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -1258,7 +1258,6 @@ fieldset { border: none; }
 [data-theme="light"] .ship-qty-row { background: var(--surface-2); }
 
 @media (max-width: 480px) {
-  .ship-pack-grid { grid-template-columns: 1fr; }
   .form-row--city { grid-template-columns: 1fr; }
   .ship-product-panel { position: static; }
 }

@@ -264,9 +264,8 @@ export const SHIPPING_PRODUCTS = [
     name: 'Oxtail Softballs',
     desc: "202BBQ's famous oxtail softballs — slow-smoked until fall-off-the-bone tender, then packed into softball-sized portions. Vacuum-sealed and shipped frozen right to your door. Reheat in under 20 minutes.",
     packs: [
-      { id: '2-pack', label: '2-Pack', price: 45 },
-      { id: '4-pack', label: '4-Pack', price: 79, tag: 'Best Value' },
-      { id: '6-pack', label: '6-Pack', price: 109 },
+      { id: '5-pack',  label: '5-Pack',  price: 100 },
+      { id: '10-pack', label: '10-Pack', price: 190, tag: 'Best Value' },
     ],
   },
 ];
