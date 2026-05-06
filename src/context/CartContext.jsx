@@ -7,38 +7,41 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
 
-  const cartCount = Object.values(cart).reduce((s, { qty }) => s + qty, 0);
+  const entries = Object.values(cart);
 
-  const cartTotal = Object.values(cart).reduce((s, { price, qty }) =>
-    typeof price === 'number' ? s + price * qty : s, 0);
+  const cartCount        = entries.reduce((s, { qty }) => s + qty, 0);
+  const cartTotal        = entries.reduce((s, { price, qty }) => typeof price === 'number' ? s + price * qty : s, 0);
+  const hasMpItems       = entries.some(({ price }) => price === 'MP');
+  const hasLocalItems    = entries.some(e => e.type !== 'shipping');
+  const hasShippingItems = entries.some(e => e.type === 'shipping');
 
-  const hasMpItems = Object.values(cart).some(({ price }) => price === 'MP');
+  // options: { type='local', flavor=null, stripeLink=null, price (shipping only), qty=1 }
+  const addToCart = useCallback((item, size, options = {}) => {
+    const { type = 'local', flavor = null, stripeLink = null, qty: addQty = 1 } = options;
 
-  const addToCart = useCallback((item, size) => {
     let price;
-    if (size === 'full')  price = item.full;
-    else if (size === 'half') price = item.half;
-    else if (size === 'each') price = item.full;
-    else if (size === 'mp')   price = 'MP';
+    if (type === 'shipping') {
+      price = options.price;
+    } else {
+      if (size === 'full')  price = item.full;
+      else if (size === 'half') price = item.half;
+      else if (size === 'each') price = item.full;
+      else if (size === 'mp')   price = 'MP';
+    }
 
-    const key = `${item.id}::${size}`;
+    const key = flavor ? `${item.id}::${size}::${flavor}` : `${item.id}::${size}`;
+
     setCart(prev => ({
       ...prev,
       [key]: prev[key]
-        ? { ...prev[key], qty: prev[key].qty + 1 }
-        : { item, size, price, qty: 1 },
+        ? { ...prev[key], qty: prev[key].qty + addQty }
+        : { item, size, price, qty: addQty, type, flavor, stripeLink },
     }));
 
     track('add_to_cart', {
       currency: 'USD',
       value: typeof price === 'number' ? price : 0,
-      items: [{
-        item_id: item.id,
-        item_name: item.name,
-        item_variant: size,
-        price: typeof price === 'number' ? price : 0,
-        quantity: 1,
-      }],
+      items: [{ item_id: item.id, item_name: item.name, item_variant: size, price: typeof price === 'number' ? price : 0, quantity: addQty }],
     });
 
     return item.name;
@@ -49,32 +52,28 @@ export function CartProvider({ children }) {
       const entry = prev[key];
       if (!entry) return prev;
       const next = { ...prev };
-      if (entry.qty + delta <= 0) {
-        delete next[key];
-      } else {
-        next[key] = { ...entry, qty: entry.qty + delta };
-      }
+      if (entry.qty + delta <= 0) delete next[key];
+      else next[key] = { ...entry, qty: entry.qty + delta };
       return next;
     });
   }, []);
 
   const removeFromCart = useCallback((key) => {
-    setCart(prev => {
-      const next = { ...prev };
-      delete next[key];
-      return next;
-    });
+    setCart(prev => { const next = { ...prev }; delete next[key]; return next; });
   }, []);
 
-  const clearCart = useCallback(() => setCart({}), []);
-
+  const clearCart          = useCallback(() => setCart({}), []);
+  const clearShippingItems = useCallback(() =>
+    setCart(prev => Object.fromEntries(Object.entries(prev).filter(([, e]) => e.type !== 'shipping'))),
+  []);
   const openCart  = useCallback(() => setCartOpen(true),  []);
   const closeCart = useCallback(() => setCartOpen(false), []);
 
   return (
     <CartContext.Provider value={{
       cart, cartCount, cartTotal, hasMpItems,
-      addToCart, adjustQty, removeFromCart, clearCart,
+      hasLocalItems, hasShippingItems,
+      addToCart, adjustQty, removeFromCart, clearCart, clearShippingItems,
       cartOpen, openCart, closeCart,
     }}>
       {children}
