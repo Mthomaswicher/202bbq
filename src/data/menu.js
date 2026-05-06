@@ -258,6 +258,19 @@ export const PAST_EVENTS = [
 
 export const EVENTS = UPCOMING_EVENTS;
 
+export const SHIPPING_PRODUCTS = [
+  {
+    id: 'oxtail-softballs',
+    name: 'Oxtail Softballs',
+    desc: "202BBQ's famous oxtail softballs — slow-smoked until fall-off-the-bone tender, then packed into softball-sized portions. Vacuum-sealed and shipped frozen right to your door. Reheat in under 20 minutes.",
+    packs: [
+      { id: '2-pack', label: '2-Pack', price: 45 },
+      { id: '4-pack', label: '4-Pack', price: 79, tag: 'Best Value' },
+      { id: '6-pack', label: '6-Pack', price: 109 },
+    ],
+  },
+];
+
 export const TESTIMONIALS = [
   {
     quote: "Matt catered our grand opening for 70+ guests and it was an absolute hit. Guests raved about the brisket and coleslaw, and many went back for seconds. 100% recommend for catering!",

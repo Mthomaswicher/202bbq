@@ -10,6 +10,7 @@ import MenuSection from './components/MenuSection.jsx';
 import AboutSection from './components/AboutSection.jsx';
 import HowItWorks from './components/HowItWorks.jsx';
 import FaqSection from './components/FaqSection.jsx';
+import ShippingSection from './components/ShippingSection.jsx';
 import OrderSection from './components/OrderSection.jsx';
 import ReviewSection from './components/ReviewSection.jsx';
 import InstagramSection from './components/InstagramSection.jsx';
@@ -38,6 +39,7 @@ export default function App() {
           <AboutSection />
           <HowItWorks />
           <FaqSection />
+          <ShippingSection />
           <OrderSection />
           <ReviewSection />
           <ContactSection />

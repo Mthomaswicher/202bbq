@@ -81,10 +81,11 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: 'Menu',   id: 'menu'  },
-    { label: 'Events', id: 'events' },
-    { label: 'About',  id: 'about' },
-    { label: 'Order',  id: 'order' },
+    { label: 'Menu',     id: 'menu'     },
+    { label: 'Events',   id: 'events'   },
+    { label: 'About',    id: 'about'    },
+    { label: 'Ship 🚚',  id: 'shipping' },
+    { label: 'Order',    id: 'order'    },
   ];
 
   const handleNavClick = (id) => {
