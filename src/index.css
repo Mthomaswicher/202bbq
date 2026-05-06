@@ -243,7 +243,7 @@ fieldset { border: none; }
 }
 .section-title {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-size: clamp(1.8rem, 5vw, 3.8rem);
   color: var(--text);
   line-height: 1.08;
   margin-bottom: 16px;
@@ -582,7 +582,7 @@ fieldset { border: none; }
 }
 .hero-headline {
   font-family: var(--font-display);
-  font-size: clamp(3.5rem, 9vw, 7rem);
+  font-size: clamp(2rem, 8vw, 7rem);
   line-height: 1.02;
   color: var(--text);
   margin-bottom: 24px;
@@ -1129,6 +1129,9 @@ fieldset { border: none; }
   position: relative;
   transition: border-color var(--transition), background var(--transition), color var(--transition);
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 .ship-pill:hover { border-color: var(--text-muted); }
 .ship-pill.active {
@@ -1641,8 +1644,8 @@ fieldset { border: none; }
 }
 .about-logo-ring {
   position: relative;
-  width: clamp(220px, 30vw, 320px);
-  height: clamp(220px, 30vw, 320px);
+  width: clamp(160px, 30vw, 320px);
+  height: clamp(160px, 30vw, 320px);
 }
 .about-logo-ring::before {
   content: '';
@@ -1676,7 +1679,7 @@ fieldset { border: none; }
 .about-text .section-eyebrow { text-align: left; }
 .about-title {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
   line-height: 1;
   color: var(--text);
   margin-bottom: 20px;
@@ -2327,8 +2330,8 @@ fieldset { border: none; }
 .cart-item-size { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 10px; }
 .cart-item-controls { display: flex; align-items: center; gap: 8px; }
 .qty-btn {
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--radius-sm);
   background: var(--surface-3);
   color: var(--text);
@@ -2433,6 +2436,63 @@ fieldset { border: none; }
   background: var(--fire);
   transform: translateY(-1px);
 }
+
+/* ---- CHECKOUT STEP ---- */
+.cart-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: color var(--transition);
+}
+.cart-back-btn:hover { color: var(--text); }
+
+.checkout-recap {
+  background: var(--surface-2);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.checkout-recap-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  padding: 3px 0;
+}
+.checkout-recap-total {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text);
+  border-top: 1px solid var(--border);
+  margin-top: 8px;
+  padding-top: 8px;
+}
+
+.checkout-form-fields { display: flex; flex-direction: column; gap: 0; }
+.checkout-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.co-city-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 10px;
+}
+.co-city-row .form-group { min-width: 0; }
 
 /* ---- TOASTS ---- */
 .toasts {
@@ -2543,7 +2603,7 @@ fieldset { border: none; }
 .contact-copy { padding-top: 8px; }
 .contact-title {
   font-family: var(--font-display);
-  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-size: clamp(1.8rem, 4vw, 3.4rem);
   line-height: 1.05;
   color: var(--text);
   margin-bottom: 16px;
@@ -2744,12 +2804,62 @@ fieldset { border: none; }
 
   .toasts { left: 16px; right: 16px; bottom: 16px; }
   .toast { min-width: unset; }
+
+  /* Shipping: remove sticky positioning when stacked */
+  .ship-product-panel,
+  .ship-selector-panel { position: static; }
+}
+
+/* Hide logo wordmark on small screens to give nav room */
+@media (max-width: 640px) {
+  .logo-wordmark { display: none; }
 }
 
 @media (max-width: 480px) {
+  /* Hero */
   .hero-ctas { flex-direction: column; }
   .hero-ctas .btn { width: 100%; justify-content: center; }
-  .hiw-grid { grid-template-columns: 1fr; }
+  .hero-steps { flex-direction: column; align-items: stretch; }
+  .hero-step  { justify-content: flex-start; }
+  .hero-sub   { margin-bottom: 24px; }
+
+  /* Layout grids */
+  .hiw-grid    { grid-template-columns: 1fr; }
   .radio-group { flex-direction: column; }
   .events-grid { grid-template-columns: 1fr; }
+
+  /* Radio cards: full width on mobile */
+  .radio-card { min-width: unset; width: 100%; }
+
+  /* Forms */
+  .form-section { padding: 20px 16px; }
+  .form-legend  { font-size: 1.1rem; }
+  .submit-area  { padding: 20px 16px; }
+
+  /* Deposit notice */
+  .deposit-notice { padding: 20px 16px; }
+
+  /* Cart drawer: tighter padding on small phones */
+  .cart-header { padding: 14px 16px; }
+  .cart-body   { padding: 14px 16px; }
+  .cart-footer { padding: 14px 16px calc(14px + env(safe-area-inset-bottom)); }
+
+  /* Checkout city/state/zip: single column on narrow cart */
+  .co-city-row { grid-template-columns: 1fr; gap: 0; }
+
+  /* Menu tabs: smaller so more fit without scrolling */
+  .menu-tab { padding: 8px 12px; font-size: 0.78rem; }
+
+  /* Shipping pills: let them stretch full width */
+  .ship-pill-grid { gap: 8px; }
+  .ship-pill      { flex: 1; text-align: center; justify-content: center; }
+
+  /* Toasts */
+  .toast { padding: 10px 14px; font-size: 0.82rem; }
+
+  /* Section sub-text: don't constrain width on mobile */
+  .section-sub { max-width: 100%; }
+
+  /* Announcement bar */
+  .announcement-bar p { font-size: 0.78rem; padding: 0 12px; }
 }

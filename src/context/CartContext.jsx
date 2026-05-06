@@ -62,7 +62,10 @@ export function CartProvider({ children }) {
     setCart(prev => { const next = { ...prev }; delete next[key]; return next; });
   }, []);
 
-  const clearCart = useCallback(() => setCart({}), []);
+  const clearCart          = useCallback(() => setCart({}), []);
+  const clearShippingItems = useCallback(() =>
+    setCart(prev => Object.fromEntries(Object.entries(prev).filter(([, e]) => e.type !== 'shipping'))),
+  []);
   const openCart  = useCallback(() => setCartOpen(true),  []);
   const closeCart = useCallback(() => setCartOpen(false), []);
 
@@ -70,7 +73,7 @@ export function CartProvider({ children }) {
     <CartContext.Provider value={{
       cart, cartCount, cartTotal, hasMpItems,
       hasLocalItems, hasShippingItems,
-      addToCart, adjustQty, removeFromCart, clearCart,
+      addToCart, adjustQty, removeFromCart, clearCart, clearShippingItems,
       cartOpen, openCart, closeCart,
     }}>
       {children}
