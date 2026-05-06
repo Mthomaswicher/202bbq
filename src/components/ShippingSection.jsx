@@ -10,7 +10,7 @@ export default function ShippingSection() {
   const [qty, setQty]       = useState(1);
   const [justAdded, setJustAdded] = useState(false);
 
-  const { addToCart, openCart } = useCart();
+  const { addToCart, openCartCheckout } = useCart();
   const { addToast } = useToast();
 
   const total = pack.price * qty;
@@ -24,7 +24,7 @@ export default function ShippingSection() {
     addToast(`${product.name} — ${pack.label} (${flavor}) added to cart`, 'success');
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
-    openCart();
+    openCartCheckout();
   };
 
   return (

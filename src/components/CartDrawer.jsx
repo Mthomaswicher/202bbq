@@ -37,7 +37,7 @@ export default function CartDrawer() {
     hasLocalItems, hasShippingItems,
     adjustQty, removeFromCart,
     clearShippingItems,
-    cartOpen, closeCart,
+    cartOpen, cartInitialStep, closeCart,
   } = useCart();
   const { addToast } = useToast();
 
@@ -55,12 +55,14 @@ export default function CartDrawer() {
   const shippingEntries = Object.values(cart).filter(e => e.type === 'shipping');
   const shippingTotal   = shippingEntries.reduce((s, { price, qty }) => s + (price || 0) * qty, 0);
 
-  // Reset to cart step when drawer closes
+  // Sync step with context when drawer opens/closes
   useEffect(() => {
-    if (!cartOpen) {
+    if (cartOpen) {
+      setStep(cartInitialStep);
+    } else {
       setTimeout(() => { setStep('cart'); setFields(EMPTY_FIELDS); setErrors({}); setTouched({}); }, 300);
     }
-  }, [cartOpen]);
+  }, [cartOpen, cartInitialStep]);
 
   useEffect(() => {
     if (cartOpen) {

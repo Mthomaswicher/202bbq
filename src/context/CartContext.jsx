@@ -6,6 +6,7 @@ const CartContext = createContext(null);
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({});
   const [cartOpen, setCartOpen] = useState(false);
+  const [cartInitialStep, setCartInitialStep] = useState('cart');
 
   const entries = Object.values(cart);
 
@@ -66,15 +67,16 @@ export function CartProvider({ children }) {
   const clearShippingItems = useCallback(() =>
     setCart(prev => Object.fromEntries(Object.entries(prev).filter(([, e]) => e.type !== 'shipping'))),
   []);
-  const openCart  = useCallback(() => setCartOpen(true),  []);
-  const closeCart = useCallback(() => setCartOpen(false), []);
+  const openCart         = useCallback(() => { setCartInitialStep('cart');     setCartOpen(true); }, []);
+  const openCartCheckout = useCallback(() => { setCartInitialStep('checkout'); setCartOpen(true); }, []);
+  const closeCart        = useCallback(() => setCartOpen(false), []);
 
   return (
     <CartContext.Provider value={{
       cart, cartCount, cartTotal, hasMpItems,
       hasLocalItems, hasShippingItems,
       addToCart, adjustQty, removeFromCart, clearCart, clearShippingItems,
-      cartOpen, openCart, closeCart,
+      cartOpen, cartInitialStep, openCart, openCartCheckout, closeCart,
     }}>
       {children}
     </CartContext.Provider>
