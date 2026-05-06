@@ -122,23 +122,34 @@ export default function CartDrawer() {
     ).join('\n');
 
     const payload = {
-      _subject: `🚚 Shipping Order — ${fields.fname} ${fields.lname} (${ref})`,
-      _replyto: fields.email,
+      _subject:  `🚚 NEW Oxtail Order — ${fields.fname} ${fields.lname} — $${shippingTotal.toFixed(2)} (${ref})`,
+      _replyto:  fields.email,
+      '--- ORDER ---': '---',
       OrderRef:  ref,
-      Type:      'NATIONWIDE SHIPPING',
+      Items:     itemLines,
+      Subtotal:  `$${shippingTotal.toFixed(2)}`,
+      '--- CUSTOMER ---': '---',
       Name:      `${fields.fname} ${fields.lname}`,
       Email:     fields.email,
       Phone:     fields.phone,
-      Items:     itemLines,
-      Subtotal:  `$${shippingTotal.toFixed(2)}`,
-      ShipTo:    `${fields.address}, ${fields.city}, ${fields.state} ${fields.zip}`,
+      '--- SHIP TO ---': '---',
+      Address:   fields.address,
+      City:      fields.city,
+      State:     fields.state,
+      ZIP:       fields.zip,
+      '--- META ---': '---',
       Submitted: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = (import.meta.env.VITE_FORMSPREE_ORDERS || '').replace(/^<|>$/g, '').trim();
+    const shippingEndpoint = (import.meta.env.VITE_FORMSPREE_SHIPPING || '').replace(/^<|>$/g, '').trim();
+    const fallbackEndpoint = (import.meta.env.VITE_FORMSPREE_ORDERS  || '').replace(/^<|>$/g, '').trim();
+    const endpoint = (!shippingEndpoint || shippingEndpoint.includes('REPLACE_ME'))
+      ? fallbackEndpoint
+      : shippingEndpoint;
 
     if (!endpoint || endpoint.includes('REPLACE_ME')) {
-      console.log('202BBQ Shipping Order:', payload);
+      console.warn('202BBQ: VITE_FORMSPREE_SHIPPING is not configured. Set it in GitHub Secrets.');
+      console.log('Shipping order payload:', payload);
       await new Promise(r => setTimeout(r, 600));
     } else {
       try {
