@@ -573,14 +573,6 @@ fieldset { border: none; }
   color: var(--ember);
   margin-bottom: 20px;
 }
-.hero-eyebrow::before {
-  content: '';
-  display: block;
-  width: 28px;
-  height: 2px;
-  background: var(--ember);
-  border-radius: 1px;
-}
 .hero-headline {
   font-family: var(--font-display);
   font-size: clamp(2rem, 8vw, 7rem);

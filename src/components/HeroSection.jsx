@@ -41,7 +41,7 @@ export default function HeroSection() {
 
       <div className="container hero-layout">
         <div className="hero-content">
-          <div className="hero-eyebrow" aria-label="Location">Washington, D.C.</div>
+          <div className="hero-eyebrow">Next Drop: This Weekend</div>
 
           <h1 className="hero-headline">
             Where the Grill<br />
@@ -50,7 +50,14 @@ export default function HeroSection() {
 
           <p className="hero-sub">
             DC-born small-batch BBQ. Smoked low &amp; slow over hardwood, at your door, at the market, or at the popup.
-            Order trays online every week.
+            Order trays online every week.{' '}
+            <a
+              href="#catering"
+              className="inline-link"
+              onClick={e => { e.preventDefault(); smoothScrollTo('catering'); }}
+            >
+              Looking for catering?
+            </a>
           </p>
 
           <div className="hero-ctas">

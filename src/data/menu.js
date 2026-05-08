@@ -195,7 +195,7 @@ export const UPCOMING_EVENTS = [
     title: '202BBQ × Right Proper',
     date: 'Saturday, May 16 · 1–6pm',
     location: 'Right Proper Brewing · 920 Girard St. NE, Washington, DC 20017',
-    desc: "Kick off the collab at Right Proper Brewing. Come for the craft beer, stay for the smoked meats. We'll be set up outside from 1–6pm — first of many dates this spring and summer.",
+    desc: "Kick off the collab at Right Proper Brewing. Come for the craft beer, stay for the smoked meats. We'll be set up outside from 1–6pm. First of many dates this spring and summer.",
     featured: true,
     cta: 'https://rightproperbrewing.com',
     collab: 'right-proper',
@@ -221,7 +221,7 @@ export const UPCOMING_EVENTS = [
     title: '202BBQ × Right Proper',
     date: 'Saturday, June 6 · 1–6pm',
     location: 'Right Proper Brewing · 920 Girard St. NE, Washington, DC 20017',
-    desc: "Summer's here and so are we. Catch 202BBQ at Right Proper from 1–6pm. More dates dropping throughout the season — follow @202_bbq to stay up to date.",
+    desc: "Summer's here and so are we. Catch 202BBQ at Right Proper from 1–6pm. More dates dropping throughout the season. Follow @202_bbq to stay up to date.",
     featured: false,
     cta: 'https://rightproperbrewing.com',
     collab: 'right-proper',
@@ -262,7 +262,7 @@ export const SHIPPING_PRODUCTS = [
   {
     id: 'oxtail-softballs',
     name: 'Oxtail Softballs',
-    desc: "202BBQ's famous oxtail softballs — slow-smoked until fall-off-the-bone tender, then packed into softball-sized portions. Vacuum-sealed and shipped frozen right to your door. Reheat in under 20 minutes.",
+    desc: "202BBQ's famous oxtail softballs, slow-smoked until fall-off-the-bone tender, then packed into softball-sized portions. Vacuum-sealed and shipped frozen right to your door. Reheat in under 20 minutes.",
     flavors: ['Candy Red', 'Caribbean', 'Honey Garlic', 'Lemon Pepper'],
     packs: [
       { id: '5-pack',  label: '5-Pack',  price: 100, stripeLink: 'https://buy.stripe.com/5kQcN47g3eViggtcrT7IY03' },

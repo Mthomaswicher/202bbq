@@ -88,7 +88,7 @@ export default function ContactSection() {
     setSubmitting(true);
 
     const payload = {
-      _subject: `Custom / Catering Inquiry from ${fields.name} — ${EVENT_TYPES.find(t => t.v === eventType)?.label}`,
+      _subject: `Custom / Catering Inquiry from ${fields.name}: ${EVENT_TYPES.find(t => t.v === eventType)?.label}`,
       _replyto: fields.email,
       Name:       fields.name,
       Email:      fields.email,
@@ -142,7 +142,7 @@ export default function ContactSection() {
             </h2>
             <p className="contact-sub">
               Planning a corporate lunch, wedding reception, birthday party, or need something
-              special that's not on the menu? We do it all — smoked low &amp; slow, just for you.
+              special that's not on the menu? We do it all, smoked low &amp; slow, just for you.
             </p>
             <ul className="contact-features">
               {[
@@ -230,7 +230,7 @@ export default function ContactSection() {
                       name="message"
                       rows={4}
                       maxLength={1000}
-                      placeholder="Tell us about your event — what you're envisioning, any dietary needs, venue details, or questions you have."
+                      placeholder="Tell us about your event: what you're envisioning, any dietary needs, venue details, or questions you have."
                       value={fields.message}
                       onChange={e => setField('message', e.target.value)}
                       onBlur={() => blur('message')}

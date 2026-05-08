@@ -15,7 +15,7 @@ const EVENT_TYPES = [
 ];
 
 const SERVICE_TYPES = [
-  { v: 'dropoff',    label: 'Drop-Off',            sub: 'We drop trays & setup — you serve' },
+  { v: 'dropoff',    label: 'Drop-Off',            sub: 'We drop trays & setup, you serve' },
   { v: 'buffet',     label: 'Buffet Setup',        sub: 'Trays, chafers & serving gear on-site' },
   { v: 'fullservice', label: 'Full-Service / On-Site Smoking', sub: 'We cook, serve & clean up' },
 ];
@@ -99,7 +99,7 @@ export default function CateringSection() {
     const serviceLabel = SERVICE_TYPES.find(s => s.v === serviceType)?.label || serviceType;
 
     const payload = {
-      _subject: `New Catering Inquiry: ${fields.eventType} for ${fields.guests} — ${fields.fname} ${fields.lname} (${thisRef})`,
+      _subject: `New Catering Inquiry: ${fields.eventType} for ${fields.guests}, ${fields.fname} ${fields.lname} (${thisRef})`,
       _replyto: fields.email,
       CateringRef: thisRef,
       Name:        `${fields.fname} ${fields.lname}`,
@@ -160,7 +160,7 @@ export default function CateringSection() {
         <div className="container">
           <div className="order-success" role="alert" aria-live="assertive">
             <h2 ref={successRef} tabIndex={-1}>Catering Inquiry Received!</h2>
-            <p>Thanks — we got your event details. We'll reach out within a few hours with a custom quote and next steps.</p>
+            <p>Thanks! We got your event details. We'll reach out within a few hours with a custom quote and next steps.</p>
             {cateringRef && (
               <p className="deposit-order-ref">
                 <span>Inquiry reference</span>
@@ -186,7 +186,7 @@ export default function CateringSection() {
           <p className="section-eyebrow">Catering</p>
           <h2 className="section-title" id="catering-heading">Book 202BBQ for Your Event</h2>
           <p className="section-sub">
-            Weddings, corporate events, birthdays, backyard bashes — tell us about your event and we'll send a custom quote.
+            Weddings, corporate events, birthdays, backyard bashes. Tell us about your event and we'll send a custom quote.
             Questions? Call <a href="tel:2029978912" className="inline-link">202-997-8912</a>.
           </p>
         </div>

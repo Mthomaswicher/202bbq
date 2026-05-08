@@ -70,10 +70,10 @@ export default function EventsSection() {
               <span className="collab-banner-eyebrow">New Popup Collab</span>
               <p>
                 202BBQ is teaming up with{' '}
-                <a href="https://rightproper.com" target="_blank" rel="noopener noreferrer" className="inline-link">
+                <a href="https://rightproperbrewing.com" target="_blank" rel="noopener noreferrer" className="inline-link">
                   Right Proper Brewing
                 </a>{' '}
-                for a series of pop-ups this spring and summer. Grab a pint, grab some 'cue — more dates dropping soon.
+                for a series of pop-ups this spring and summer. Grab a pint, grab some 'cue. More dates dropping soon.
               </p>
             </div>
           </div>

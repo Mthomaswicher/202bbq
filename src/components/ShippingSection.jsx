@@ -21,7 +21,7 @@ export default function ShippingSection() {
       pack.id,
       { type: 'shipping', flavor, price: pack.price, stripeLink: pack.stripeLink, qty }
     );
-    addToast(`${product.name} — ${pack.label} (${flavor}) added to cart`, 'success');
+    addToast(`${product.name}, ${pack.label} (${flavor}) added to cart`, 'success');
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
     openCartCheckout();

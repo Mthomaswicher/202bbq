@@ -118,11 +118,11 @@ export default function CartDrawer() {
     const ref = makeShipRef();
 
     const itemLines = shippingEntries.map(({ item, size, flavor, price, qty }) =>
-      `${qty}× ${item.name} — ${size} — ${flavor}: $${(price * qty).toFixed(2)}`
+      `${qty}x ${item.name}, ${size}, ${flavor}: $${(price * qty).toFixed(2)}`
     ).join('\n');
 
     const payload = {
-      _subject:  `🚚 NEW Oxtail Order — ${fields.fname} ${fields.lname} — $${shippingTotal.toFixed(2)} (${ref})`,
+      _subject:  `🚚 NEW Oxtail Order: ${fields.fname} ${fields.lname}, $${shippingTotal.toFixed(2)} (${ref})`,
       _replyto:  fields.email,
       '--- ORDER ---': '---',
       OrderRef:  ref,
@@ -276,7 +276,7 @@ export default function CartDrawer() {
               <div className="checkout-recap">
                 {shippingEntries.map(({ item, size, flavor, price, qty }, i) => (
                   <div key={i} className="checkout-recap-row">
-                    <span>{qty}× {size.charAt(0).toUpperCase() + size.slice(1)} — {flavor}</span>
+                    <span>{qty}× {size.charAt(0).toUpperCase() + size.slice(1)}, {flavor}</span>
                     <span>${(price * qty).toFixed(2)}</span>
                   </div>
                 ))}
@@ -338,7 +338,7 @@ export default function CartDrawer() {
             )}
             {hasShippingItems && (
               <button className="btn btn-full cart-ship-pay-btn" onClick={() => setStep('checkout')}>
-                {hasLocalItems ? 'Checkout Shipped Items →' : 'Checkout — Enter Shipping Info'}
+                {hasLocalItems ? 'Checkout Shipped Items →' : 'Checkout: Enter Shipping Info'}
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ marginLeft: 8 }}>
                   <path d="M7 17L17 7M17 7H8M17 7v9"/>
                 </svg>
@@ -362,7 +362,7 @@ export default function CartDrawer() {
               disabled={submitting}
               aria-busy={submitting}
             >
-              {submitting ? 'Saving…' : `Continue to Payment — $${shippingTotal.toFixed(2)}`}
+              {submitting ? 'Saving…' : `Continue to Payment: $${shippingTotal.toFixed(2)}`}
               {!submitting && (
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true" style={{ marginLeft: 8 }}>
                   <path d="M7 17L17 7M17 7H8M17 7v9"/>
