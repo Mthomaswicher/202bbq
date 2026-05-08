@@ -207,7 +207,7 @@ export default function CartDrawer() {
         aria-hidden={!cartOpen}
       >
         {/* ── Header ── */}
-        <div className="cart-header">
+        <div className={`cart-header${step === 'checkout' ? ' cart-header--checkout' : ''}`}>
           {step === 'checkout' ? (
             <button className="cart-back-btn" onClick={() => setStep('cart')} aria-label="Back to cart">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
@@ -218,7 +218,7 @@ export default function CartDrawer() {
           ) : (
             <h2>Your Cart {cartCount > 0 && <span style={{ color: 'var(--ember)', fontSize: '1.1rem' }}>({cartCount})</span>}</h2>
           )}
-          {step === 'checkout' && <h2 style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)', fontSize: '1rem', fontWeight: 700 }}>Shipping Info</h2>}
+          {step === 'checkout' && <h2 className="cart-checkout-title">Shipping Info</h2>}
           <button ref={closeRef} className="cart-close" onClick={closeCart} aria-label="Close cart">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>

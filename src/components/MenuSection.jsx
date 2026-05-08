@@ -151,20 +151,22 @@ export default function MenuSection() {
         </div>
 
         {/* Tabs */}
-        <div className="menu-tabs" role="tablist" aria-label="Menu categories">
-          {MENU_CATEGORIES.map(({ key, label }) => (
-            <button
-              key={key}
-              role="tab"
-              className={`menu-tab${activeTab === key ? ' active' : ''}`}
-              aria-selected={activeTab === key}
-              aria-controls={`panel-${key}`}
-              id={`tab-${key}`}
-              onClick={() => setActiveTab(key)}
-            >
-              {label}
-            </button>
-          ))}
+        <div className="menu-tabs-wrap">
+          <div className="menu-tabs" role="tablist" aria-label="Menu categories">
+            {MENU_CATEGORIES.map(({ key, label }) => (
+              <button
+                key={key}
+                role="tab"
+                className={`menu-tab${activeTab === key ? ' active' : ''}`}
+                aria-selected={activeTab === key}
+                aria-controls={`panel-${key}`}
+                id={`tab-${key}`}
+                onClick={() => setActiveTab(key)}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Panels */}
