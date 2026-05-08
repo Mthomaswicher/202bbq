@@ -325,7 +325,7 @@ export default function OrderSection() {
           <p className="section-eyebrow">Place Your Order</p>
           <h2 className="section-title" id="order-heading">Order for This Weekend</h2>
           <p className="section-sub">
-            Orders accepted <strong>Monday–Thursday</strong>. Pickup or delivery <strong>Saturday &amp; Sunday</strong> in the DMV.{' '}
+            Orders accepted <strong>Monday–Thursday</strong>. Pickup, local DMV delivery, or nationwide shipping <strong>Saturday &amp; Sunday</strong>.{' '}
             Questions? Call <a href="tel:2029978912" className="inline-link">202-997-8912</a>.
           </p>
         </div>
@@ -358,7 +358,7 @@ export default function OrderSection() {
                   How would you like your order? <span style={{ color: 'var(--ember)' }}>*</span>
                 </p>
                 <div className="radio-group">
-                  {[{ v: 'pickup', label: 'Pickup', sub: 'Free · Address confirmed on order' }, { v: 'delivery', label: 'Delivery', sub: 'DMV area · Delivery fee may apply' }].map(opt => (
+                  {[{ v: 'pickup', label: 'Pickup', sub: 'Free · Address confirmed on order' }, { v: 'delivery', label: 'Delivery / Shipping', sub: 'DMV local delivery or nationwide · Fees vary' }].map(opt => (
                     <label key={opt.v} className="radio-card">
                       <input type="radio" name="fulfillment" value={opt.v} checked={fulfillment === opt.v}
                         onChange={() => { setFulfillment(opt.v); setIsDelivery(opt.v === 'delivery'); }} />

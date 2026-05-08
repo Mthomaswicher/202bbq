@@ -17,7 +17,7 @@ const STEPS = [
   {
     num: '04',
     title: 'Pickup or Delivery',
-    body: <>Your order is ready <strong>Saturday or Sunday</strong>. Pickup from us or delivered right to you anywhere in the DMV.</>,
+    body: <>Your order is ready <strong>Saturday or Sunday</strong>. Pickup from us, delivered locally in the DMV, or shipped nationwide.</>,
   },
 ];
 
