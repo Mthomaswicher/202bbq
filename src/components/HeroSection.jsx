@@ -41,7 +41,7 @@ export default function HeroSection() {
 
       <div className="container hero-layout">
         <div className="hero-content">
-          <div className="hero-eyebrow">Next Drop: This Weekend</div>
+          <div className="hero-eyebrow" aria-label="Location">Washington, D.C.</div>
 
           <h1 className="hero-headline">
             Where the Grill<br />
@@ -131,7 +131,7 @@ export default function HeroSection() {
             <span className="hero-pin-flame">🔥</span>
             <div>
               <strong>Next drop</strong>
-              <span>This Saturday</span>
+              <span>This Weekend</span>
             </div>
           </div>
         </div>
