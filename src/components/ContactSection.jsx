@@ -162,7 +162,7 @@ export default function ContactSection() {
             </ul>
             <p className="contact-or-call">
               Or call us directly:&nbsp;
-              <a href="tel:2029978912" className="inline-link">202-997-8912</a>
+              <a href="tel:2027345621" className="inline-link">202-734-5621</a>
             </p>
           </div>
 

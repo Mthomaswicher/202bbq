@@ -47,7 +47,7 @@ export default function FaqSection() {
           <h2 className="section-title" id="faq-heading">Frequently Asked</h2>
           <p className="section-sub">
             Everything you need to know before your first order. Still have questions?{' '}
-            <a href="tel:2029978912" className="inline-link">Call us</a>.
+            <a href="tel:2027345621" className="inline-link">Call us</a>.
           </p>
         </div>
 

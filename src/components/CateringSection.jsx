@@ -130,12 +130,12 @@ export default function CateringSection() {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           setSubmitting(false);
-          addToast(data?.error || "Submit failed. Please try again or call 202-997-8912.", 'error');
+          addToast(data?.error || "Submit failed. Please try again or call 202-734-5621.", 'error');
           return;
         }
       } catch {
         setSubmitting(false);
-        addToast("Network issue. Check your connection, try again, or call 202-997-8912.", 'error');
+        addToast("Network issue. Check your connection, try again, or call 202-734-5621.", 'error');
         return;
       }
     }
@@ -187,7 +187,7 @@ export default function CateringSection() {
           <h2 className="section-title" id="catering-heading">Book 202BBQ for Your Event</h2>
           <p className="section-sub">
             Weddings, corporate events, birthdays, backyard bashes. Tell us about your event and we'll send a custom quote.
-            Questions? Call <a href="tel:2029978912" className="inline-link">202-997-8912</a>.
+            Questions? Call <a href="tel:2027345621" className="inline-link">202-734-5621</a>.
           </p>
         </div>
 

@@ -128,7 +128,7 @@ export default function Header() {
               </a>
             </li>
             <li>
-              <a href="tel:2029978912" className="nav-icon-btn" aria-label="Call 202-997-8912"
+              <a href="tel:2027345621" className="nav-icon-btn" aria-label="Call 202-734-5621"
                  onClick={() => track('contact', { method: 'phone', location: 'header' })}>
                 <IconPhone />
               </a>
@@ -200,7 +200,7 @@ export default function Header() {
             {label}
           </a>
         ))}
-        <a href="tel:2029978912" onClick={() => { setMenuOpen(false); track('contact', { method: 'phone', location: 'mobile_nav' }); }}>📞 202-997-8912</a>
+        <a href="tel:2027345621" onClick={() => { setMenuOpen(false); track('contact', { method: 'phone', location: 'mobile_nav' }); }}>📞 202-734-5621</a>
         <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" onClick={() => { setMenuOpen(false); track('instagram_click', { location: 'mobile_nav' }); }}>
           Instagram @202_bbq
         </a>

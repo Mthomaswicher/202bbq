@@ -190,7 +190,7 @@ export default function MenuSection() {
 
         <p className="menu-note">
           * Full Tray serves ≈ 30–40 people &nbsp;·&nbsp; MP = Market Price, call{' '}
-          <a href="tel:2029978912" className="inline-link">202-997-8912</a> to quote
+          <a href="tel:2027345621" className="inline-link">202-734-5621</a> to quote
         </p>
       </div>
     </section>

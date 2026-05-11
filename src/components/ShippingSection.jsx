@@ -29,6 +29,9 @@ export default function ShippingSection() {
 
   return (
     <section className="shipping-section" id="shipping" aria-labelledby="shipping-heading">
+      <div className="ship-hero-img-wrap">
+        <img src="/photos/oxtail-smoker.webp" alt="Oxtail softballs smoking on three racks in an open smoker" className="ship-hero-img" />
+      </div>
       <div className="container">
         <div className="shipping-layout">
 

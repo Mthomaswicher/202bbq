@@ -2,7 +2,7 @@ const STEPS = [
   {
     num: '01',
     title: 'Browse & Order',
-    body: <>Browse the menu and add trays to your cart, then fill out the order form below. Or call <a href="tel:2029978912">202-997-8912</a>. Orders close <strong>Thursday night</strong>. Slots are limited.</>,
+    body: <>Browse the menu and add trays to your cart, then fill out the order form below. Or call <a href="tel:2027345621">202-734-5621</a>. Orders close <strong>Thursday night</strong>. Slots are limited.</>,
   },
   {
     num: '02',

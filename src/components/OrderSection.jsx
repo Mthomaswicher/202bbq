@@ -181,12 +181,12 @@ export default function OrderSection() {
         if (!res.ok) {
           const data = await res.json().catch(() => ({}));
           setSubmitting(false);
-          addToast(data?.error || "Submit failed. Please try again or call 202-997-8912 to order by phone.", 'error');
+          addToast(data?.error || "Submit failed. Please try again or call 202-734-5621 to order by phone.", 'error');
           return;
         }
       } catch (err) {
         setSubmitting(false);
-        addToast("Blocked by an ad blocker or browser extension. Try disabling it, or call/text 202-997-8912 to order.", 'error');
+        addToast("Blocked by an ad blocker or browser extension. Try disabling it, or call/text 202-734-5621 to order.", 'error');
         return;
       }
     }
@@ -271,15 +271,15 @@ export default function OrderSection() {
                     <ul className="deposit-methods" aria-label="Alternate payment options">
                       <li>
                         <span className="deposit-method-label">CashApp</span>
-                        <span className="deposit-method-value">202-997-8912</span>
+                        <span className="deposit-method-value">202-734-5621</span>
                       </li>
                       <li>
                         <span className="deposit-method-label">Venmo</span>
-                        <span className="deposit-method-value">202-997-8912</span>
+                        <span className="deposit-method-value">202-734-5621</span>
                       </li>
                       <li>
                         <span className="deposit-method-label">Zelle</span>
-                        <span className="deposit-method-value">202-997-8912</span>
+                        <span className="deposit-method-value">202-734-5621</span>
                       </li>
                     </ul>
                     <p className="deposit-notice-note">Include your order reference in the payment note so we can match it to your order.</p>
@@ -290,15 +290,15 @@ export default function OrderSection() {
                   <ul className="deposit-methods" aria-label="Payment options">
                     <li>
                       <span className="deposit-method-label">CashApp</span>
-                      <span className="deposit-method-value">202-997-8912</span>
+                      <span className="deposit-method-value">202-734-5621</span>
                     </li>
                     <li>
                       <span className="deposit-method-label">Venmo</span>
-                      <span className="deposit-method-value">202-997-8912</span>
+                      <span className="deposit-method-value">202-734-5621</span>
                     </li>
                     <li>
                       <span className="deposit-method-label">Zelle</span>
-                      <span className="deposit-method-value">202-997-8912</span>
+                      <span className="deposit-method-value">202-734-5621</span>
                     </li>
                   </ul>
                   <p className="deposit-notice-note">Include your name in the payment note so we can match it to your order.</p>
@@ -326,7 +326,7 @@ export default function OrderSection() {
           <h2 className="section-title" id="order-heading">Order for This Weekend</h2>
           <p className="section-sub">
             Orders accepted <strong>Monday–Thursday</strong>. Pickup, local DMV delivery, or nationwide shipping <strong>Saturday &amp; Sunday</strong>.{' '}
-            Questions? Call <a href="tel:2029978912" className="inline-link">202-997-8912</a>.
+            Questions? Call <a href="tel:2027345621" className="inline-link">202-734-5621</a>.
           </p>
         </div>
 
