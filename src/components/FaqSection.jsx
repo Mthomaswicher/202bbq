@@ -1,62 +1,37 @@
 import { useState } from 'react';
-import { FAQS } from '../data/menu.js';
+import { FAQS } from '../data/faqs.js';
+import { SITE } from '../data/site.js';
+import Icon from './ui/Icon.jsx';
+import { Section, PhoneLink } from './ui/Bits.jsx';
 
-function ChevronDown() {
+function FaqItem({ faq, open, onToggle }) {
+  const panelId = `faq-${faq.id}`;
   return (
-    <svg className="faq-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" aria-hidden="true">
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function FaqItem({ faq, index }) {
-  const [open, setOpen] = useState(false);
-  const id = `faq-${index}`;
-
-  return (
-    <div className={`faq-item${open ? ' open' : ''}`}>
-      <button
-        className="faq-question"
-        onClick={() => setOpen(o => !o)}
-        aria-expanded={open}
-        aria-controls={id}
-        id={`${id}-btn`}
-      >
-        {faq.q}
-        <ChevronDown />
-      </button>
-      <div
-        className="faq-answer"
-        id={id}
-        role="region"
-        aria-labelledby={`${id}-btn`}
-        style={{ maxHeight: open ? '400px' : '0' }}
-      >
-        <div className="faq-answer-inner">{faq.a}</div>
+    <li className={`faq-item${open ? ' is-open' : ''}`}>
+      <h3 className="faq-q">
+        <button type="button" aria-expanded={open} aria-controls={panelId} id={`${panelId}-btn`} onClick={onToggle}>
+          <span>{faq.q}</span>
+          <Icon name="chevronDown" size={24} />
+        </button>
+      </h3>
+      <div className="faq-answer" id={panelId} hidden={!open}>
+        <div className="faq-answer-inner prose">
+          <p>{faq.a}</p>
+          <p className="faq-sig">— {SITE.owner}</p>
+        </div>
       </div>
-    </div>
+    </li>
   );
 }
 
 export default function FaqSection() {
+  const [openId, setOpenId] = useState(FAQS[0]?.id ?? null);
   return (
-    <section className="faq-section" aria-labelledby="faq-heading">
-      <div className="container">
-        <div className="section-header">
-          <p className="section-eyebrow">Got Questions?</p>
-          <h2 className="section-title" id="faq-heading">Frequently Asked</h2>
-          <p className="section-sub">
-            Everything you need to know before your first order. Still have questions?{' '}
-            <a href="tel:2027345621" className="inline-link">Call us</a>.
-          </p>
-        </div>
-
-        <dl className="faq-list">
-          {FAQS.map((faq, i) => (
-            <FaqItem key={i} faq={faq} index={i} />
-          ))}
-        </dl>
-      </div>
-    </section>
+    <Section id="faq" title="Questions" className="faq" grid
+      lede={<>Still wondering? Call <PhoneLink location="faq" /> — a real person answers.</>}>
+      <ul className="faq-list">
+        {FAQS.map(f => <FaqItem key={f.id} faq={f} open={openId === f.id} onToggle={() => setOpenId(openId === f.id ? null : f.id)} />)}
+      </ul>
+    </Section>
   );
 }

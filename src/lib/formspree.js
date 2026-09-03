@@ -1,21 +1,17 @@
 // Shared Formspree helpers.
 //
 // Endpoints are injected at build time from GitHub Secrets (see
-// .github/workflows/deploy.yml). If a secret is missing, Vite inlines
-// `undefined` and the form has nowhere to send to. When that happens we must
-// FAIL LOUDLY: a form that quietly shows a success screen and drops the
-// submission loses real orders without anyone noticing.
+// .github/workflows/deploy.yml) and resolved in data/site.js. If one is
+// missing we FAIL LOUDLY: a form that quietly shows a success screen and drops
+// the submission loses real orders without anyone noticing.
+
+import { SITE } from '../data/site.js';
 
 const PLACEHOLDERS = ['REPLACE_ME', 'YOUR_', 'undefined', 'null'];
-
 const clean = raw => String(raw ?? '').replace(/^<|>$/g, '').trim();
+const isUsable = value => Boolean(value) && !PLACEHOLDERS.some(p => value.includes(p));
 
-const isUsable = value =>
-  Boolean(value) && !PLACEHOLDERS.some(p => value.includes(p));
-
-// Returns the first usable endpoint from the candidates, or '' if none is
-// configured. Later candidates act as fallbacks so a single missing secret
-// degrades to another inbox instead of silently discarding the submission.
+/** First usable endpoint from the candidates, or ''. Later candidates are fallbacks. */
 export function resolveEndpoint(...candidates) {
   for (const candidate of candidates) {
     const value = clean(candidate);
@@ -24,37 +20,39 @@ export function resolveEndpoint(...candidates) {
   return '';
 }
 
-export const FALLBACK_PHONE = '202-734-5621';
-
 export const NOT_CONFIGURED_MESSAGE =
-  `We couldn't send that from the site. Please call or text ${FALLBACK_PHONE} so we don't miss your request.`;
+  `We couldn't send this from the site. Call or text ${SITE.phone} and we'll take it by phone.`;
+export const FAILED_MESSAGE =
+  `We couldn't send this. Try again, or call ${SITE.phone} and we'll take it by phone.`;
 
-// POSTs the payload and reports the outcome. Never throws.
-export async function submitToFormspree(endpoint, payload) {
+/**
+ * POST the payload as JSON with a 12-second timeout. Never throws.
+ * Returns { ok } or { ok:false, error, notConfigured?, network?, timeout? }.
+ */
+export async function submitToFormspree(endpoint, payload, { timeoutMs = 12000 } = {}) {
   if (!endpoint) {
     console.error('202BBQ: no Formspree endpoint configured; submission not sent.', payload);
     return { ok: false, notConfigured: true, error: NOT_CONFIGURED_MESSAGE };
   }
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify(payload),
+      signal: controller.signal,
+      keepalive: true,
     });
     if (!res.ok) {
       const data = await res.json().catch(() => ({}));
       const detail = data?.error || data?.errors?.[0]?.message;
-      return {
-        ok: false,
-        error: detail || `Submit failed. Please try again or call ${FALLBACK_PHONE} to reach us directly.`,
-      };
+      return { ok: false, error: detail ? `${detail}. ${FAILED_MESSAGE}` : FAILED_MESSAGE };
     }
     return { ok: true };
-  } catch {
-    return {
-      ok: false,
-      network: true,
-      error: `Couldn't reach our server — an ad blocker or your connection may be blocking it. Try again, or call/text ${FALLBACK_PHONE}.`,
-    };
+  } catch (err) {
+    return { ok: false, network: true, timeout: err?.name === 'AbortError', error: FAILED_MESSAGE };
+  } finally {
+    clearTimeout(timer);
   }
 }

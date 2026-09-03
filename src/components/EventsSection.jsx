@@ -1,123 +1,51 @@
-import { useState } from 'react';
-import { UPCOMING_EVENTS, PAST_EVENTS } from '../data/menu.js';
+import { splitEvents } from '../data/events.js';
+import { SITE } from '../data/site.js';
+import { nowET, fmtLong } from '../lib/time.js';
+import Picture from './ui/Picture.jsx';
+import Icon from './ui/Icon.jsx';
+import { Section } from './ui/Bits.jsx';
 
-function CalendarIcon() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <rect x="3" y="4" width="18" height="18" rx="2"/>
-      <line x1="16" y1="2" x2="16" y2="6"/>
-      <line x1="8"  y1="2" x2="8"  y2="6"/>
-      <line x1="3"  y1="10" x2="21" y2="10"/>
-    </svg>
-  );
+function dateLabel(e) {
+  if (e.start === e.end) return fmtLong(e.start);
+  const [, m1, d1] = e.start.split('-').map(Number);
+  const [, m2, d2] = e.end.split('-').map(Number);
+  const M = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return m1 === m2 ? `${M[m1 - 1]} ${d1}–${d2}, ${e.start.slice(0, 4)}` : `${M[m1 - 1]} ${d1} – ${M[m2 - 1]} ${d2}, ${e.start.slice(0, 4)}`;
 }
 
-function MapIcon() {
+function EventRow({ e, past }) {
   return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-      <circle cx="12" cy="10" r="3"/>
-    </svg>
+    <li className="event">
+      <div className="event-date mono">
+        <time dateTime={e.start}>{dateLabel(e)}</time>
+        {e.time && <span>{e.time}</span>}
+      </div>
+      <div className="event-body">
+        <h4>{e.title}</h4>
+        <p className="event-place">{e.venue}{e.address ? ` · ${e.address}` : ''}</p>
+        {e.desc && <p>{e.desc}</p>}
+        {e.url && !past && <a href={e.url} target="_blank" rel="noopener noreferrer" className="event-link">{e.linkLabel ?? 'More'} <Icon name="external" size={18} /></a>}
+      </div>
+      {e.partner === 'right-proper' && !past && <Picture name="right-proper" alt="Right Proper Brewing Company" sizes="160px" className="event-partner" radius={false} />}
+    </li>
   );
 }
 
 export default function EventsSection() {
-  const [activeTab, setActiveTab] = useState('upcoming');
-  const isPast = activeTab === 'past';
-  const events = isPast ? PAST_EVENTS : UPCOMING_EVENTS;
-  const showCollabBanner = !isPast && UPCOMING_EVENTS.some(e => e.collab === 'right-proper');
-
+  const { upcoming, past } = splitEvents(nowET().ymd);
   return (
-    <section className="events-section" id="events" aria-labelledby="events-heading">
-      <div className="container">
-        <div className="section-header">
-          <p className="section-eyebrow">Find Us in the Wild</p>
-          <h2 className="section-title" id="events-heading">Popups, Markets &amp; More</h2>
-          <p className="section-sub">
-            Beyond the online order, catch us live around the city. Follow{' '}
-            <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="inline-link">@202_bbq</a>{' '}
-            for real-time location drops.
-          </p>
-        </div>
-
-        <div className="events-tabs" role="tablist" aria-label="Events tabs">
-          <button
-            role="tab"
-            aria-selected={activeTab === 'upcoming'}
-            className={`events-tab${activeTab === 'upcoming' ? ' active' : ''}`}
-            onClick={() => setActiveTab('upcoming')}
-          >
-            Upcoming
-          </button>
-          <button
-            role="tab"
-            aria-selected={activeTab === 'past'}
-            className={`events-tab${activeTab === 'past' ? ' active' : ''}`}
-            onClick={() => setActiveTab('past')}
-          >
-            Past Events
-          </button>
-        </div>
-
-        {showCollabBanner && (
-          <div className="collab-banner">
-            <img
-              src="/photos/right-proper-logo.png"
-              alt="Right Proper Brewing Company"
-              className="collab-banner-logo"
-            />
-            <div className="collab-banner-text">
-              <span className="collab-banner-eyebrow">New Popup Collab</span>
-              <p>
-                202BBQ is teaming up with{' '}
-                <a href="https://rightproperbrewing.com" target="_blank" rel="noopener noreferrer" className="inline-link">
-                  Right Proper Brewing
-                </a>{' '}
-                for a series of pop-ups this spring and summer. Grab a pint, grab some 'cue. More dates dropping soon.
-              </p>
-            </div>
-          </div>
-        )}
-
-        {events.length === 0 ? (
-          <p className="events-empty">No events to show here yet.</p>
-        ) : (
-          <div className={`events-grid${isPast ? ' past-tab' : ''}`}>
-            {events.map(event => (
-              <article
-                key={event.id}
-                className={[
-                  'event-card',
-                  event.collab ? 'collab' : event.featured ? 'featured' : '',
-                ].filter(Boolean).join(' ')}
-                aria-label={event.title}
-              >
-                <span className={`event-badge ${event.badgeClass}`}>{event.badge}</span>
-
-                <h3>{event.title}</h3>
-
-                <div className="event-meta">
-                  <span><CalendarIcon /> {event.date}</span>
-                  <span><MapIcon /> {event.location}</span>
-                </div>
-
-                <p>{event.desc}</p>
-
-                {event.cta && (
-                  <a
-                    href={event.cta}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="btn btn-ghost event-cta"
-                  >
-                    {event.ctaLabel || 'Learn More'}
-                  </a>
-                )}
-              </article>
-            ))}
-          </div>
-        )}
-      </div>
-    </section>
+    <Section id="events" title="Where to find us" className="events">
+      {upcoming.length > 0 ? (
+        <ul className="event-list">{upcoming.map(e => <EventRow key={e.id} e={e} />)}</ul>
+      ) : (
+        <p className="events-empty">No popups on the calendar right now. We post dates on Instagram first — <a href={SITE.instagramUrl} target="_blank" rel="noopener noreferrer">@{SITE.instagram}</a>.</p>
+      )}
+      {past.length > 0 && (
+        <details className="disclosure events-past">
+          <summary className="btn btn-secondary"><Icon name="chevronDown" size={22} /> Past popups ({past.length})</summary>
+          <ul className="event-list past">{past.map(e => <EventRow key={e.id} e={e} past />)}</ul>
+        </details>
+      )}
+    </Section>
   );
 }

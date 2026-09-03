@@ -1,124 +1,72 @@
 import { useState } from 'react';
-import { SHIPPING_PRODUCTS } from '../data/menu.js';
-import { useCart } from '../context/CartContext.jsx';
-import { useToast } from '../context/ToastContext.jsx';
+import { OXTAIL_SOFTBALLS as P } from '../data/products.js';
+import { SITE } from '../data/site.js';
+import { money } from '../lib/format.js';
+import { track } from '../lib/analytics.js';
+import { RadioCardGroup } from './ui/Field.jsx';
+import Picture from './ui/Picture.jsx';
+import Icon from './ui/Icon.jsx';
+import { PhoneLink, Tag } from './ui/Bits.jsx';
+
+// Checkout is on Stripe. The flavour chosen here rides along as
+// client_reference_id (Stripe accepts [A-Za-z0-9_-]); the owner checklist also
+// adds a required "Flavour" dropdown on the Payment Link for redundancy.
 
 export default function ShippingSection() {
-  const product = SHIPPING_PRODUCTS[0];
-  const [pack, setPack]     = useState(product.packs[0]);
-  const [flavor, setFlavor] = useState(product.flavors[0]);
-  const [qty, setQty]       = useState(1);
-  const [justAdded, setJustAdded] = useState(false);
+  const [flavour, setFlavour] = useState('');
+  const [error, setError] = useState('');
+  const facts = [
+    P.facts.freeShipping && 'Free shipping on every order',
+    P.facts.packaging,
+    P.facts.sealed,
+    P.facts.reheatMinutes && `Reheats in under ${P.facts.reheatMinutes} minutes`,
+    P.facts.shipDays,
+    P.facts.transitDays && `Arrives in about ${P.facts.transitDays} days`,
+    P.facts.weightPerBall && `${P.facts.weightPerBall} per softball`,
+  ].filter(Boolean);
 
-  const { addToCart, openCartCheckout } = useCart();
-  const { addToast } = useToast();
-
-  const total = pack.price * qty;
-
-  const handleAddToCart = () => {
-    addToCart(
-      { id: product.id, name: product.name, emoji: '🍲' },
-      pack.id,
-      { type: 'shipping', flavor, price: pack.price, stripeLink: pack.stripeLink, qty }
-    );
-    addToast(`${product.name}, ${pack.label} (${flavor}) added to cart`, 'success');
-    setJustAdded(true);
-    setTimeout(() => setJustAdded(false), 1500);
-    openCartCheckout();
+  const buyUrl = pack => {
+    const u = new URL(pack.stripeLink);
+    if (flavour) u.searchParams.set('client_reference_id', `${flavour}-${pack.id}`);
+    u.searchParams.set('utm_source', '202barbecue.com');
+    u.searchParams.set('utm_medium', 'softballs');
+    return u.toString();
+  };
+  const onBuy = (e, pack) => {
+    if (!flavour) { e.preventDefault(); setError('Choose a flavour first.'); document.getElementById('flavour')?.focus(); return; }
+    track('begin_checkout', { currency: 'USD', value: pack.price, items: [{ item_id: `${P.id}-${pack.id}`, item_name: `${P.name} ${pack.label}`, item_variant: flavour, price: pack.price, quantity: 1 }] });
   };
 
   return (
-    <section className="shipping-section" id="shipping" aria-labelledby="shipping-heading">
-      <div className="ship-hero-img-wrap">
-        <img src="/photos/oxtail-smoker.webp" alt="Oxtail softballs smoking on three racks in an open smoker" className="ship-hero-img" />
-      </div>
+    <section id="shipping" className="section shipping" aria-labelledby="shipping-heading">
+      <p className="band bridge"><span className="container">Not in DC? {P.name} ship nationwide.</span></p>
       <div className="container">
-        <div className="shipping-layout">
-
-          {/* Left: product info */}
-          <div className="ship-product-panel">
-            <p className="ship-eyebrow">Now Shipping Nationwide 🚚</p>
-            <h2 className="ship-product-title" id="shipping-heading">{product.name}</h2>
-            <p className="ship-product-desc">{product.desc}</p>
-            <ul className="ship-trust-list">
-              <li>🧊 Ships in insulated, frozen packaging</li>
-              <li>🔒 Vacuum-sealed for freshness</li>
-              <li>⏱️ Reheats in under 20 minutes</li>
-              <li>🌎 Delivered anywhere in the US</li>
+        <div className="shipping-grid">
+          <div className="shipping-text">
+            <div className="section-head">
+              <h2 id="shipping-heading" tabIndex={-1}>{P.name}</h2>
+              <p className="lede">{P.desc}</p>
+            </div>
+            {P.image && <Picture name={P.image} alt={`${P.name} on the smoker`} sizes="(min-width: 1024px) 40vw, 100vw" />}
+            <ul className="facts mono">
+              {facts.map(f => <li key={f}><Icon name="check" size={18} /> {f}</li>)}
             </ul>
           </div>
 
-          {/* Right: selector panel */}
-          <div className="ship-selector-panel">
-            <div className="ship-free-shipping-badge">✓ FREE Shipping on Every Order</div>
-            <div className="ship-price" aria-live="polite">${total.toFixed(2)}</div>
-            <hr className="ship-divider" />
-
-            <div className="ship-selector-group">
-              <p className="ship-selector-label">
-                Pack: <span className="ship-selector-value">{pack.label}</span>
-              </p>
-              <div className="ship-pill-grid" role="radiogroup" aria-label="Pack size">
-                {product.packs.map(p => (
-                  <button
-                    key={p.id}
-                    type="button"
-                    role="radio"
-                    aria-checked={pack.id === p.id}
-                    className={`ship-pill${pack.id === p.id ? ' active' : ''}`}
-                    onClick={() => setPack(p)}
-                  >
-                    {p.label}
-                    {p.tag && <span className="ship-pill-tag">{p.tag}</span>}
-                  </button>
-                ))}
-              </div>
+          <div className="buy-panel">
+            <RadioCardGroup id="flavour" name="flavour" legend="Pick a flavour" value={flavour} onChange={v => { setFlavour(v); setError(''); }}
+              options={P.flavours.map(f => ({ value: f.id, title: f.name, sub: f.line }))} cols={2} error={error} />
+            <div className="packs">
+              {P.packs.map(pack => (
+                <a key={pack.id} href={buyUrl(pack)} className="btn btn-primary btn-lg btn-full" onClick={e => onBuy(e, pack)}>
+                  <span>Buy {pack.label} · {money(pack.price)}</span>
+                  {pack.tag && <Tag>{pack.tag}</Tag>}
+                </a>
+              ))}
             </div>
-
-            <div className="ship-selector-group">
-              <p className="ship-selector-label">
-                Flavor: <span className="ship-selector-value">{flavor}</span>
-              </p>
-              <div className="ship-pill-grid" role="radiogroup" aria-label="Flavor">
-                {product.flavors.map(f => (
-                  <button
-                    key={f}
-                    type="button"
-                    role="radio"
-                    aria-checked={flavor === f}
-                    className={`ship-pill${flavor === f ? ' active' : ''}`}
-                    onClick={() => setFlavor(f)}
-                  >
-                    {f}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className="ship-selector-group">
-              <p className="ship-selector-label">Quantity:</p>
-              <div className="ship-qty-pill" role="group" aria-label="Quantity">
-                <button type="button" onClick={() => setQty(q => Math.max(1, q - 1))} aria-label="Decrease">−</button>
-                <span aria-live="polite" aria-atomic="true">{qty}</span>
-                <button type="button" onClick={() => setQty(q => q + 1)} aria-label="Increase">+</button>
-              </div>
-            </div>
-
-            <button
-              className={`btn btn-lg btn-full ship-atc-btn${justAdded ? ' added' : ''}`}
-              onClick={handleAddToCart}
-            >
-              {justAdded ? '✔ Added to Cart' : 'Add to Cart'}
-            </button>
-
-            <p className="ship-secure-note">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-              </svg>
-              Secure checkout · Card, Apple Pay, Google Pay
-            </p>
+            <p className="small muted">You'll confirm the quantity and enter your delivery address on the next screen (Stripe). Card, Apple Pay or Google Pay.</p>
+            <p className="small">Questions? Call <PhoneLink location="shipping" />.</p>
           </div>
-
         </div>
       </div>
     </section>

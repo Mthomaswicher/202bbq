@@ -1,7 +1,7 @@
 // Generates responsive AVIF/WebP/JPEG renditions + tiny blur placeholders for the
 // site's photography. Run once (npm run images) after adding or replacing a photo.
 //
-// Source photos live in  public/photos/  (originals, never served directly).
+// Source photos live in  assets/photos/  (originals, never served).
 // Output goes to         public/img/     (served) and src/data/images.json (manifest).
 import sharp from 'sharp';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
@@ -13,13 +13,13 @@ const MANIFEST = path.join(ROOT, 'src/data/images.json');
 
 // name → { src, widths, formats }
 const IMAGES = {
-  'brisket-slice': { src: 'public/photos/hero-brisket.jpg', widths: [480, 800, 1200, 1600] },
-  'brisket-board': { src: 'public/photos/hero-ribs.jpg',    widths: [480, 800, 1200] },
-  'chicken-egg':   { src: 'public/photos/hero-chicken.jpg', widths: [480, 800, 1200, 1600] },
-  'pork-butt':     { src: 'public/photos/hero-pork.jpg',    widths: [480, 800, 1200] },
-  'pitmaster':     { src: 'public/about-photo.jpg',         widths: [480, 800, 1200] },
-  'logo':          { src: 'public/logo.png',                widths: [80, 160, 320, 640], formats: ['webp', 'png'] },
-  'right-proper':  { src: 'public/photos/right-proper-logo.png', widths: [320, 640], formats: ['webp', 'png'] },
+  'brisket-slice': { src: 'assets/photos/hero-brisket.jpg', widths: [480, 800, 1200, 1600] },
+  'brisket-board': { src: 'assets/photos/hero-ribs.jpg',    widths: [480, 800, 1024] },
+  'chicken-egg':   { src: 'assets/photos/hero-chicken.jpg', widths: [480, 800, 1200, 1600] },
+  'pork-butt':     { src: 'assets/photos/hero-pork.jpg',    widths: [480, 800, 1024] },
+  'pitmaster':     { src: 'assets/photos/about-photo.jpg',         widths: [480, 600] },
+  'logo':          { src: 'assets/logo.png',                widths: [80, 160, 320, 640], formats: ['webp', 'png'] },
+  'right-proper':  { src: 'assets/right-proper-logo.png', widths: [320, 640], formats: ['webp', 'png'] },
 };
 
 const DEFAULT_FORMATS = ['avif', 'webp', 'jpg'];

@@ -3,13 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0B0906" />
-  <meta name="color-scheme" content="dark" />
+  <meta name="theme-color" content="#F4ECE0" />
+  <meta name="color-scheme" content="light" />
+
+  <!-- Theme before first paint: light unless the visitor chose dark. -->
+  <script>
+    (function () {
+      var t = 'light';
+      try { var v = localStorage.getItem('202bbq.theme'); if (v === '"dark"' || v === 'dark') t = 'dark'; } catch (e) {}
+      document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
 
   <!-- Primary SEO -->
-  <title>202BBQ | DC Barbecue Catering + Nationwide BBQ Delivery | 202Barbecue.com</title>
-  <meta name="description" content="202BBQ (202Barbecue.com) is DC-born small-batch barbecue catering. Order brisket, ribs, pulled pork, wings, and sides by the tray for weekend pickup, local DMV delivery, or nationwide shipping. Find us at DC farmers markets, popups, and the 2026 Giant BBQ Battle." />
-  <meta name="keywords" content="202 barbecue, 202barbecue, 202 BBQ, DC barbecue, DC BBQ, Washington DC barbecue, BBQ catering DC, barbecue catering DC, brisket DC, pulled pork DC, smoked ribs DC, DMV BBQ catering, BBQ tray order DC, DC farmers market BBQ, Capitol Hill BBQ, DC BBQ Battle, nationwide BBQ delivery, BBQ shipped nationwide, mail order BBQ, online BBQ delivery, smoked brisket delivery, BBQ catering nationwide" />
+  <title>202BBQ | DC Barbecue Catering by the Tray · Oxtail Softballs Shipped Nationwide</title>
+  <meta name="description" content="202BBQ (202Barbecue.com) is DC-born small-batch barbecue catering. Order brisket, ribs, pulled pork, wings and sides by the tray for weekend pickup in Northeast DC or delivery across DC, Maryland and Virginia. Oxtail Softballs ship anywhere in the US." />
+  <meta name="keywords" content="202 barbecue, 202barbecue, 202 BBQ, DC barbecue, DC BBQ, Washington DC barbecue, BBQ catering DC, barbecue catering DC, brisket DC, pulled pork DC, smoked ribs DC, DMV BBQ catering, BBQ tray order DC, DC farmers market BBQ, Capitol Hill BBQ, oxtail softballs, mail order BBQ, smoked oxtails shipped" />
   <meta name="author" content="202BBQ" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="googlebot" content="index, follow" />
@@ -20,45 +29,31 @@
   <!-- Canonical -->
   <link rel="canonical" href="https://202barbecue.com/" />
 
-  <!-- Open Graph (Facebook, LinkedIn, iMessage) -->
+  <!-- Open Graph -->
   <meta property="og:type" content="restaurant.restaurant" />
   <meta property="og:site_name" content="202BBQ" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:url" content="https://202barbecue.com/" />
-  <meta property="og:title" content="202BBQ | DC Barbecue Catering + Nationwide BBQ Delivery" />
-  <meta property="og:description" content="DC-born small-batch barbecue catering. Brisket, ribs, pulled pork, wings and sides, smoked low and slow. Weekend pickup, DMV delivery, nationwide shipping, and DC popups." />
-  <meta property="og:image" content="https://202barbecue.com/logo.png" />
-  <meta property="og:image:secure_url" content="https://202barbecue.com/logo.png" />
-  <meta property="og:image:type" content="image/png" />
+  <meta property="og:title" content="202BBQ | DC Barbecue Catering by the Tray" />
+  <meta property="og:description" content="DC-born small-batch barbecue. Brisket, ribs, pulled pork, wings and sides by the tray, smoked every Friday night. Weekend pickup and delivery across DC, Maryland and Virginia. Oxtail Softballs ship nationwide." />
+  <meta property="og:image" content="https://202barbecue.com/og.jpg" />
+  <meta property="og:image:secure_url" content="https://202barbecue.com/og.jpg" />
+  <meta property="og:image:type" content="image/jpeg" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="202BBQ logo: DC-born small-batch barbecue catering" />
+  <meta property="og:image:alt" content="202BBQ: sliced smoked brisket on a board beside the 202BBQ logo" />
 
   <!-- Twitter / X -->
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="202BBQ | DC Barbecue Catering + Nationwide BBQ Delivery" />
-  <meta name="twitter:description" content="DC-born small-batch barbecue catering. Brisket, ribs, pulled pork, wings and sides, smoked low and slow. Local DMV delivery + nationwide shipping." />
-  <meta name="twitter:image" content="https://202barbecue.com/logo.png" />
-  <meta name="twitter:image:alt" content="202BBQ logo" />
+  <meta name="twitter:title" content="202BBQ | DC Barbecue Catering by the Tray" />
+  <meta name="twitter:description" content="DC-born small-batch barbecue by the tray, smoked every Friday night. Weekend pickup and delivery across DC, Maryland and Virginia. Oxtail Softballs ship nationwide." />
+  <meta name="twitter:image" content="https://202barbecue.com/og.jpg" />
+  <meta name="twitter:image:alt" content="202BBQ: sliced smoked brisket on a board beside the 202BBQ logo" />
 
   <!-- Icons -->
   <link rel="icon" href="/favicon.ico" sizes="48x48" />
-  <link rel="icon" href="/logo.png" type="image/png" sizes="1024x1024" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-  <!-- Google Analytics 4 -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2XL1HLJML0"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-2XL1HLJML0', { anonymize_ip: true });
-  </script>
-
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet" />
 
   <!-- GitHub Pages SPA redirect rehydrator: pairs with public/404.html -->
   <script>
@@ -72,265 +67,11 @@
     })(window.location);
   </script>
 
-  <!-- Structured data: Restaurant / LocalBusiness -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Restaurant",
-    "@id": "https://202barbecue.com/#restaurant",
-    "name": "202BBQ",
-    "alternateName": ["202 BBQ", "202 Barbecue", "202Barbecue"],
-    "description": "DC-born small-batch barbecue catering. Smoked low and slow over hardwood. Weekend tray orders for local pickup, DMV delivery, and nationwide shipping, plus popups and farmers markets around Washington, D.C.",
-    "slogan": "Where the Grill Meets the Hill",
-    "url": "https://202barbecue.com/",
-    "logo": "https://202barbecue.com/logo.png",
-    "image": "https://202barbecue.com/logo.png",
-    "telephone": "+1-202-734-5621",
-    "priceRange": "$$",
-    "servesCuisine": ["Barbecue", "American", "Southern"],
-    "areaServed": [
-      { "@type": "City", "name": "Washington", "sameAs": "https://en.wikipedia.org/wiki/Washington,_D.C." },
-      { "@type": "AdministrativeArea", "name": "DMV (DC, Maryland, Virginia)" },
-      { "@type": "Country", "name": "United States" }
-    ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Washington",
-      "addressRegion": "DC",
-      "addressCountry": "US"
-    },
-    "sameAs": [
-      "https://www.instagram.com/202_bbq"
-    ],
-    "openingHoursSpecification": [
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday"],
-        "description": "Online order window open",
-        "opens": "00:00",
-        "closes": "23:59"
-      },
-      {
-        "@type": "OpeningHoursSpecification",
-        "dayOfWeek": ["Saturday", "Sunday"],
-        "description": "Pickup and delivery",
-        "opens": "10:00",
-        "closes": "20:00"
-      }
-    ],
-    "hasMenu": {
-      "@type": "Menu",
-      "name": "202BBQ Tray Menu",
-      "url": "https://202barbecue.com/#menu",
-      "hasMenuSection": [
-        {
-          "@type": "MenuSection",
-          "name": "Beef",
-          "hasMenuItem": [
-            { "@type": "MenuItem", "name": "Brisket", "description": "17–18 lb whole brisket smoked overnight over hardwood.", "offers": { "@type": "Offer", "price": "235.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Brisket Burnt Ends", "description": "Whole brisket smoked overnight, cut into caramelized burnt end cubes and finished in house sauce.", "offers": { "@type": "Offer", "price": "200.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Chuck Roast Burnt Ends", "description": "Chuck roast smoked and finished in our house sauce.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Ox Tails", "description": "Slow-smoked then braised until fall-off-the-bone tender.", "offers": { "@type": "Offer", "price": "185.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Smoked Burgers", "description": "Hand-pressed beef patties smoked low and slow.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Ribeyes", "description": "Thick-cut ribeyes with Hill Rub, smoked to medium-rare.", "offers": { "@type": "Offer", "price": "45.00", "priceCurrency": "USD" } }
-          ]
-        },
-        {
-          "@type": "MenuSection",
-          "name": "Pork",
-          "hasMenuItem": [
-            { "@type": "MenuItem", "name": "Pulled Pork", "description": "Bone-in pork shoulder smoked 14+ hours.", "offers": { "@type": "Offer", "price": "165.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Pork Ribs", "description": "St. Louis spare ribs rubbed and smoked.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } }
-          ]
-        },
-        {
-          "@type": "MenuSection",
-          "name": "Chicken",
-          "hasMenuItem": [
-            { "@type": "MenuItem", "name": "Wings", "description": "Whole wings smoked with Hill Rub.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Thighs", "description": "Bone-in, skin-on smoked chicken thighs.", "offers": { "@type": "Offer", "price": "140.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Drumsticks", "description": "Smoked drumsticks with crispy seasoned skin.", "offers": { "@type": "Offer", "price": "140.00", "priceCurrency": "USD" } }
-          ]
-        },
-        {
-          "@type": "MenuSection",
-          "name": "Sides & More",
-          "hasMenuItem": [
-            { "@type": "MenuItem", "name": "Smoked Salmon", "description": "Atlantic salmon cold-smoked over cherry wood.", "offers": { "@type": "Offer", "price": "330.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Half Smokes", "description": "DC's own beef and pork half-smoke sausages.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Mac and Cheese", "description": "Three-cheese baked mac topped with brisket bits.", "offers": { "@type": "Offer", "price": "175.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Collard Greens", "description": "Slow-braised Southern-style with smoked turkey neck.", "offers": { "@type": "Offer", "price": "150.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Mashed Potatoes", "description": "Buttery, creamy mashed potatoes.", "offers": { "@type": "Offer", "price": "130.00", "priceCurrency": "USD" } },
-            { "@type": "MenuItem", "name": "Kickin' Coleslaw", "description": "Creamy vinegar slaw with jalapeño and celery seed.", "offers": { "@type": "Offer", "price": "120.00", "priceCurrency": "USD" } }
-          ]
-        }
-      ]
-    },
-    "acceptsReservations": "False"
-  }
-  </script>
-
-  <!-- Structured data: Organization -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "@id": "https://202barbecue.com/#organization",
-    "name": "202BBQ",
-    "alternateName": ["202 Barbecue", "202Barbecue"],
-    "url": "https://202barbecue.com/",
-    "logo": "https://202barbecue.com/logo.png",
-    "sameAs": ["https://www.instagram.com/202_bbq"],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "telephone": "+1-202-734-5621",
-      "contactType": "customer service",
-      "areaServed": "US",
-      "availableLanguage": ["English"]
-    }
-  }
-  </script>
-
-  <!-- Structured data: WebSite -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "@id": "https://202barbecue.com/#website",
-    "url": "https://202barbecue.com/",
-    "name": "202BBQ",
-    "description": "DC-born small-batch barbecue catering. Weekend tray orders with local DMV delivery and nationwide shipping, plus popups and farmers markets in Washington, D.C.",
-    "publisher": { "@id": "https://202barbecue.com/#organization" },
-    "inLanguage": "en-US"
-  }
-  </script>
-
-  <!-- Structured data: FAQ -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    "mainEntity": [
-      {
-        "@type": "Question",
-        "name": "When can I place an order?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Orders are open Monday through Thursday each week. Everything is smoked fresh overnight Friday so your order is ready Saturday and Sunday. We close the order window Thursday night."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What's the difference between a Full Tray and a Half Tray?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "A Full Tray feeds approximately 30–40 people. A Half Tray feeds 15–20. Perfect for house parties to office events."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do you deliver, or is it pickup only?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Both, and more. 202BBQ offers pickup, local delivery throughout the DMV area, and nationwide shipping for customers outside the DC area. A delivery fee may apply based on location."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Do you ship BBQ nationwide?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Yes. 202BBQ now ships smoked BBQ trays nationwide. Order online Monday through Thursday and we will coordinate shipping so your order arrives fresh. Contact us at 202-734-5621 for shipping details and rates."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "What does Market Price mean?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Some items like Beef Ribs and Lamb Chops are priced at market because cost fluctuates weekly. After you submit an order request, 202BBQ will confirm the exact price before finalizing."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Is my order confirmed when I submit the form?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "Not quite. The form sends 202BBQ a request, and they personally confirm your order within a few hours, along with pickup/delivery details."
-        }
-      },
-      {
-        "@type": "Question",
-        "name": "Where can I find 202BBQ besides online ordering?",
-        "acceptedAnswer": {
-          "@type": "Answer",
-          "text": "202BBQ does popups and farmers markets around Washington, D.C., and is competing in the 34th Annual Giant BBQ Battle on June 27–28, 2026 on Pennsylvania Avenue NW. Follow @202_bbq on Instagram for locations."
-        }
-      }
-    ]
-  }
-  </script>
-
-  <!-- Structured data: Event (DC BBQ Battle 2026) -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Event",
-    "name": "34th Annual Giant BBQ Battle: 202BBQ Competing",
-    "startDate": "2026-06-27",
-    "endDate": "2026-06-28",
-    "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-    "eventStatus": "https://schema.org/EventScheduled",
-    "location": {
-      "@type": "Place",
-      "name": "Pennsylvania Avenue NW (3rd–7th St)",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "Pennsylvania Ave NW",
-        "addressLocality": "Washington",
-        "addressRegion": "DC",
-        "addressCountry": "US"
-      }
-    },
-    "image": "https://202barbecue.com/logo.png",
-    "description": "202BBQ is competing at DC's biggest BBQ event. Two days, top pitmasters, 100+ food samples, and live music.",
-    "organizer": {
-      "@type": "Organization",
-      "name": "Giant National Capital Barbecue Battle",
-      "url": "https://bbqindc.com/"
-    },
-    "performer": { "@id": "https://202barbecue.com/#organization" }
-  }
-  </script>
+  <!--JSONLD-->
 </head>
 <body>
   <div id="root"></div>
-
-  <!-- Crawlable fallback for search engines and no-JS clients -->
-  <noscript>
-    <div style="max-width:720px;margin:2rem auto;padding:1.25rem;font-family:system-ui,sans-serif;line-height:1.55;color:#222;">
-      <h1>202BBQ: DC-Born Small-Batch Barbecue Catering</h1>
-      <p><strong>Where the Grill Meets the Hill.</strong> 202BBQ (202Barbecue.com) is a Washington, D.C. barbecue catering company smoking brisket, pulled pork, ribs, wings, and Southern sides low and slow over hardwood. We serve weekend tray orders with local pickup, DMV delivery, and nationwide shipping, plus popups and farmers markets around the city.</p>
-      <h2>How ordering works</h2>
-      <ol>
-        <li>Order online Monday–Thursday.</li>
-        <li>We smoke overnight Friday.</li>
-        <li>Pickup or delivery Saturday and Sunday.</li>
-      </ol>
-      <h2>Menu highlights</h2>
-      <ul>
-        <li>Brisket, Brisket Burnt Ends, Chuck Roast Burnt Ends, Ox Tails, Beef Ribs, Ribeyes</li>
-        <li>Pulled Pork, St. Louis Pork Ribs</li>
-        <li>Smoked Wings, Thighs, Drumsticks</li>
-        <li>Half Smokes, Mac &amp; Cheese, Collard Greens, Kickin' Coleslaw, Mashed Potatoes, Smoked Salmon</li>
-      </ul>
-      <h2>Contact</h2>
-      <p>Phone: <a href="tel:2027345621">202-734-5621</a> · Instagram: <a href="https://www.instagram.com/202_bbq">@202_bbq</a></p>
-      <p>Competing at the 34th Annual Giant BBQ Battle, June 27–28, 2026, Pennsylvania Avenue NW, Washington, D.C.</p>
-      <p><em>Please enable JavaScript to place an order online.</em></p>
-    </div>
-  </noscript>
-
+  <!--NOSCRIPT-->
   <script type="module" src="/src/main.jsx"></script>
 </body>
 </html>

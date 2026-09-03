@@ -1,330 +1,145 @@
-import { useState, useRef } from 'react';
-import { useToast } from '../context/ToastContext.jsx';
+import { useRef, useState } from 'react';
+import { SITE } from '../data/site.js';
+import reviews from '../data/reviews.json';
+import { useCart } from '../context/CartContext.jsx';
+import { phoneDigits, groupPhone } from '../lib/format.js';
+import { stampET, addDays, nowET, fmtLong } from '../lib/time.js';
+import { submitToFormspree } from '../lib/formspree.js';
 import { track } from '../lib/analytics.js';
-import { resolveEndpoint, submitToFormspree } from '../lib/formspree.js';
+import { TextField, TextArea, RadioCardGroup, ErrorSummary, Notice } from './ui/Field.jsx';
+import Button from './ui/Button.jsx';
+import { Section, PhoneLink } from './ui/Bits.jsx';
 
-const EVENT_TYPES = [
-  'Wedding',
-  'Corporate Event',
-  'Birthday Party',
-  'Anniversary',
-  'Graduation',
-  'Holiday Party',
-  'Private Party',
-  'Backyard BBQ',
-  'Other',
+const TYPES = [
+  { value: 'full-service', title: 'Full-service catering', sub: 'We set up and serve' },
+  { value: 'drop-off',     title: 'Drop-off for a big event', sub: '100+ people' },
+  { value: 'custom',       title: 'A custom order', sub: 'Something not on the menu' },
+  { value: 'question',     title: 'A question', sub: 'Anything else' },
 ];
-
-const SERVICE_TYPES = [
-  { v: 'dropoff',    label: 'Drop-Off',            sub: 'We drop trays & setup, you serve' },
-  { v: 'buffet',     label: 'Buffet Setup',        sub: 'Trays, chafers & serving gear on-site' },
-  { v: 'fullservice', label: 'Full-Service / On-Site Smoking', sub: 'We cook, serve & clean up' },
+const STYLES = [
+  { value: 'drop-off', title: 'Drop-off', sub: 'We drop trays and set up, you serve' },
+  { value: 'buffet',   title: 'Buffet setup', sub: 'Trays, chafers and serving gear on site' },
+  { value: 'full',     title: 'Full service', sub: 'We cook, serve and clean up' },
 ];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const label = (list, v) => list.find(x => x.value === v)?.title ?? '';
 
-const BUDGETS = [
-  'Under $500',
-  '$500–$1,500',
-  '$1,500–$3,000',
-  '$3,000–$5,000',
-  '$5,000–$10,000',
-  '$10,000+',
-  'Not sure yet',
-];
-
-function validate(name, value) {
-  if (!value || !String(value).trim()) return 'This field is required.';
-  if (name === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Enter a valid email address.';
-  if (name === 'phone' && !/^[\d\s().+\-]{7,}$/.test(value)) return 'Enter a valid phone number.';
-  if (name === 'guests' && (!/^\d+$/.test(value) || Number(value) < 1)) return 'Enter a valid guest count.';
-  return '';
-}
-
-function makeCateringRef() {
-  const now = new Date();
-  const yy = String(now.getFullYear()).slice(2);
-  const mm = String(now.getMonth() + 1).padStart(2, '0');
-  const dd = String(now.getDate()).padStart(2, '0');
-  const rand = Math.random().toString(36).slice(2, 6).toUpperCase();
-  return `CAT-${yy}${mm}${dd}-${rand}`;
+function nextBusinessDay(ymd) {
+  let d = addDays(ymd, 1);
+  const dow = new Date(`${d}T12:00:00Z`).getUTCDay();
+  if (dow === 6) d = addDays(d, 2);
+  if (dow === 0) d = addDays(d, 1);
+  return d;
 }
 
 export default function CateringSection() {
-  const { addToast } = useToast();
-  const [submitted, setSubmitted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
-  const [cateringRef, setCateringRef] = useState('');
-  const successRef = useRef(null);
-
-  const [fields, setFields] = useState({
-    fname: '', lname: '', email: '', phone: '',
-    eventType: '', eventDate: '', guests: '', venue: '', budget: '', details: '',
-  });
-  const [serviceType, setServiceType] = useState('');
+  const { customer, setCustomer } = useCart();
+  const [f, setF] = useState({ type: '', when: '', guests: '', where: '', style: '', details: '' });
   const [errors, setErrors] = useState({});
-  const [touched, setTouched] = useState({});
+  const [sending, setSending] = useState(false);
+  const [sendError, setSendError] = useState('');
+  const [done, setDone] = useState(null);
+  const summaryRef = useRef(null);
+  const doneRef = useRef(null);
+  const set = patch => setF(s => ({ ...s, ...patch }));
+  const clearErr = id => setErrors(e => { if (!e[id]) return e; const n = { ...e }; delete n[id]; return n; });
 
-  const setField = (name, value) => {
-    setFields(f => ({ ...f, [name]: value }));
-    if (touched[name]) setErrors(e => ({ ...e, [name]: validate(name, value) }));
+  const isQuestion = f.type === 'question';
+  const askStyle = f.type === 'full-service' || f.type === 'drop-off';
+  const proof = reviews.find(r => r.id.startsWith('jerod'));
+
+  const validate = () => {
+    const e = {};
+    if (!f.type) e['ev-type'] = 'Choose what you are planning.';
+    if (!isQuestion && !f.when.trim()) e['ev-when'] = 'Tell us when the event is — a date, or roughly when.';
+    if (!isQuestion && !f.guests.trim()) e['ev-guests'] = 'Tell us roughly how many people, or type "not sure".';
+    if (!isQuestion && !f.where.trim()) e['ev-where'] = 'Tell us the city or ZIP code.';
+    if (askStyle && !f.style) e['ev-style'] = 'Choose a service style.';
+    if (!customer.name.trim()) e['ev-name'] = 'Enter your full name.';
+    if (phoneDigits(customer.phone).length !== 10) e['ev-phone'] = 'Enter a phone number we can call, for example 202 555 0100.';
+    if (customer.email.trim() && !EMAIL_RE.test(customer.email.trim())) e['ev-email'] = 'Enter an email address like name@example.com, or leave it blank.';
+    if (!f.details.trim()) e['ev-details'] = isQuestion ? 'Type your question.' : 'Tell us a little about the event.';
+    return e;
   };
 
-  const blur = (name) => {
-    setTouched(t => ({ ...t, [name]: true }));
-    setErrors(e => ({ ...e, [name]: validate(name, fields[name]) }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const required = ['fname', 'lname', 'email', 'phone', 'eventType', 'eventDate', 'guests', 'venue'];
-    const newErrors = {};
-    let hasError = false;
-    for (const name of required) {
-      const err = validate(name, fields[name]);
-      if (err) { newErrors[name] = err; hasError = true; }
-    }
-    if (!serviceType) {
-      addToast('Please choose a service type.', 'error');
-      hasError = true;
-    }
-    if (hasError) {
-      setErrors(newErrors);
-      setTouched(Object.fromEntries(required.map(n => [n, true])));
-      if (Object.keys(newErrors).length) addToast('Please fix the errors below.', 'error');
-      return;
-    }
-
-    setSubmitting(true);
-
-    const thisRef = makeCateringRef();
-    const serviceLabel = SERVICE_TYPES.find(s => s.v === serviceType)?.label || serviceType;
-
+  const onSubmit = async ev => {
+    ev.preventDefault();
+    const e = validate();
+    setErrors(e); setSendError('');
+    if (Object.keys(e).length) { setTimeout(() => summaryRef.current?.focus(), 0); return; }
+    setSending(true);
+    const email = customer.email.trim();
     const payload = {
-      _subject: `New Catering Inquiry: ${fields.eventType} for ${fields.guests}, ${fields.fname} ${fields.lname} (${thisRef})`,
-      _replyto: fields.email,
-      CateringRef: thisRef,
-      Name:        `${fields.fname} ${fields.lname}`,
-      Email:       fields.email,
-      Phone:       fields.phone,
-      EventType:   fields.eventType,
-      EventDate:   fields.eventDate,
-      GuestCount:  fields.guests,
-      Venue:       fields.venue,
-      ServiceType: serviceLabel,
-      Budget:      fields.budget || 'Not specified',
-      Details:     fields.details || 'None',
-      Submitted:   new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
+      _subject: `Event request · ${label(TYPES, f.type)} · ${f.guests.trim() || 'n/a'} people · ${customer.name.trim()}`,
+      ...(email ? { email, _replyto: email } : {}),
+      _gotcha: ev.target.elements._gotcha?.value ?? '',
+      Summary: [
+        `EVENT REQUEST · ${label(TYPES, f.type)}`,
+        `${customer.name.trim()} · ${groupPhone(customer.phone)}${email ? ` · ${email}` : ''}`,
+        `When: ${f.when.trim() || 'n/a'} · People: ${f.guests.trim() || 'n/a'} · Where: ${f.where.trim() || 'n/a'}${askStyle ? ` · Style: ${label(STYLES, f.style)}` : ''}`,
+        `Details: ${f.details.trim()}`,
+        `Sent ${stampET()}`,
+      ].join('\n'),
+      Type: label(TYPES, f.type),
+      When: f.when.trim() || 'n/a',
+      People: f.guests.trim() || 'n/a',
+      Where: f.where.trim() || 'n/a',
+      ...(askStyle ? { 'Service style': label(STYLES, f.style) } : {}),
+      name: customer.name.trim(),
+      phone: groupPhone(customer.phone),
+      Details: f.details.trim(),
+      'Submitted (ET)': stampET(),
+      Page: `${SITE.url}#catering`,
     };
-
-    // Falls back to the contact/orders inboxes so a missing VITE_FORMSPREE_CATERING
-    // secret still delivers the inquiry instead of dropping it.
-    const endpoint = resolveEndpoint(
-      import.meta.env.VITE_FORMSPREE_CATERING,
-      import.meta.env.VITE_FORMSPREE_CONTACT,
-      import.meta.env.VITE_FORMSPREE_ORDERS,
-    );
-
-    const result = await submitToFormspree(endpoint, payload);
-    if (!result.ok) {
-      setSubmitting(false);
-      addToast(result.error, 'error');
-      return;
-    }
-
-    track('generate_lead', {
-      lead_type: 'catering',
-      event_type: fields.eventType,
-      service_type: serviceLabel,
-      guests: Number(fields.guests) || 0,
-      catering_ref: thisRef,
-    });
-
-    setCateringRef(thisRef);
-    setSubmitting(false);
-    setSubmitted(true);
-    setTimeout(() => successRef.current?.focus(), 100);
+    const result = await submitToFormspree(SITE.forms.events, payload);
+    setSending(false);
+    if (!result.ok) { setSendError(result.error); return; }
+    track('generate_lead', { lead_type: 'catering', event_type: f.type, guests: Number(f.guests) || 0 });
+    setDone({ type: label(TYPES, f.type), when: f.when.trim(), guests: f.guests.trim(), replyBy: fmtLong(nextBusinessDay(nowET().ymd)) });
+    setTimeout(() => doneRef.current?.focus(), 50);
   };
 
-  if (submitted) {
-    return (
-      <section className="order-section" id="catering">
-        <div className="container">
-          <div className="order-success" role="alert" aria-live="assertive">
-            <h2 ref={successRef} tabIndex={-1}>Catering Inquiry Received!</h2>
-            <p>Thanks! We got your event details. We'll reach out within a few hours with a custom quote and next steps.</p>
-            {cateringRef && (
-              <p className="deposit-order-ref">
-                <span>Inquiry reference</span>
-                <code>{cateringRef}</code>
-              </p>
-            )}
-            <div className="success-actions">
-              <button className="btn btn-ghost" onClick={() => setSubmitted(false)}>Submit Another Inquiry</button>
-              <a href="https://www.instagram.com/202_bbq" target="_blank" rel="noopener noreferrer" className="btn btn-primary">
-                Follow @202_bbq
-              </a>
-            </div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section className="order-section" id="catering" aria-labelledby="catering-heading">
-      <div className="container">
-        <div className="section-header">
-          <p className="section-eyebrow">Catering</p>
-          <h2 className="section-title" id="catering-heading">Book 202BBQ for Your Event</h2>
-          <p className="section-sub">
-            Weddings, corporate events, birthdays, backyard bashes. Tell us about your event and we'll send a custom quote.
-            Questions? Call <a href="tel:2027345621" className="inline-link">202-734-5621</a>.
-          </p>
+    <Section id="catering" title="Plan an event" className="catering" grid stickyHead
+      lede={`From 20 guests to 500. Drop-off trays, buffet setup, or full service with our smoker on site. We serve ${SITE.serviceArea}.`}
+      headExtra={(
+        <ul className="proof catering-proof">
+          {proof && <li>Catered a 70-guest grand opening — "guests went back for seconds"</li>}
+          <li>Menus built around the tray list above</li>
+          {SITE.eventNoticeHours && <li>{SITE.eventNoticeHours} hours' notice</li>}
+        </ul>
+      )}>
+      {done ? (
+        <div className="form-done" tabIndex={-1} ref={doneRef}>
+          <h3>Got it{customer.name ? `, ${customer.name.trim().split(/\s+/)[0]}` : ''}.</h3>
+          <p>{SITE.owner} will reply by {done.replyBy} with a quote for your {done.type.toLowerCase()}{done.guests ? ` for ${done.guests} people` : ''}{done.when ? ` (${done.when})` : ''}. Or call <PhoneLink location="catering_done" />.</p>
+          <Button variant="secondary" size="compact" onClick={() => { setDone(null); setF({ type: '', when: '', guests: '', where: '', style: '', details: '' }); }}>Send another</Button>
         </div>
-
-        <form className="order-form" id="catering-form" noValidate onSubmit={handleSubmit} aria-label="Catering inquiry form" style={{ maxWidth: 820, margin: '0 auto' }}>
-
-          {/* Event Details */}
-          <div className="form-section">
-            <p className="form-legend"><span className="form-legend-icon">🎉</span> Event Details</p>
-
-            <div className="form-group">
-              <label htmlFor="eventType">Event Type <span className="req" aria-hidden="true">*</span></label>
-              <select
-                id="eventType"
-                name="eventType"
-                value={fields.eventType}
-                onChange={e => setField('eventType', e.target.value)}
-                onBlur={() => blur('eventType')}
-                required
-                aria-required="true"
-                aria-invalid={errors.eventType ? 'true' : 'false'}
-              >
-                <option value="">Select event type…</option>
-                {EVENT_TYPES.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-              {errors.eventType && <span className="ferr" role="alert">{errors.eventType}</span>}
-            </div>
-
-            <div className="form-row">
-              <Field id="eventDate" label="Event Date" type="date"
-                value={fields.eventDate} onChange={v => setField('eventDate', v)} onBlur={() => blur('eventDate')} error={errors.eventDate} required />
-              <Field id="guests" label="Number of Guests" type="number" placeholder="e.g. 50" inputMode="numeric"
-                value={fields.guests} onChange={v => setField('guests', v)} onBlur={() => blur('guests')} error={errors.guests} required />
-            </div>
-
-            <Field id="venue" label="Venue / Location" placeholder="Address, venue name, or neighborhood"
-              value={fields.venue} onChange={v => setField('venue', v)} onBlur={() => blur('venue')} error={errors.venue} required />
-
-            <div style={{ marginTop: 16 }}>
-              <p style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--text-muted)', letterSpacing: '0.04em', textTransform: 'uppercase', marginBottom: 10 }}>
-                Service Type <span style={{ color: 'var(--ember)' }}>*</span>
-              </p>
-              <div className="radio-group">
-                {SERVICE_TYPES.map(opt => (
-                  <label key={opt.v} className="radio-card">
-                    <input type="radio" name="serviceType" value={opt.v}
-                      checked={serviceType === opt.v} onChange={() => setServiceType(opt.v)} />
-                    <span className="radio-dot" aria-hidden="true" />
-                    <div className="radio-text">
-                      <strong>{opt.label}</strong>
-                      <span>{opt.sub}</span>
-                    </div>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group" style={{ marginTop: 16 }}>
-              <label htmlFor="budget">Estimated Budget <span className="fhint" style={{ marginLeft: 6 }}>(optional)</span></label>
-              <select
-                id="budget"
-                name="budget"
-                value={fields.budget}
-                onChange={e => setField('budget', e.target.value)}
-              >
-                <option value="">Select a range…</option>
-                {BUDGETS.map(b => <option key={b} value={b}>{b}</option>)}
-              </select>
-            </div>
-          </div>
-
-          {/* Contact Info */}
-          <div className="form-section">
-            <p className="form-legend"><span className="form-legend-icon">👤</span> Your Information</p>
-            <div className="form-row">
-              <Field id="fname" label="First Name" placeholder="Sam"   autoComplete="given-name"
-                value={fields.fname} onChange={v => setField('fname', v)} onBlur={() => blur('fname')} error={errors.fname} required />
-              <Field id="lname" label="Last Name"  placeholder="Smith" autoComplete="family-name"
-                value={fields.lname} onChange={v => setField('lname', v)} onBlur={() => blur('lname')} error={errors.lname} required />
-            </div>
-            <Field id="email" label="Email Address" type="email" placeholder="sam@email.com" autoComplete="email" inputMode="email"
-              value={fields.email} onChange={v => setField('email', v)} onBlur={() => blur('email')} error={errors.email} required />
-            <Field id="phone" label="Phone Number"  type="tel"   placeholder="(202) 555-0100" autoComplete="tel" inputMode="tel"
-              value={fields.phone} onChange={v => setField('phone', v)} onBlur={() => blur('phone')} error={errors.phone} required />
-          </div>
-
-          {/* Details */}
-          <div className="form-section">
-            <p className="form-legend"><span className="form-legend-icon">📝</span> Tell us more</p>
-            <div className="form-group">
-              <label htmlFor="details">Menu ideas, dietary needs, timing, theme, anything else?</label>
-              <textarea id="details" name="details" rows={5} maxLength={2000}
-                placeholder="e.g. 60 guests, brisket + pulled pork + 2 sides, vegetarian option for 5, cocktail hour starts at 5pm, outdoor venue with power access…"
-                value={fields.details} onChange={e => setField('details', e.target.value)}
-              />
-              <span className="fhint">Up to 2000 characters.</span>
-            </div>
-          </div>
-
-          {/* Submit */}
-          <div className="submit-area">
-            <p className="submit-disclaimer">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-                <circle cx="12" cy="12" r="10"/>
-                <line x1="12" y1="8" x2="12" y2="12"/>
-                <line x1="12" y1="16" x2="12.01" y2="16"/>
-              </svg>
-              We'll follow up within a few hours with a custom quote. Nothing is booked until we confirm.
-            </p>
-            <button
-              type="submit"
-              className="btn btn-primary btn-lg btn-full"
-              disabled={submitting}
-              aria-busy={submitting}
-            >
-              {submitting ? 'Sending…' : 'Request Catering Quote'}
-            </button>
-          </div>
+      ) : (
+        <form className="event-form" noValidate onSubmit={onSubmit}>
+          <ErrorSummary errors={Object.entries(errors).map(([id, message]) => ({ id, message }))} summaryRef={summaryRef} />
+          <RadioCardGroup id="ev-type" name="ev-type" legend="What are you planning?" value={f.type} onChange={v => { set({ type: v }); clearErr('ev-type'); }} options={TYPES} cols={2} error={errors['ev-type']} />
+          {!isQuestion && (
+            <>
+              <TextField id="ev-when" name="ev-when" label="When is it?" value={f.when} onChange={v => { set({ when: v }); clearErr('ev-when'); }} error={errors['ev-when']} hint='A date, or roughly when — "mid-October" is fine.' autoComplete="off" />
+              <TextField id="ev-guests" name="ev-guests" label="How many people?" value={f.guests} onChange={v => { set({ guests: v }); clearErr('ev-guests'); }} error={errors['ev-guests']} hint='A rough number is fine, or "not sure".' inputMode="numeric" autoComplete="off" />
+              <TextField id="ev-where" name="ev-where" label="Where?" value={f.where} onChange={v => { set({ where: v }); clearErr('ev-where'); }} error={errors['ev-where']} hint="City or ZIP code." autoComplete="postal-code" />
+            </>
+          )}
+          {askStyle && (
+            <RadioCardGroup id="ev-style" name="ev-style" legend="Service style" value={f.style} onChange={v => { set({ style: v }); clearErr('ev-style'); }} options={STYLES} cols={3} error={errors['ev-style']} />
+          )}
+          <TextField id="ev-name" name="name" label="Full name" autoComplete="name" value={customer.name} onChange={v => { setCustomer({ name: v }); clearErr('ev-name'); }} error={errors['ev-name']} />
+          <TextField id="ev-phone" name="phone" label="Phone number" type="tel" autoComplete="tel" inputMode="tel" value={customer.phone} onChange={v => { setCustomer({ phone: v }); clearErr('ev-phone'); }} error={errors['ev-phone']} hint="We'll call this number." />
+          <TextField id="ev-email" name="email" label="Email" optional type="email" autoComplete="email" inputMode="email" value={customer.email} onChange={v => { setCustomer({ email: v }); clearErr('ev-email'); }} error={errors['ev-email']} />
+          <TextArea id="ev-details" name="details" label={isQuestion ? 'Your question' : 'Tell us about it'} value={f.details} onChange={v => { set({ details: v }); clearErr('ev-details'); }} error={errors['ev-details']} maxLength={1000}
+            hint={isQuestion ? undefined : 'Menu ideas, dietary needs, timing, the venue — whatever you know so far.'} />
+          <input type="text" name="_gotcha" className="gotcha" tabIndex={-1} aria-hidden="true" autoComplete="off" defaultValue="" />
+          {sendError && <Notice kind="error" role="alert">{sendError}</Notice>}
+          <Button type="submit" size="lg" mobileFull busy={sending}>Send my event request</Button>
+          <p className="small muted form-after">{SITE.owner} replies within one business day. Or call <PhoneLink location="catering_form" />.</p>
         </form>
-      </div>
-    </section>
-  );
-}
-
-function Field({ id, label, type = 'text', placeholder, hint, value, onChange, onBlur, error, required, autoComplete, inputMode }) {
-  return (
-    <div className="form-group">
-      <label htmlFor={id}>
-        {label} {required && <span className="req" aria-hidden="true">*</span>}
-      </label>
-      <input
-        type={type}
-        id={id}
-        name={id}
-        placeholder={placeholder}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        onBlur={onBlur}
-        required={required}
-        autoComplete={autoComplete}
-        inputMode={inputMode}
-        aria-required={required}
-        aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={`${hint ? `h-${id} ` : ''}${error ? `e-${id}` : ''}`}
-      />
-      {hint  && <span className="fhint" id={`h-${id}`}>{hint}</span>}
-      {error && <span className="ferr"  id={`e-${id}`} role="alert">{error}</span>}
-    </div>
+      )}
+    </Section>
   );
 }

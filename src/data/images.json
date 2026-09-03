@@ -43,7 +43,8 @@
     "aspect": 0.6667,
     "widths": [
       480,
-      800
+      800,
+      1024
     ],
     "formats": [
       "avif",
@@ -53,15 +54,18 @@
     "sources": {
       "avif": [
         "/img/brisket-board-480.avif",
-        "/img/brisket-board-800.avif"
+        "/img/brisket-board-800.avif",
+        "/img/brisket-board-1024.avif"
       ],
       "webp": [
         "/img/brisket-board-480.webp",
-        "/img/brisket-board-800.webp"
+        "/img/brisket-board-800.webp",
+        "/img/brisket-board-1024.webp"
       ],
       "jpg": [
         "/img/brisket-board-480.jpg",
-        "/img/brisket-board-800.jpg"
+        "/img/brisket-board-800.jpg",
+        "/img/brisket-board-1024.jpg"
       ]
     },
     "lqip": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAADQBgCdASoYACQAPu1qrVCppaQipWzJMB2JZgCw7DaKEMpC6U8lx/K1DtlruN4l6klD+Qhq7SvaVvVsud0DU7AA/vNZli5RWlNdrbVYXY2r091K+oK4BhYDaKn0HI2FpQSJS3v47gdGeiBRGo2eJyugjbmN6NT37Hzc5qyyGd3P3bNMUMSIJgDkCy2i8msPHO+X7GXrdgHUNfoNNdaQJuYj/tUlB4IiX2rdWPdhb9CpI+gOmtaLV/3I0gzISzrcyki+GTBTMxp4c5MnZBSd1xXmtn7G3YLGY3hAd3EMz2hA1y6yQjwAAA==",
@@ -111,7 +115,8 @@
     "aspect": 0.6667,
     "widths": [
       480,
-      800
+      800,
+      1024
     ],
     "formats": [
       "avif",
@@ -121,15 +126,18 @@
     "sources": {
       "avif": [
         "/img/pork-butt-480.avif",
-        "/img/pork-butt-800.avif"
+        "/img/pork-butt-800.avif",
+        "/img/pork-butt-1024.avif"
       ],
       "webp": [
         "/img/pork-butt-480.webp",
-        "/img/pork-butt-800.webp"
+        "/img/pork-butt-800.webp",
+        "/img/pork-butt-1024.webp"
       ],
       "jpg": [
         "/img/pork-butt-480.jpg",
-        "/img/pork-butt-800.jpg"
+        "/img/pork-butt-800.jpg",
+        "/img/pork-butt-1024.jpg"
       ]
     },
     "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACwBQCdASoYACQAPtFYpk2oJaQiNUwBABoJZQDG9Chx0JnaTLCUrDEdCfYfuHTb++Z73czTdwAA/u7eyCZcYeRGcMQHyL31M0CnFWeqP+lyePn6eMqFUzjF8j6hE8OtSf53Ukg93hxXEYf47NU07e/yjIqBzOW5wuQAAA==",
@@ -140,7 +148,8 @@
     "height": 800,
     "aspect": 0.75,
     "widths": [
-      480
+      480,
+      600
     ],
     "formats": [
       "avif",
@@ -149,13 +158,16 @@
     ],
     "sources": {
       "avif": [
-        "/img/pitmaster-480.avif"
+        "/img/pitmaster-480.avif",
+        "/img/pitmaster-600.avif"
       ],
       "webp": [
-        "/img/pitmaster-480.webp"
+        "/img/pitmaster-480.webp",
+        "/img/pitmaster-600.webp"
       ],
       "jpg": [
-        "/img/pitmaster-480.jpg"
+        "/img/pitmaster-480.jpg",
+        "/img/pitmaster-600.jpg"
       ]
     },
     "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAACQBQCdASoYACAAPu1ssVCppiUiqAqpMB2JYgDE2DQ6H/UbPcKYxN57+YhcdxGuTHcntaKxAAD9IeqAjha5rb+5McX21TPeDZKibDqdC/dWb8GrUn1u24Uh98xZiVJIyROOwGofgqPC7H74m5vRjLRedpQOqnDnKu1g6n215CUuPjr3mhvY/TdBHATHgfQ1M3pqLi78VAIZFXyfI0Din9i9JwAAAA==",

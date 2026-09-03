@@ -1,332 +1,128 @@
-// ---- Menu Data ----
-export const MENU = {
-  beef: [
-    {
-      id: 'chuck-burnt-ends',
-      name: 'Chuck Roast Burnt Ends',
-      emoji: '🍖',
-      desc: 'Chuck roast smoked to melt-in-your-mouth perfection, cut into burnt end cubes and finished in our house sauce.',
-      full: 150,
-      half: null,
-    },
-    {
-      id: 'brisket-burnt-ends',
-      name: 'Brisket Burnt Ends',
-      emoji: '🍖',
-      desc: 'Whole brisket smoked overnight, then cut into caramelized burnt end cubes and finished in house sauce. Rich, smoky, and impossible to stop eating.',
-      full: 200,
-      half: null,
-    },
-    {
-      id: 'brisket',
-      name: 'Brisket',
-      emoji: '🥩',
-      desc: '17–18 lb whole brisket smoked overnight over hardwood. Bark for days. Sliced or chopped to order.',
-      full: 235,
-      half: null,
-    },
-    {
-      id: 'ox-tails',
-      name: 'Ox Tails',
-      emoji: '🍲',
-      desc: 'Slow-smoked then braised until fall-off-the-bone tender. A DC classic, done the 202 way.',
-      full: 185,
-      half: 130,
-    },
-    {
-      id: 'beef-ribs',
-      name: 'Beef Ribs',
-      emoji: '🦴',
-      desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours. Pricing varies by market. Call to quote.',
-      full: 'MP',
-      half: 'MP',
-    },
-    {
-      id: 'smoked-burgers',
-      name: 'Smoked Burgers',
-      emoji: '🍔',
-      desc: 'Hand-pressed beef patties smoked low and slow before a hot finish. Served with all the fixings.',
-      full: 130,
-      half: 90,
-    },
-    {
-      id: 'ribeyes',
-      name: 'Ribeyes',
-      emoji: '🥩',
-      desc: 'Thick-cut ribeyes seasoned with our Hill Rub and smoked to a perfect medium-rare finish.',
-      full: 45,
-      half: null,
-      unit: 'per steak',
-    },
-  ],
-  pork: [
-    {
-      id: 'pulled-pork',
-      name: 'Pulled Pork',
-      emoji: '🐷',
-      desc: 'Bone-in pork shoulder smoked for 14+ hours until it pulls apart with two fingers. Served with house vinegar sauce.',
-      full: 165,
-      half: 100,
-    },
-    {
-      id: 'pork-ribs',
-      name: 'Pork Ribs',
-      emoji: '🍖',
-      desc: 'St. Louis spare ribs rubbed and smoked until they hit that perfect bend test. Glazed to order.',
-      full: 150,
-      half: 100,
-    },
-  ],
-  chicken: [
-    {
-      id: 'wings',
-      name: 'Wings',
-      emoji: '🍗',
-      desc: 'Whole wings seasoned with our Hill Rub and smoked until the skin crisps up and the meat stays juicy.',
-      full: 150,
-      half: 90,
-    },
-    {
-      id: 'thighs',
-      name: 'Thighs',
-      emoji: '🍗',
-      desc: 'Bone-in, skin-on chicken thighs smoked low and slow. Consistently the most-requested cut we make.',
-      full: 140,
-      half: 90,
-    },
-    {
-      id: 'drumsticks',
-      name: 'Drumsticks',
-      emoji: '🍗',
-      desc: 'Smoked drumsticks with a crispy seasoned skin. Great for crowds. Finger food done right.',
-      full: 140,
-      half: 90,
-    },
-  ],
-  sides: [
-    {
-      id: 'smoked-salmon',
-      name: 'Smoked Salmon',
-      emoji: '🐟',
-      desc: 'Atlantic salmon cold-smoked over cherry wood. Silky, rich, and impossible not to double-dip.',
-      full: 330,
-      half: 200,
-    },
-    {
-      id: 'half-smokes',
-      name: 'Half Smokes',
-      emoji: '🌭',
-      desc: "DC's own. Beef and pork half-smoke sausages smoked until the casing snaps. A Capitol Hill tradition.",
-      full: 130,
-      half: 90,
-    },
-    {
-      id: 'half-smoke-burnt-ends',
-      name: 'Half Smoke Burnt Ends',
-      emoji: '🌭',
-      desc: 'Half smokes re-cut into burnt end bites and finished low and slow in our smoky glaze. A 202 original.',
-      full: 135,
-      half: 90,
-    },
-    {
-      id: 'lamb-chops',
-      name: 'Lamb Chops',
-      emoji: '🍖',
-      desc: 'Frenched lamb chops (rack of 8 bones) seasoned with herbs and smoked. Priced at market. Contact us for availability and quote.',
-      full: 'MP',
-      half: 'MP',
-    },
-    {
-      id: 'collard-greens',
-      name: 'Collard Greens',
-      emoji: '🥬',
-      desc: 'Slow-braised Southern-style collard greens with smoked turkey neck, apple cider vinegar, and brown sugar.',
-      full: 150,
-      half: 125,
-    },
-    {
-      id: 'mac-cheese',
-      name: 'Mac and Cheese',
-      emoji: '🧀',
-      desc: 'Three-cheese baked mac topped with smoked brisket bits and a golden breadcrumb crust.',
-      full: 175,
-      half: 145,
-    },
-    {
-      id: 'mashed-potatoes',
-      name: 'Mashed Potatoes',
-      emoji: '🥔',
-      desc: 'Buttery, creamy mashed potatoes made with real butter and cream. Simple, perfect, crowd-pleasing.',
-      full: 130,
-      half: 100,
-    },
-    {
-      id: 'kickin-coleslaw',
-      name: "Kickin' Coleslaw",
-      emoji: '🥗',
-      desc: 'Creamy vinegar slaw with jalapeño, celery seed, and a kick of heat. The essential BBQ counterpart.',
-      full: 120,
-      half: 85,
-    },
-    {
-      id: 'seafood-salad',
-      name: 'Seafood Salad',
-      emoji: '🦐',
-      desc: 'Fresh mixed seafood salad with shrimp, crab, and more, tossed in a light, herbed dressing.',
-      full: 250,
-      half: null,
-    },
-  ],
-};
+// The tray menu.
+//
+// Each item has one or more `options` (a size or unit). An option that does not
+// exist is simply absent — never "N/A". `pricing: 'quote'` marks market-price
+// items: they can be added, are excluded from the subtotal, and are quoted by
+// Matt before anything is confirmed. `feeds` is [low, high] people.
+//
+// `image` is a key in ./images.json, or null when nothing has been shot yet.
 
-export const MENU_CATEGORIES = [
-  { key: 'beef',    label: 'Beef' },
-  { key: 'pork',    label: 'Pork' },
-  { key: 'chicken', label: 'Chicken' },
-  { key: 'sides',   label: 'Sides & More' },
+const FULL = (price, extra = {}) => ({ id: 'full', label: 'Full tray', feeds: [30, 40], price, ...extra });
+const HALF = (price, extra = {}) => ({ id: 'half', label: 'Half tray', feeds: [15, 20], price, ...extra });
+const QUOTE = { pricing: 'quote', price: null };
+
+export const GROUPS = [
+  { id: 'beef',    short: 'Beef',    name: 'Beef' },
+  { id: 'pork',    short: 'Pork',    name: 'Pork & Sausage', blurb: "Including DC's own half-smokes." },
+  { id: 'chicken', short: 'Chicken', name: 'Chicken', blurb: 'Seasoned with our Hill Rub.' },
+  { id: 'seafood', short: 'Seafood', name: 'Seafood & Lamb', blurb: 'Salmon cold-smoked over cherry wood; lamb at market price.' },
+  { id: 'sides',   short: 'Sides',   name: 'Sides', blurb: 'Made from scratch. The mac and cheese has brisket in it.' },
 ];
 
-// Events: only include confirmed real events. Add entries here when dates/locations are confirmed.
-export const UPCOMING_EVENTS = [
-  {
-    id: 'right-proper-may-16',
-    badge: 'Pop-up',
-    badgeClass: 'badge--collab',
-    title: '202BBQ × Right Proper',
-    date: 'Saturday, May 16 · 1–6pm',
-    location: 'Right Proper Brewing · 920 Girard St. NE, Washington, DC 20017',
-    desc: "Kick off the collab at Right Proper Brewing. Come for the craft beer, stay for the smoked meats. We'll be set up outside from 1–6pm. First of many dates this spring and summer.",
-    featured: true,
-    cta: 'https://rightproperbrewing.com',
-    collab: 'right-proper',
-    ctaLabel: 'Visit Right Proper',
-  },
-  {
-    id: 'right-proper-may-30',
-    badge: 'Pop-up',
-    badgeClass: 'badge--collab',
-    title: '202BBQ × Right Proper',
-    date: 'Saturday, May 30 · 1–6pm',
-    location: 'Right Proper Brewing · 920 Girard St. NE, Washington, DC 20017',
-    desc: "Round two. More smoked meats, more craft beer, better weather. Drop by Right Proper from 1–6pm and grab a plate.",
-    featured: false,
-    cta: 'https://rightproperbrewing.com',
-    collab: 'right-proper',
-    ctaLabel: 'Visit Right Proper',
-  },
-  {
-    id: 'right-proper-jun-6',
-    badge: 'Pop-up',
-    badgeClass: 'badge--collab',
-    title: '202BBQ × Right Proper',
-    date: 'Saturday, June 6 · 1–6pm',
-    location: 'Right Proper Brewing · 920 Girard St. NE, Washington, DC 20017',
-    desc: "Summer's here and so are we. Catch 202BBQ at Right Proper from 1–6pm. More dates dropping throughout the season. Follow @202_bbq to stay up to date.",
-    featured: false,
-    cta: 'https://rightproperbrewing.com',
-    collab: 'right-proper',
-    ctaLabel: 'Visit Right Proper',
-  },
-  {
-    id: 'bbq-battle',
-    badge: 'Competition',
-    badgeClass: 'badge--gold',
-    title: '34th Annual Giant BBQ Battle',
-    date: 'June 27–28, 2026',
-    location: 'Pennsylvania Ave NW · Washington, DC',
-    desc: "We're competing at DC's biggest BBQ event, the 34th Annual Giant BBQ Battle on Historic Pennsylvania Avenue. Two days, the country's best pitmasters, 100+ food samples, live music, and three stages of entertainment. Come find the 202BBQ tent and show your support.",
-    featured: true,
-    cta: 'https://bbqindc.com/',
-    ctaLabel: 'Follow for Updates',
-  },
+export const MENU_ITEMS = [
+  // ---- Beef ----
+  { id: 'brisket', group: 'beef', name: 'Brisket', image: 'brisket-slice',
+    desc: 'A whole 17–18 lb brisket smoked overnight over hardwood. Bark for days. Sliced or chopped to order.',
+    tags: ['Signature'], allergens: [],
+    options: [FULL(235)] },
+  { id: 'brisket-burnt-ends', group: 'beef', name: 'Brisket Burnt Ends', image: null,
+    desc: 'Whole brisket smoked overnight, cut into caramelized cubes and finished in our house sauce.',
+    tags: [], allergens: [],
+    options: [FULL(200)] },
+  { id: 'chuck-burnt-ends', group: 'beef', name: 'Chuck Roast Burnt Ends', image: null,
+    desc: 'Chuck roast smoked until tender, cubed, and finished in our house sauce.',
+    tags: [], allergens: [],
+    options: [FULL(150)] },
+  { id: 'ox-tails', group: 'beef', name: 'Ox Tails', image: null,
+    desc: 'Slow-smoked, then braised until they fall off the bone. A DC classic, done the 202 way.',
+    tags: ['DC classic'], allergens: [],
+    options: [FULL(185), HALF(130)] },
+  { id: 'beef-ribs', group: 'beef', name: 'Beef Ribs', image: null,
+    desc: 'Dinosaur-sized beef short ribs smoked over oak for 10+ hours.',
+    tags: [], allergens: [],
+    options: [FULL(null, QUOTE), HALF(null, QUOTE)] },
+  { id: 'smoked-burgers', group: 'beef', name: 'Smoked Burgers', image: null,
+    desc: 'Hand-pressed patties smoked low and slow, then finished hot. Served with all the fixings.',
+    tags: [], allergens: ['wheat'],
+    options: [FULL(130), HALF(90)] },
+  { id: 'ribeyes', group: 'beef', name: 'Ribeyes', image: null,
+    desc: 'Thick-cut ribeyes seasoned with our Hill Rub and smoked to medium-rare.',
+    tags: [], allergens: [],
+    options: [{ id: 'each', label: 'Per steak', unit: 'steak', feeds: [1, 1], price: 45, minQty: 6 }] },
+
+  // ---- Pork & Sausage ----
+  { id: 'pulled-pork', group: 'pork', name: 'Pulled Pork', image: 'pork-butt',
+    desc: 'Bone-in pork shoulder smoked 14+ hours until it pulls apart with two fingers. Served with house vinegar sauce.',
+    tags: ['Signature'], allergens: [],
+    options: [FULL(165), HALF(100)] },
+  { id: 'pork-ribs', group: 'pork', name: 'Pork Ribs', image: null,
+    desc: 'St. Louis spare ribs rubbed and smoked until they pass the bend test. Glazed to order.',
+    tags: [], allergens: [],
+    options: [FULL(150), HALF(100)] },
+  { id: 'half-smokes', group: 'pork', name: 'Half Smokes', image: null,
+    desc: "DC's own beef-and-pork sausages, smoked until the casing snaps. A Capitol Hill tradition.",
+    tags: ['DC classic'], allergens: [],
+    options: [FULL(130), HALF(90)] },
+  { id: 'half-smoke-burnt-ends', group: 'pork', name: 'Half Smoke Burnt Ends', image: null,
+    desc: 'Half smokes cut into bite-size ends and finished low and slow in our smoky glaze. A 202 original.',
+    tags: [], allergens: [],
+    options: [FULL(135), HALF(90)] },
+
+  // ---- Chicken ----
+  { id: 'thighs', group: 'chicken', name: 'Thighs', image: 'chicken-egg',
+    desc: 'Bone-in, skin-on thighs smoked low and slow. The cut people ask for most.',
+    tags: ['Most requested'], allergens: [],
+    options: [FULL(140), HALF(90)] },
+  { id: 'wings', group: 'chicken', name: 'Wings', image: null,
+    desc: 'Whole wings seasoned with our Hill Rub and smoked until the skin crisps and the meat stays juicy.',
+    tags: [], allergens: [],
+    options: [FULL(150), HALF(90)] },
+  { id: 'drumsticks', group: 'chicken', name: 'Drumsticks', image: null,
+    desc: 'Smoked drumsticks with crisp, seasoned skin. Finger food for a crowd.',
+    tags: [], allergens: [],
+    options: [FULL(140), HALF(90)] },
+
+  // ---- Seafood & Lamb ----
+  { id: 'smoked-salmon', group: 'seafood', name: 'Smoked Salmon', image: null,
+    desc: 'Atlantic salmon cold-smoked over cherry wood. Silky and rich.',
+    tags: [], allergens: ['fish'],
+    options: [FULL(330), HALF(200)] },
+  { id: 'seafood-salad', group: 'seafood', name: 'Seafood Salad', image: null,
+    desc: 'Shrimp, crab and mixed seafood tossed in a light herbed dressing.',
+    tags: [], allergens: ['shellfish'],
+    options: [FULL(250)] },
+  { id: 'lamb-chops', group: 'seafood', name: 'Lamb Chops', image: null,
+    desc: 'A frenched rack of eight, seasoned with herbs and smoked.',
+    tags: [], allergens: [],
+    options: [FULL(null, QUOTE), HALF(null, QUOTE)] },
+
+  // ---- Sides ----
+  { id: 'mac-cheese', group: 'sides', name: 'Mac and Cheese', image: null,
+    desc: 'Three-cheese baked mac topped with smoked brisket bits and a golden breadcrumb crust.',
+    tags: [], allergens: ['dairy', 'wheat'], contains: 'brisket',
+    options: [FULL(175), HALF(145)] },
+  { id: 'collard-greens', group: 'sides', name: 'Collard Greens', image: null,
+    desc: 'Slow-braised Southern collards with smoked turkey neck, cider vinegar and brown sugar.',
+    tags: [], allergens: [], contains: 'smoked turkey',
+    options: [FULL(150), HALF(125)] },
+  { id: 'mashed-potatoes', group: 'sides', name: 'Mashed Potatoes', image: null,
+    desc: 'Buttery, creamy mashed potatoes made with real butter and cream.',
+    tags: [], allergens: ['dairy'],
+    options: [FULL(130), HALF(100)] },
+  { id: 'kickin-coleslaw', group: 'sides', name: "Kickin' Coleslaw", image: null,
+    desc: 'Creamy vinegar slaw with jalapeño and celery seed. A little heat.',
+    tags: [], allergens: ['egg'],
+    options: [FULL(120), HALF(85)] },
 ];
 
-export const PAST_EVENTS = [
-  {
-    id: 'annies-ace-demo',
-    badge: 'Live Demo',
-    badgeClass: 'badge--ember',
-    title: "Live Fire Demo at Annie's Ace Hardware",
-    date: 'Sunday, April 26, 2026 · 10am–2pm',
-    location: "Annie's Ace Hardware · 3405 8th St NE, Washington, DC 20017",
-    desc: "We fired up the Big Green Egg and smoked three whole chickens. Free samples, pitmaster Q&A, and a great turnout. Thanks to everyone who stopped by!",
-    featured: true,
-    cta: 'https://www.instagram.com/202_bbq',
-    ctaLabel: 'See the Recap',
-  },
+export const TRAY_KEY = [
+  { id: 'full', label: 'Full tray', feeds: [30, 40] },
+  { id: 'half', label: 'Half tray', feeds: [15, 20] },
 ];
 
-export const EVENTS = UPCOMING_EVENTS;
-
-export const SHIPPING_PRODUCTS = [
-  {
-    id: 'oxtail-softballs',
-    name: 'Oxtail Softballs',
-    desc: "202BBQ's famous oxtail softballs, slow-smoked until fall-off-the-bone tender, then packed into softball-sized portions. Vacuum-sealed and shipped frozen right to your door. Reheat in under 20 minutes.",
-    flavors: ['Candy Red', 'Caribbean', 'Honey Garlic', 'Lemon Pepper'],
-    packs: [
-      { id: '5-pack',  label: '5-Pack',  price: 100, stripeLink: 'https://buy.stripe.com/5kQcN47g3eViggtcrT7IY03' },
-      { id: '10-pack', label: '10-Pack', price: 190, tag: 'Best Value', stripeLink: 'https://buy.stripe.com/3cIbJ06bZ28w3tH63v7IY02' },
-    ],
-  },
-];
-
-export const TESTIMONIALS = [
-  {
-    quote: "Matt catered our grand opening for 70+ guests and it was an absolute hit. Guests raved about the brisket and coleslaw, and many went back for seconds. 100% recommend for catering!",
-    author: 'Jerod L.',
-    location: 'Washington, DC',
-    stars: 5,
-  },
-  {
-    quote: "THE best barbecue you will ever have in DC. The brisket, ribs, and smoked meats rival the best BBQ spots from Kansas City or Austin.",
-    author: 'Beau W.',
-    location: 'Washington, DC',
-    stars: 5,
-  },
-  {
-    quote: "Ordered the smoked salmon and it was moist and delicious.",
-    author: 'Ashley C.',
-    location: 'Washington, DC',
-    stars: 5,
-  },
-  {
-    quote: "Matt puts his heart and soul into producing the most amazing smoked meats! Brisket, smoked pork butt, and chicken legs are my faves. Highly recommend!",
-    author: 'Stevan S.',
-    location: 'Washington, DC',
-    stars: 4,
-  },
-  {
-    quote: "I ordered an entire 17lb brisket and it was literally the most juicy and tender brisket I have ever had in my life! Highly recommend!",
-    author: 'Sam F.',
-    location: 'Washington, DC',
-    stars: 5,
-  },
-];
-
-export const FAQS = [
-  {
-    q: "When can I place an order?",
-    a: "Orders are open Monday through Thursday each week. Everything is smoked fresh overnight Friday so your order is ready Saturday and Sunday. We close the order window Thursday night, no exceptions, so plan ahead!",
-  },
-  {
-    q: "What's the difference between a Full Tray and Half Tray?",
-    a: "A Full Tray feeds approximately 30–40 people. A Half Tray feeds 15–20. Perfect for everything from house parties to office events. If you're unsure about quantity, call us. We're happy to help you plan.",
-  },
-  {
-    q: "Do you deliver, or is it pickup only?",
-    a: "Both, and more! We offer pickup (address confirmed on your order confirmation), delivery throughout the DMV area, and nationwide shipping for customers outside the DC area. A delivery or shipping fee may apply depending on your location. Select your preference on the order form or call us to arrange shipping.",
-  },
-  {
-    q: "What does 'Market Price' mean?",
-    a: "Some items like Beef Ribs and Lamb Chops are priced at market because the cost fluctuates weekly based on what we source. After you submit your order request, we'll call or email you with the exact price before finalizing anything.",
-  },
-  {
-    q: "Is my order confirmed when I submit the form?",
-    a: "Not quite. The form sends us a request, and we'll personally confirm your order within a few hours. You're not locked in until you hear from us. We'll also confirm pickup/delivery details and any market-price totals at that time.",
-  },
-  {
-    q: "Can I find you anywhere besides ordering online?",
-    a: "Yes! Beyond weekend orders, we do popups and farmers markets around DC. We're also competing in the 34th Annual Giant BBQ Battle on June 27–28, 2026 on Historic Pennsylvania Avenue NW. Come find us there. Follow @202_bbq on Instagram for all live location announcements.",
-  },
-];
+// ---- lookups ----
+const byId = new Map(MENU_ITEMS.map(i => [i.id, i]));
+export const getItem = id => byId.get(id) ?? null;
+export const getOption = (itemId, optionId) => getItem(itemId)?.options.find(o => o.id === optionId) ?? null;
+export const itemsInGroup = groupId => MENU_ITEMS.filter(i => i.group === groupId);
+export const groupOf = item => GROUPS.find(g => g.id === item.group);

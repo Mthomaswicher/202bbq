@@ -1,45 +1,69 @@
-const STEPS = [
-  {
-    num: '01',
-    title: 'Browse & Order',
-    body: <>Browse the menu and add trays to your cart, then fill out the order form below. Or call <a href="tel:2027345621">202-734-5621</a>. Orders close <strong>Thursday night</strong>. Slots are limited.</>,
-  },
-  {
-    num: '02',
-    title: 'We Confirm',
-    body: "You'll get a confirmation with your pickup location or delivery window, plus totals for any market-price items. No charge until we confirm.",
-  },
-  {
-    num: '03',
-    title: 'Overnight Smoke',
-    body: 'Friday night we fire up the smoker. Low and slow, all night, until every piece is absolutely perfect.',
-  },
-  {
-    num: '04',
-    title: 'Pickup or Delivery',
-    body: <>Your order is ready <strong>Saturday or Sunday</strong>. Pickup from us, delivered locally in the DMV, or shipped nationwide.</>,
-  },
+import { SITE, PICKUP_AREA, DELIVERY_FEE_SENTENCE } from '../data/site.js';
+import { useOrderWindow } from './StatusLine.jsx';
+import { nowET } from '../lib/time.js';
+import { Section, PhoneLink } from './ui/Bits.jsx';
+
+const WEEK = [
+  { d: 'Mon', label: 'Order' },
+  { d: 'Tue', label: 'Order' },
+  { d: 'Wed', label: 'Order' },
+  { d: 'Thu', label: 'Order by 9 pm' },
+  { d: 'Fri', label: 'We smoke overnight' },
+  { d: 'Sat', label: 'Pick up or delivery' },
+  { d: 'Sun', label: 'Pick up or delivery' },
 ];
+const DOW_TO_INDEX = [6, 0, 1, 2, 3, 4, 5]; // JS Sunday=0 → our Mon-first index
+
+function WeekStrip() {
+  const today = DOW_TO_INDEX[nowET().dow];
+  return (
+    <ol className="weekstrip band" aria-label="Our week">
+      {WEEK.map((w, i) => (
+        <li key={w.d} className={i === today ? 'is-today' : undefined} aria-current={i === today ? 'date' : undefined}>
+          <span className="mono weekstrip-day">{w.d}</span>
+          <span className="weekstrip-label">{w.label}</span>
+          {i === today && <span className="sr-only">(today)</span>}
+        </li>
+      ))}
+    </ol>
+  );
+}
 
 export default function HowItWorks() {
+  const win = useOrderWindow();
   return (
-    <section className="hiw-section" aria-labelledby="hiw-heading">
-      <div className="container">
-        <div className="section-header">
-          <p className="section-eyebrow">Simple as Smoke</p>
-          <h2 className="section-title" id="hiw-heading">How to Get Your BBQ</h2>
-        </div>
-
-        <ol className="hiw-grid" role="list">
-          {STEPS.map(step => (
-            <li key={step.num} className="hiw-item">
-              <div className="hiw-num" aria-hidden="true">{step.num}</div>
-              <h3>{step.title}</h3>
-              <p>{step.body}</p>
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+    <Section id="how-it-works" title="How ordering works" className="how">
+      <WeekStrip />
+      <ol className="steps">
+        <li>
+          <span className="step-num" aria-hidden="true">1</span>
+          <div>
+            <h3 className="step-title">Pick your trays.</h3>
+            <p>A full tray feeds 30–40, a half feeds 15–20. Not sure how much? Use the helper above the menu, or call <PhoneLink location="how" />.</p>
+          </div>
+        </li>
+        <li>
+          <span className="step-num" aria-hidden="true">2</span>
+          <div>
+            <h3 className="step-title">Send your request by Thursday {win.cutoffLabel}.</h3>
+            <p>Nothing is charged automatically. {SITE.owner} calls or emails to confirm, usually within a few hours, and quotes any market-price items.</p>
+          </div>
+        </li>
+        <li>
+          <span className="step-num" aria-hidden="true">3</span>
+          <div>
+            <h3 className="step-title">Hold it with a ${SITE.depositAmount} deposit — now, or after {SITE.owner} confirms.</h3>
+            <p>Card, Apple Pay or Google Pay through Stripe, or Cash App, Venmo or Zelle. Refunded in full if we can't fill your request. The balance is due at pickup or delivery.</p>
+          </div>
+        </li>
+        <li>
+          <span className="step-num" aria-hidden="true">4</span>
+          <div>
+            <h3 className="step-title">Saturday or Sunday, {SITE.fulfilHours.open}–{SITE.fulfilHours.close}.</h3>
+            <p>Free pickup in {PICKUP_AREA}. Delivery across {SITE.serviceArea} — {DELIVERY_FEE_SENTENCE}.</p>
+          </div>
+        </li>
+      </ol>
+    </Section>
   );
 }

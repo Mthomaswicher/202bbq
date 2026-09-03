@@ -1,36 +1,26 @@
-import { useState } from 'react';
 import { useToast } from '../context/ToastContext.jsx';
-
-function Toast({ toast, onRemove }) {
-  const [leaving, setLeaving] = useState(false);
-
-  const handleRemove = () => {
-    setLeaving(true);
-    setTimeout(() => onRemove(toast.id), 280);
-  };
-
-  const icons = { success: '✔', error: '✘', info: 'ℹ' };
-
-  return (
-    <div
-      className={`toast ${toast.type}${leaving ? ' leaving' : ''}`}
-      role="status"
-      onClick={handleRemove}
-      style={{ cursor: 'pointer' }}
-    >
-      <span className="toast-icon">{icons[toast.type] || 'ℹ'}</span>
-      <span>{toast.message}</span>
-    </div>
-  );
-}
+import Icon from './ui/Icon.jsx';
 
 export default function ToastContainer() {
-  const { toasts, removeToast } = useToast();
-
+  const { toasts, removeToast, pause, resume } = useToast();
   return (
-    <div className="toasts" aria-live="polite" aria-atomic="false" aria-label="Notifications">
+    <div className="toasts" role="status" aria-live="polite">
       {toasts.map(t => (
-        <Toast key={t.id} toast={t} onRemove={removeToast} />
+        <div
+          key={t.id} className="toast"
+          onMouseEnter={() => pause(t.id)} onMouseLeave={() => resume(t.id)}
+          onFocus={() => pause(t.id)} onBlur={() => resume(t.id)}
+        >
+          <p>{t.message}</p>
+          {t.action && (
+            <button type="button" className="btn btn-tertiary btn-compact" onClick={() => { t.action.onClick(); removeToast(t.id); }}>
+              {t.action.label}
+            </button>
+          )}
+          <button type="button" className="btn btn-icon btn-tertiary" aria-label="Dismiss" onClick={() => removeToast(t.id)}>
+            <Icon name="x" size={20} />
+          </button>
+        </div>
       ))}
     </div>
   );

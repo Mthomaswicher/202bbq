@@ -1,0 +1,47 @@
+/* ---- sticky header ---- */
+.site-header {
+  position: sticky; top: 0; z-index: var(--z-header);
+  background: var(--paper);
+  min-height: var(--header-h);
+  transition: box-shadow var(--dur-fast) var(--ease-standard);
+}
+.site-header.is-scrolled { box-shadow: var(--elev-header); }
+.header-inner {
+  display: flex; align-items: center; gap: 4px;
+  min-height: var(--header-h);
+  padding-inline: 12px;
+  max-width: var(--container-menu); margin-inline: auto;
+}
+@media (min-width: 360px) { .header-inner { padding-inline: var(--gutter); } }
+
+.logo-link { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; color: var(--rust-logo); margin-right: 4px; border-radius: var(--r-2); }
+.logo-link .logo-wide { display: none; }
+@media (min-width: 1024px) { .logo-link .logo-small { display: none; } .logo-link .logo-wide { display: block; } }
+
+.main-nav { flex: 1; min-width: 0; }
+.main-nav ul { display: flex; align-items: center; gap: 0; }
+.main-nav a {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 8px 12px;
+  font-size: var(--fs-button); font-weight: 600; color: var(--ink); text-decoration: none;
+  border-radius: var(--r-2); white-space: nowrap;
+  text-underline-offset: 6px; text-decoration-thickness: 3px;
+}
+.main-nav a:hover { text-decoration: underline; text-decoration-color: var(--line-strong); }
+.main-nav a[aria-current] { font-weight: 700; text-decoration: underline; text-decoration-color: var(--rust); }
+.main-nav .from-640 { display: none; }
+.main-nav .from-1024 { display: none; }
+@media (min-width: 640px)  { .main-nav .from-640 { display: block; } }
+@media (min-width: 1024px) { .main-nav .from-1024 { display: block; } .main-nav a { padding: 12px 12px; } }
+
+.header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.call-link { padding: 0 10px; gap: 4px; }
+.call-link .call-digits { display: none; }
+@media (min-width: 480px) { .call-link { padding: 0 14px 0 12px; gap: 8px; } .call-link .call-word { display: none; } .call-link .call-digits { display: inline; } .call-link svg { width: 24px; height: 24px; } }
+.your-order { display: none; gap: 8px; }
+.your-order .sep { opacity: .7; }
+.your-order .price { font-size: inherit; line-height: inherit; }
+@media (min-width: 1024px) { .your-order { display: inline-flex; } }
+
+/* the one flourish: smoke curls rise once on load */
+.logo-smoke { animation: smoke-rise var(--dur-draw) var(--ease-out) both; transform-origin: center bottom; }
+@keyframes smoke-rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
