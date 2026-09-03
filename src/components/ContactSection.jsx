@@ -1,5 +1,7 @@
 import { useState, useRef } from 'react';
+import { useToast } from '../context/ToastContext.jsx';
 import { track } from '../lib/analytics.js';
+import { resolveEndpoint, submitToFormspree } from '../lib/formspree.js';
 
 const EVENT_TYPES = [
   { v: 'catering',       label: 'Catering Event',    sub: 'Corporate, wedding, celebration' },
@@ -43,6 +45,7 @@ function Field({ id, label, type = 'text', placeholder, hint, value, onChange, o
 }
 
 export default function ContactSection() {
+  const { addToast } = useToast();
   const [eventType, setEventType] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -100,26 +103,17 @@ export default function ContactSection() {
       Submitted:  new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = (import.meta.env.VITE_FORMSPREE_CONTACT || '').replace(/^<|>$/g, '').trim();
+    const endpoint = resolveEndpoint(
+      import.meta.env.VITE_FORMSPREE_CONTACT,
+      import.meta.env.VITE_FORMSPREE_CATERING,
+      import.meta.env.VITE_FORMSPREE_ORDERS,
+    );
 
-    if (!endpoint || endpoint.includes('REPLACE_ME')) {
-      console.log('202BBQ Contact Inquiry (Formspree not configured):', payload);
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          setSubmitting(false);
-          return;
-        }
-      } catch {
-        setSubmitting(false);
-        return;
-      }
+    const result = await submitToFormspree(endpoint, payload);
+    if (!result.ok) {
+      setSubmitting(false);
+      addToast(result.error, 'error');
+      return;
     }
 
     track('contact_inquiry', { inquiry_type: eventType });

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useToast } from '../context/ToastContext.jsx';
 import { track } from '../lib/analytics.js';
 import REVIEWS from '../data/reviews.json';
+import { resolveEndpoint, submitToFormspree } from '../lib/formspree.js';
 
 function Stars({ value, size = 'md' }) {
   const full = Math.round(value);
@@ -160,22 +161,16 @@ export default function ReviewSection() {
       Submitted: new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = import.meta.env.VITE_FORMSPREE_REVIEWS;
+    const endpoint = resolveEndpoint(
+      import.meta.env.VITE_FORMSPREE_REVIEWS,
+      import.meta.env.VITE_FORMSPREE_CONTACT,
+    );
 
-    if (!endpoint || endpoint.includes('REPLACE_ME')) {
-      console.log('202BBQ Review (Formspree not configured):', formspreePayload);
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(formspreePayload),
-      });
-      if (!res.ok) {
-        setSubmitting(false);
-        addToast('Something went wrong. Please try again.', 'error');
-        return;
-      }
+    const result = await submitToFormspree(endpoint, formspreePayload);
+    if (!result.ok) {
+      setSubmitting(false);
+      addToast(result.error, 'error');
+      return;
     }
 
     track('submit_review', { rating });

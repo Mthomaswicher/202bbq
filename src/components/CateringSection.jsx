@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react';
 import { useToast } from '../context/ToastContext.jsx';
 import { track } from '../lib/analytics.js';
+import { resolveEndpoint, submitToFormspree } from '../lib/formspree.js';
 
 const EVENT_TYPES = [
   'Wedding',
@@ -115,29 +116,19 @@ export default function CateringSection() {
       Submitted:   new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = import.meta.env.VITE_FORMSPREE_CATERING;
+    // Falls back to the contact/orders inboxes so a missing VITE_FORMSPREE_CATERING
+    // secret still delivers the inquiry instead of dropping it.
+    const endpoint = resolveEndpoint(
+      import.meta.env.VITE_FORMSPREE_CATERING,
+      import.meta.env.VITE_FORMSPREE_CONTACT,
+      import.meta.env.VITE_FORMSPREE_ORDERS,
+    );
 
-    if (!endpoint || endpoint.includes('REPLACE_ME') || endpoint.includes('YOUR_')) {
-      console.log('202BBQ Catering Inquiry (Formspree not configured):', payload);
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(payload),
-        });
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          setSubmitting(false);
-          addToast(data?.error || "Submit failed. Please try again or call 202-734-5621.", 'error');
-          return;
-        }
-      } catch {
-        setSubmitting(false);
-        addToast("Network issue. Check your connection, try again, or call 202-734-5621.", 'error');
-        return;
-      }
+    const result = await submitToFormspree(endpoint, payload);
+    if (!result.ok) {
+      setSubmitting(false);
+      addToast(result.error, 'error');
+      return;
     }
 
     track('generate_lead', {
