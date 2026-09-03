@@ -1,0 +1,220 @@
+{
+  "brisket-slice": {
+    "width": 3024,
+    "height": 4032,
+    "aspect": 0.75,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "sources": {
+      "avif": [
+        "/img/brisket-slice-480.avif",
+        "/img/brisket-slice-800.avif",
+        "/img/brisket-slice-1200.avif",
+        "/img/brisket-slice-1600.avif"
+      ],
+      "webp": [
+        "/img/brisket-slice-480.webp",
+        "/img/brisket-slice-800.webp",
+        "/img/brisket-slice-1200.webp",
+        "/img/brisket-slice-1600.webp"
+      ],
+      "jpg": [
+        "/img/brisket-slice-480.jpg",
+        "/img/brisket-slice-800.jpg",
+        "/img/brisket-slice-1200.jpg",
+        "/img/brisket-slice-1600.jpg"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4ILQAAACwBQCdASoYACAAPu1srVCppiQiqAqpMB2JQBbfXRCHrLIUjt2NHpTGV0LjIRAEpsFYilrnngAA/mFon2r98Y2x1JKe+WllQusZooE2YmBwthaYP9JswwTOAcyhy9VsPvFbCUOlfaGOsJNXsbimTKwpMsOVM5hjlhGFbwzftqVT7uOQln6DC6YnjFi9pumuianW9NW1+UOqqNbhFFeAA2+JpaE7SdyiQPCFDIleE+ZARrngAAA=",
+    "color": "#180808"
+  },
+  "brisket-board": {
+    "width": 1024,
+    "height": 1536,
+    "aspect": 0.6667,
+    "widths": [
+      480,
+      800
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "sources": {
+      "avif": [
+        "/img/brisket-board-480.avif",
+        "/img/brisket-board-800.avif"
+      ],
+      "webp": [
+        "/img/brisket-board-480.webp",
+        "/img/brisket-board-800.webp"
+      ],
+      "jpg": [
+        "/img/brisket-board-480.jpg",
+        "/img/brisket-board-800.jpg"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAADQBgCdASoYACQAPu1qrVCppaQipWzJMB2JZgCw7DaKEMpC6U8lx/K1DtlruN4l6klD+Qhq7SvaVvVsud0DU7AA/vNZli5RWlNdrbVYXY2r091K+oK4BhYDaKn0HI2FpQSJS3v47gdGeiBRGo2eJyugjbmN6NT37Hzc5qyyGd3P3bNMUMSIJgDkCy2i8msPHO+X7GXrdgHUNfoNNdaQJuYj/tUlB4IiX2rdWPdhb9CpI+gOmtaLV/3I0gzISzrcyki+GTBTMxp4c5MnZBSd1xXmtn7G3YLGY3hAd3EMz2hA1y6yQjwAAA==",
+    "color": "#080808"
+  },
+  "chicken-egg": {
+    "width": 4284,
+    "height": 5712,
+    "aspect": 0.75,
+    "widths": [
+      480,
+      800,
+      1200,
+      1600
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "sources": {
+      "avif": [
+        "/img/chicken-egg-480.avif",
+        "/img/chicken-egg-800.avif",
+        "/img/chicken-egg-1200.avif",
+        "/img/chicken-egg-1600.avif"
+      ],
+      "webp": [
+        "/img/chicken-egg-480.webp",
+        "/img/chicken-egg-800.webp",
+        "/img/chicken-egg-1200.webp",
+        "/img/chicken-egg-1600.webp"
+      ],
+      "jpg": [
+        "/img/chicken-egg-480.jpg",
+        "/img/chicken-egg-800.jpg",
+        "/img/chicken-egg-1200.jpg",
+        "/img/chicken-egg-1600.jpg"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAABwBQCdASoYACAAPuVepk2pJSOiN/VYASAciWoAtshAsy01DI+WqI/EaAEC0KukicahxshgAMvmjfR6pkZjp7waKOokQIeMYvpMCcwqa9/eI5gVr2k+psoPA9CbVE5fwkk6K1rw3INleL7LzInRP64Gs0JwUg+Y8lGt3D/RME/qUgY8vnHKnEDm6jv5Eq/CvowAAA==",
+    "color": "#484848"
+  },
+  "pork-butt": {
+    "width": 1024,
+    "height": 1536,
+    "aspect": 0.6667,
+    "widths": [
+      480,
+      800
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "sources": {
+      "avif": [
+        "/img/pork-butt-480.avif",
+        "/img/pork-butt-800.avif"
+      ],
+      "webp": [
+        "/img/pork-butt-480.webp",
+        "/img/pork-butt-800.webp"
+      ],
+      "jpg": [
+        "/img/pork-butt-480.jpg",
+        "/img/pork-butt-800.jpg"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRoYAAABXRUJQVlA4IHoAAACwBQCdASoYACQAPtFYpk2oJaQiNUwBABoJZQDG9Chx0JnaTLCUrDEdCfYfuHTb++Z73czTdwAA/u7eyCZcYeRGcMQHyL31M0CnFWeqP+lyePn6eMqFUzjF8j6hE8OtSf53Ukg93hxXEYf47NU07e/yjIqBzOW5wuQAAA==",
+    "color": "#080808"
+  },
+  "pitmaster": {
+    "width": 600,
+    "height": 800,
+    "aspect": 0.75,
+    "widths": [
+      480
+    ],
+    "formats": [
+      "avif",
+      "webp",
+      "jpg"
+    ],
+    "sources": {
+      "avif": [
+        "/img/pitmaster-480.avif"
+      ],
+      "webp": [
+        "/img/pitmaster-480.webp"
+      ],
+      "jpg": [
+        "/img/pitmaster-480.jpg"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRrAAAABXRUJQVlA4IKQAAACQBQCdASoYACAAPu1ssVCppiUiqAqpMB2JYgDE2DQ6H/UbPcKYxN57+YhcdxGuTHcntaKxAAD9IeqAjha5rb+5McX21TPeDZKibDqdC/dWb8GrUn1u24Uh98xZiVJIyROOwGofgqPC7H74m5vRjLRedpQOqnDnKu1g6n215CUuPjr3mhvY/TdBHATHgfQ1M3pqLi78VAIZFXyfI0Din9i9JwAAAA==",
+    "color": "#181818"
+  },
+  "logo": {
+    "width": 1024,
+    "height": 1024,
+    "aspect": 1,
+    "widths": [
+      80,
+      160,
+      320,
+      640
+    ],
+    "formats": [
+      "webp",
+      "png"
+    ],
+    "sources": {
+      "webp": [
+        "/img/logo-80.webp",
+        "/img/logo-160.webp",
+        "/img/logo-320.webp",
+        "/img/logo-640.webp"
+      ],
+      "png": [
+        "/img/logo-80.png",
+        "/img/logo-160.png",
+        "/img/logo-320.png",
+        "/img/logo-640.png"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAADwBACdASoYABgAPu1sq1EppaOiqAqpMB2JZgC7ABEc7nXdzWCuG4h0ELtvN0Zw9AAA/u1DkBP+H7GavvUWgXCygFui4KfU0yOlVDJ3Pa8g9Wm2e7y1Br6FD1gNst6QJSVR8H8T/PVFEzTIO/uHADS4wAAAAA==",
+    "color": "#f8e8e8"
+  },
+  "right-proper": {
+    "width": 1500,
+    "height": 319,
+    "aspect": 4.7022,
+    "widths": [
+      320,
+      640
+    ],
+    "formats": [
+      "webp",
+      "png"
+    ],
+    "sources": {
+      "webp": [
+        "/img/right-proper-320.webp",
+        "/img/right-proper-640.webp"
+      ],
+      "png": [
+        "/img/right-proper-320.png",
+        "/img/right-proper-640.png"
+      ]
+    },
+    "lqip": "data:image/webp;base64,UklGRsAAAABXRUJQVlA4WAoAAAAQAAAAFwAABAAAQUxQSHEAAAAFcBsAgOG8bRvps3+dIdTazum9RkTEYnMWuZZiuP0tnfOEYEFSPlB1+s1ZEmgWfrZtNlMYCCWahZPmLncvWRp78HlQqm3ofcf+BlYR1M0DMNIEWnpCfzbQeH54DqrSD8zzDyQNElV+HqdC5OQJjCKHMQBWUDggKAAAALACAJ0BKhgABQA+7WKpTamlo6IwCAEwHYlpAAB7IAD+8KT9bRAAAAA=",
+    "color": "#486848"
+  }
+}
