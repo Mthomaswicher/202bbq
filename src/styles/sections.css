@@ -15,7 +15,7 @@
 .steps { display: grid; gap: var(--s-5); }
 .steps > li { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 16px; max-width: none; }
 .steps .step-num, .next-steps .step-num { font-family: var(--font-display); font-variation-settings: 'SOFT' 40; font-weight: 600; font-size: var(--fs-h3); line-height: 1.2; color: var(--rust); min-width: 1.2em; }
-.steps .step-title { font-family: var(--font-body); font-size: var(--fs-h5); font-weight: 700; line-height: var(--lh-h5); margin-bottom: 4px; }
+.steps .step-title { font-family: var(--font-body); font-size: var(--fs-h5); font-weight: 700; line-height: var(--lh-h5); margin-bottom: 4px; text-wrap: pretty; }
 @media (min-width: 768px) { .steps { grid-template-columns: 1fr 1fr; column-gap: var(--s-7); } }
 
 /* ---- your order ---- */
@@ -77,8 +77,9 @@
 .facts svg { color: var(--success); flex: none; }
 .buy-panel { padding: var(--s-5); background: var(--surface); border: var(--rule); border-radius: var(--r-3); display: grid; gap: var(--s-4); align-self: start; }
 .buy-panel .radio-group { margin-bottom: 0; }
-.packs { display: grid; gap: 10px; }
-.packs .btn .tag { background: var(--paper); color: var(--ink); }
+.packs { display: grid; gap: 14px; }
+.pack { display: grid; gap: 6px; }
+.pack-tag { font-size: var(--fs-small); font-weight: 600; color: var(--smoke); }
 @media (min-width: 1024px) { .shipping-grid { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); column-gap: var(--s-8); align-items: start; } }
 
 /* ---- reviews ---- */

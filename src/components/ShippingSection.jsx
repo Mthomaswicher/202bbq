@@ -6,7 +6,7 @@ import { track } from '../lib/analytics.js';
 import { RadioCardGroup } from './ui/Field.jsx';
 import Picture from './ui/Picture.jsx';
 import Icon from './ui/Icon.jsx';
-import { PhoneLink, Tag } from './ui/Bits.jsx';
+import { PhoneLink } from './ui/Bits.jsx';
 
 // Checkout is on Stripe. The flavour chosen here rides along as
 // client_reference_id (Stripe accepts [A-Za-z0-9_-]); the owner checklist also
@@ -58,10 +58,12 @@ export default function ShippingSection() {
               options={P.flavours.map(f => ({ value: f.id, title: f.name, sub: f.line }))} cols={2} error={error} />
             <div className="packs">
               {P.packs.map(pack => (
-                <a key={pack.id} href={buyUrl(pack)} className="btn btn-primary btn-lg btn-full" onClick={e => onBuy(e, pack)}>
-                  <span>Buy {pack.label} · {money(pack.price)}</span>
-                  {pack.tag && <Tag>{pack.tag}</Tag>}
-                </a>
+                <div key={pack.id} className="pack">
+                  {pack.tag && <span className="pack-tag">{pack.tag} — {Math.round((1 - pack.price / (P.packs[0].price * (parseInt(pack.label, 10) / parseInt(P.packs[0].label, 10)))) * 100)}% less per softball</span>}
+                  <a href={buyUrl(pack)} className="btn btn-primary btn-lg btn-full" onClick={e => onBuy(e, pack)}>
+                    Buy {pack.label} · {money(pack.price)}
+                  </a>
+                </div>
               ))}
             </div>
             <p className="small muted">You'll confirm the quantity and enter your delivery address on the next screen (Stripe). Card, Apple Pay or Google Pay.</p>

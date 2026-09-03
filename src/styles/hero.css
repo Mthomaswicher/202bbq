@@ -20,11 +20,11 @@
 
 @media (min-width: 640px) { .hero-picture { max-height: 380px; } .hero-ctas .btn { flex: 0 1 auto; } }
 @media (min-width: 1024px) {
-  .hero-grid { grid-template-columns: 5fr 7fr; align-items: stretch; }
+  .hero-grid { grid-template-columns: 1fr 1fr; align-items: stretch; }
   .hero-photo { order: 0; }
   .hero-picture { aspect-ratio: auto !important; height: 100%; max-height: none; min-height: 600px; }
   .hero-text { padding: var(--s-8) var(--s-7) var(--s-8) var(--gutter); gap: var(--s-5); align-content: center; }
-  .hero h1 { max-width: 15ch; }
+  .hero h1 { max-width: 18ch; font-size: clamp(2.75rem, 1.2rem + 3vw, 3.75rem); }
   .hero-ctas { margin-top: var(--s-3); }
 }
 @media (min-width: 1440px) {

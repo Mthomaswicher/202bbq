@@ -28,7 +28,6 @@ jobs:
         run: npm run build
         env:
           VITE_FORMSPREE_ORDERS: ${{ secrets.VITE_FORMSPREE_ORDERS }}
-          VITE_FORMSPREE_SHIPPING: ${{ secrets.VITE_FORMSPREE_SHIPPING }}
           VITE_FORMSPREE_REVIEWS: ${{ secrets.VITE_FORMSPREE_REVIEWS }}
           VITE_FORMSPREE_CONTACT: ${{ secrets.VITE_FORMSPREE_CONTACT }}
           VITE_FORMSPREE_CATERING: ${{ secrets.VITE_FORMSPREE_CATERING }}
