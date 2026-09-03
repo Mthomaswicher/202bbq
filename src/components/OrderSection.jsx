@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import { useToast } from '../context/ToastContext.jsx';
 import { track } from '../lib/analytics.js';
+import { resolveEndpoint, submitToFormspree } from '../lib/formspree.js';
 
 const fmt = n => (typeof n === 'number' ? `$${n.toFixed(2)}` : String(n));
 
@@ -166,29 +167,16 @@ export default function OrderSection() {
       Submitted:   new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }),
     };
 
-    const endpoint = (import.meta.env.VITE_FORMSPREE_ORDERS || '').replace(/^<|>$/g, '').trim();
+    const endpoint = resolveEndpoint(
+      import.meta.env.VITE_FORMSPREE_ORDERS,
+      import.meta.env.VITE_FORMSPREE_CONTACT,
+    );
 
-    if (!endpoint || endpoint.includes('REPLACE_ME')) {
-      console.log('202BBQ Order (Formspree not configured):', formspreePayload);
-      await new Promise(r => setTimeout(r, 800));
-    } else {
-      try {
-        const res = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-          body: JSON.stringify(formspreePayload),
-        });
-        if (!res.ok) {
-          const data = await res.json().catch(() => ({}));
-          setSubmitting(false);
-          addToast(data?.error || "Submit failed. Please try again or call 202-734-5621 to order by phone.", 'error');
-          return;
-        }
-      } catch (err) {
-        setSubmitting(false);
-        addToast("Blocked by an ad blocker or browser extension. Try disabling it, or call/text 202-734-5621 to order.", 'error');
-        return;
-      }
+    const result = await submitToFormspree(endpoint, formspreePayload);
+    if (!result.ok) {
+      setSubmitting(false);
+      addToast(result.error, 'error');
+      return;
     }
 
     track('generate_lead', {
