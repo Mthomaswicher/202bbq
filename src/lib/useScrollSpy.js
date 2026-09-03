@@ -14,15 +14,13 @@ export function useScrollSpy(ids, { topInset = 0, bottom = '-60%' } = {}) {
     const inset = typeof topInset === 'function' ? topInset() : topInset;
     const visible = new Map();
     const pick = () => {
+      // The current section is the LAST visible one whose top sits at or above the chrome line;
+      // failing that, the first visible one; failing that, the last one scrolled past.
+      const vis = els.filter(el => visible.get(el));
       let best = null;
-      for (const el of els) {
-        if (!visible.get(el)) continue;
-        if (!best || el.getBoundingClientRect().top < best.getBoundingClientRect().top) best = el;
-      }
-      // If nothing intersects the band, keep the last section whose top is above it.
-      if (!best) {
-        for (const el of els) if (el.getBoundingClientRect().top <= inset + 8) best = el;
-      }
+      for (const el of vis) if (el.getBoundingClientRect().top <= inset + 64) best = el;
+      if (!best && vis.length) best = vis[0];
+      if (!best) for (const el of els) if (el.getBoundingClientRect().top <= inset + 8) best = el;
       setActive(best ? best.id : '');
     };
     const io = new IntersectionObserver(entries => {

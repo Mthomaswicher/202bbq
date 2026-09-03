@@ -7,19 +7,6 @@
 
 import { SITE } from '../data/site.js';
 
-const PLACEHOLDERS = ['REPLACE_ME', 'YOUR_', 'undefined', 'null'];
-const clean = raw => String(raw ?? '').replace(/^<|>$/g, '').trim();
-const isUsable = value => Boolean(value) && !PLACEHOLDERS.some(p => value.includes(p));
-
-/** First usable endpoint from the candidates, or ''. Later candidates are fallbacks. */
-export function resolveEndpoint(...candidates) {
-  for (const candidate of candidates) {
-    const value = clean(candidate);
-    if (isUsable(value)) return value;
-  }
-  return '';
-}
-
 export const NOT_CONFIGURED_MESSAGE =
   `We couldn't send this from the site. Call or text ${SITE.phone} and we'll take it by phone.`;
 export const FAILED_MESSAGE =

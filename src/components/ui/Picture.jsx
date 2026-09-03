@@ -24,7 +24,7 @@ export default function Picture({ name, alt, sizes = '100vw', loading = 'lazy', 
         backgroundImage: `url("${img.lqip}")`,
         backgroundSize: 'cover',
         backgroundPosition: position ?? 'center',
-        aspectRatio: ratio ?? `${img.width} / ${img.height}`,
+        aspectRatio: ratio === null ? 'auto' : (ratio ?? `${img.width} / ${img.height}`),
         borderRadius: radius ? 'var(--r-3)' : 0,
         overflow: 'hidden',
         display: 'block',
@@ -41,7 +41,7 @@ export default function Picture({ name, alt, sizes = '100vw', loading = 'lazy', 
         height={img.height}
         alt={alt}
         loading={priority ? 'eager' : loading}
-        fetchPriority={priority ? 'high' : undefined}
+        fetchpriority={priority ? 'high' : undefined}
         decoding={priority ? 'sync' : 'async'}
         style={{ width: '100%', height: '100%', objectFit: 'cover', objectPosition: position ?? 'center', display: 'block' }}
       />

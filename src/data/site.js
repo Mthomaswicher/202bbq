@@ -69,7 +69,7 @@ export const DELIVERY_FEE_SENTENCE = SITE.deliveryFees
 
 // The one deposit sentence. Byte-identical wherever it appears.
 export const DEPOSIT_SENTENCE =
-  `Nothing is charged automatically. A $${SITE.depositAmount} deposit holds your trays — pay it after you send this, or when ${SITE.owner} calls. It's refunded in full if we can't fill your request; the rest is due at pickup or delivery.`;
+  `Nothing is charged automatically. A $${SITE.depositAmount} deposit holds your trays — pay it after you send this, or when ${SITE.owner} calls. It’s refunded in full if we can’t fill your request; the rest is due at pickup or delivery.`;
 
 export const CANCEL_TERMS = SITE.cancelTerms ??
-  `Change or cancel free of charge until Thursday 9 pm ET — call or text ${SITE.phone} and we'll refund the $${SITE.depositAmount}. After that the meat is already bought and smoking, so the deposit is kept.`;
+  `Change or cancel free of charge until Thursday 9 pm ET. Call or text ${SITE.phone} and we’ll refund the $${SITE.depositAmount}. After that the meat is already bought and smoking, so the deposit is kept.`;

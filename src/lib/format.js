@@ -2,6 +2,9 @@
 
 export const money = n => (typeof n === 'number' ? `$${n.toLocaleString('en-US')}` : '');
 
+/** "$330", or "Market price" when every line is a quote item. */
+export const subtotalLabel = s => (s.subtotal === 0 && s.hasQuote ? 'Market price' : money(s.subtotal));
+
 /** "feeds 30–40" */
 export const feedsRange = ([lo, hi]) => (lo === hi ? `feeds ${lo}` : `feeds ${lo}–${hi}`);
 

@@ -7,11 +7,11 @@ export const FAQS = [
   {
     id: 'how-much',
     q: 'How much should I order?',
-    a: 'A full tray feeds 30–40 people and a half tray feeds 15–20. For 40 people, one full tray of a meat plus one full tray of a side is plenty. Two half trays equal one full. Use the headcount helper above the menu, or call ' + SITE.phone + ' and we will work it out together.',
+    a: 'A full tray feeds 30–40 people and a half tray feeds 15–20. For 40 people, 1 full tray of a meat plus 1 full tray of a side is plenty. 2 half trays equal 1 full. Use the headcount helper on the menu, or call ' + SITE.phone + ' and we will work it out together.',
   },
   {
     id: 'market-price',
-    q: 'What does "market price" mean?',
+    q: 'What does “market price” mean?',
     a: 'Beef Ribs and Lamb Chops cost us a different amount each week, so we quote them after you send your request and before anything is confirmed. You are never committed to a market-price item until you have heard the number.',
   },
   {
@@ -37,6 +37,6 @@ export const FAQS = [
   {
     id: 'in-person',
     q: 'Where can I find you in person?',
-    a: `We do popups and markets around DC. Upcoming dates are listed under "Where to find us" and go up on Instagram first — @${SITE.instagram}.`,
+    a: `We set up at markets and breweries around DC. Upcoming dates are listed under “Where to find us” and go up on Instagram first — @${SITE.instagram}.`,
   },
 ].filter(f => f.a);

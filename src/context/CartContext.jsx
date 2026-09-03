@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import { getItem, getOption } from '../data/menu.js';
-import { summarise } from '../lib/format.js';
+import { summarise, money } from '../lib/format.js';
 import { local, KEYS, WEEK } from '../lib/storage.js';
 import { track } from '../lib/analytics.js';
 
@@ -33,11 +33,12 @@ export function CartProvider({ children }) {
   const [state, setState] = useState(load);
   const [announcement, setAnnouncement] = useState('');
   const restoredAt = useRef(state.savedAt);   // when the restored cart was saved (for the RestoreLine)
+  const restoredCount = useRef(Object.values(state.lines).reduce((s, l) => s + l.qty, 0));
   const [restoreDismissed, setRestoreDismissed] = useState(false);
 
   // Persist on every change.
   useEffect(() => {
-    const hasAnything = Object.keys(state.lines).length || state.customer.name || state.customer.phone || state.draft.notes;
+    const hasAnything = Object.keys(state.lines).length || state.customer.name || state.customer.phone || state.draft.notes || state.headcount;
     if (!hasAnything) { local.remove(KEYS.cart); return; }
     local.set(KEYS.cart, { ...state, savedAt: state.savedAt ?? Date.now() });
   }, [state]);
@@ -82,8 +83,11 @@ export function CartProvider({ children }) {
     setQty(itemId, optionId, qty, { announceIt: false });
     const price = typeof option.price === 'number' ? option.price : 0;
     track('add_to_cart', { currency: 'USD', value: price, items: [{ item_id: item.id, item_name: item.name, item_variant: option.id, price, quantity: 1 }] });
-    announce(`${item.name}, ${option.label.toLowerCase()}, added to your order.`);
-  }, [state.lines, setQty, announce]);
+    const added = option.unit ? (option.minQty ?? 1) : 1;
+    const nextTotal = summary.subtotal + price * (state.lines[key] ? 1 : added);
+    const nextCount = (option.unit ? summary.trays : summary.trays + 1) + (option.unit ? summary.units + added : summary.units);
+    announce(`${item.name}, ${option.label.toLowerCase()}, added. ${nextCount} in your order, ${nextTotal > 0 ? money(nextTotal) : 'market price'}.`);
+  }, [state.lines, summary, setQty, announce]);
 
   const remove = useCallback((itemId, optionId) => {
     const key = `${itemId}::${optionId}`;
@@ -97,10 +101,11 @@ export function CartProvider({ children }) {
   const restoreLine = useCallback(line => {
     if (!line) return;
     setState(prev => ({ ...prev, lines: { ...prev.lines, [`${line.itemId}::${line.optionId}`]: line }, savedAt: Date.now() }));
-  }, []);
+    const item = getItem(line.itemId); const option = getOption(line.itemId, line.optionId);
+    if (item && option) announce(`${item.name}, ${option.label.toLowerCase()}, back in your order.`);
+  }, [announce]);
 
   const clearLines = useCallback(() => setState(prev => ({ ...prev, lines: {}, savedAt: Date.now() })), []);
-  const clearAll = useCallback(() => { setState({ ...EMPTY }); local.remove(KEYS.cart); }, []);
 
   const setHeadcount = useCallback(n => setState(prev => ({ ...prev, headcount: n, savedAt: Date.now() })), []);
   const setCustomer = useCallback(patch => setState(prev => ({ ...prev, customer: { ...prev.customer, ...patch }, savedAt: Date.now() })), []);
@@ -112,13 +117,13 @@ export function CartProvider({ children }) {
   const restoredOld = Boolean(restoredAt.current && Date.now() - restoredAt.current > 60 * 60 * 1000 && lineCount > 0 && !restoreDismissed);
 
   const value = useMemo(() => ({
-    lines, lineCount, summary, qtyOf, add, setQty, remove, restoreLine, clearLines, clearAll,
+    lines, lineCount, summary, qtyOf, add, setQty, remove, restoreLine, clearLines,
     headcount: state.headcount, setHeadcount,
     customer: state.customer, setCustomer,
     draft: state.draft, setDraft,
-    restoredOld, restoredAt: restoredAt.current, dismissRestore: () => setRestoreDismissed(true),
+    restoredOld, restoredAt: restoredAt.current, restoredCount: restoredCount.current, dismissRestore: () => setRestoreDismissed(true),
     announcement, announce,
-  }), [lines, lineCount, summary, qtyOf, add, setQty, remove, restoreLine, clearLines, clearAll, state.headcount, setHeadcount, state.customer, setCustomer, state.draft, setDraft, restoredOld, announcement, announce]);
+  }), [lines, lineCount, summary, qtyOf, add, setQty, remove, restoreLine, clearLines, state.headcount, setHeadcount, state.customer, setCustomer, state.draft, setDraft, restoredOld, announcement, announce]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }

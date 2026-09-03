@@ -3,6 +3,7 @@ import { ToastProvider } from './context/ToastContext.jsx';
 import { ThemeProvider } from './context/ThemeContext.jsx';
 import { splitEvents } from './data/events.js';
 import { nowET } from './lib/time.js';
+import { focusHeading } from './lib/useScrollSpy.js';
 import SiteHeader from './components/SiteHeader.jsx';
 import Hero from './components/Hero.jsx';
 import MenuSection, { OrderBar } from './components/menu/MenuSection.jsx';
@@ -30,8 +31,8 @@ export default function App() {
     <ThemeProvider>
       <ToastProvider>
         <CartProvider>
-          <a href="#menu" className="skip-link">Skip to menu</a>
-          <a href="#main-content" className="skip-link">Skip to main content</a>
+          <a href="#menu" className="skip-link" onClick={() => focusHeading('menu')}>Skip to menu</a>
+          <a href="#main-content" className="skip-link" onClick={() => focusHeading('hero')}>Skip to main content</a>
           <SiteHeader hasUpcomingEvents={upcoming.length > 0} />
           <main id="main-content">
             <Hero />
@@ -50,8 +51,8 @@ export default function App() {
             <ContactSection />
             <OrderBar />
           </main>
-          <Footer />
           <ToastContainer />
+          <Footer />
           <LiveRegion />
         </CartProvider>
       </ToastProvider>

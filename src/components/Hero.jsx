@@ -1,6 +1,5 @@
 import reviews from '../data/reviews.json';
 import { SITE, PICKUP_AREA } from '../data/site.js';
-import { EVENTS } from '../data/events.js';
 import { focusHeading } from '../lib/useScrollSpy.js';
 import Picture from './ui/Picture.jsx';
 import Button from './ui/Button.jsx';
@@ -10,12 +9,10 @@ import StatusLine from './StatusLine.jsx';
 function ProofStrip() {
   const n = reviews.length;
   const avg = n ? (reviews.reduce((s, r) => s + r.rating, 0) / n) : 0;
-  const battle = EVENTS.find(e => e.id === 'bbq-battle-2026');
   const facts = [
     n >= 3 && <><span role="img" aria-label={`${avg.toFixed(1)} out of 5 stars`}>{avg.toFixed(1)}★</span> from {n} customers</>,
     'Smoked over hardwood. No gas.',
     SITE.licence ? `Licensed by ${SITE.licence}` : 'A fully licensed DC food business',
-    battle && `Took part in the ${battle.start.slice(0, 4)} Giant National Capital Barbecue Battle`,
   ].filter(Boolean);
   return (
     <ul className="proof" aria-label="About 202BBQ">
@@ -49,13 +46,13 @@ export default function Hero() {
           <ProofStrip />
         </div>
         <div className="hero-photo">
-          <Picture
+<Picture
             name="brisket-board"
             alt="Slicing a whole smoked brisket on a wooden board"
             sizes="(min-width: 1024px) 50vw, 100vw"
             priority
-            ratio="4 / 5"
-            position="50% 25%"
+            ratio={null}
+            position="50% 55%"
             className="hero-picture"
           />
         </div>

@@ -39,8 +39,8 @@
   },
   "brisket-board": {
     "width": 1024,
-    "height": 1536,
-    "aspect": 0.6667,
+    "height": 1190,
+    "aspect": 0.8605,
     "widths": [
       480,
       800,
@@ -68,7 +68,7 @@
         "/img/brisket-board-1024.jpg"
       ]
     },
-    "lqip": "data:image/webp;base64,UklGRvIAAABXRUJQVlA4IOYAAADQBgCdASoYACQAPu1qrVCppaQipWzJMB2JZgCw7DaKEMpC6U8lx/K1DtlruN4l6klD+Qhq7SvaVvVsud0DU7AA/vNZli5RWlNdrbVYXY2r091K+oK4BhYDaKn0HI2FpQSJS3v47gdGeiBRGo2eJyugjbmN6NT37Hzc5qyyGd3P3bNMUMSIJgDkCy2i8msPHO+X7GXrdgHUNfoNNdaQJuYj/tUlB4IiX2rdWPdhb9CpI+gOmtaLV/3I0gzISzrcyki+GTBTMxp4c5MnZBSd1xXmtn7G3YLGY3hAd3EMz2hA1y6yQjwAAA==",
+    "lqip": "data:image/webp;base64,UklGRsgAAABXRUJQVlA4ILwAAADQBQCdASoYABwAPu1qqFAppiOiqA1RMB2JbACdMoR+AFVEgrX1hj/Fduhk11xoas1UJz+rj+NAAP70u/zV5nJLAJ7c0I8mW6F10GXoXHqiHqeQmv9B3PpcPk11rdUk4lp6SUl2T7fOx4K/KnIujuWgq2dQOuqseDIV1qr0yp6/7r8vVh/lvLDpwkeR5Rqx/qiQOMpJHlbSL9BCbzgxVo85/sE6+cyJ0mRRdsRAZKjlaC1JNAhtrRXkH2AAAA==",
     "color": "#080808"
   },
   "chicken-egg": {

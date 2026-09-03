@@ -71,9 +71,6 @@
 .field-error { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-small); line-height: var(--lh-small); color: var(--error); font-weight: 600; }
 .field-error svg { flex: none; width: 20px; height: 20px; margin-top: 2px; }
 .counter { font-size: var(--fs-small); color: var(--smoke); text-align: right; }
-.select-wrap { position: relative; }
-.select { appearance: none; -webkit-appearance: none; padding-right: 52px; }
-.select-wrap svg { position: absolute; right: 16px; top: 50%; width: 24px; height: 24px; margin-top: -12px; pointer-events: none; color: var(--ink); }
 .input[inputmode="numeric"], .input[type="number"] { font-variant-numeric: tabular-nums; }
 
 /* ---- radio cards ---- */
@@ -154,7 +151,7 @@
 /* ---- proof strip ---- */
 .proof { display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--font-mono); font-size: var(--fs-label); letter-spacing: var(--track-mono); color: var(--smoke); }
 .proof li { display: flex; gap: 10px; align-items: baseline; max-width: none; }
-.proof li::before { content: ""; width: 10px; height: 10px; flex: none; margin-top: 2px; border-left: 2px solid var(--rust-logo); border-right: 2px solid var(--rust-logo); transform: translateY(2px); }
+.proof li::before { content: ""; width: 10px; height: 10px; flex: none; margin-top: 2px; border-left: 2px solid var(--ink); border-right: 2px solid var(--ink); transform: translateY(2px); }
 
 /* ---- toasts ---- */
 .toasts { position: fixed; left: 16px; right: 16px; bottom: calc(var(--orderbar-h) + 28px + env(safe-area-inset-bottom)); z-index: var(--z-toast); display: grid; gap: 8px; justify-items: center; pointer-events: none; }

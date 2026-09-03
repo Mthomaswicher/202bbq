@@ -67,31 +67,6 @@ export function TextArea({
   );
 }
 
-export function Select({ label, optional, hint, error, value, onChange, onBlur, name, options, id: givenId, inputRef, placeholder = 'Choose one', ...rest }) {
-  const uid = useId();
-  const id = givenId ?? `f-${uid}`;
-  const hintId = hint ? `${id}-hint` : null;
-  const errId = error ? `${id}-error` : null;
-  const describedBy = [hintId, errId].filter(Boolean).join(' ') || undefined;
-  return (
-    <div className={`field${error ? ' has-error' : ''}`}>
-      <label htmlFor={id}>{label}{optional && <span className="optional"> (optional)</span>}</label>
-      {hint && <p className="hint" id={hintId}>{hint}</p>}
-      <div className="select-wrap">
-        <select id={id} name={name ?? id} className="select" value={value} onChange={e => onChange(e.target.value)} onBlur={onBlur}
-          aria-invalid={error ? 'true' : undefined} aria-describedby={describedBy} ref={inputRef} {...rest}>
-          <option value="">{placeholder}</option>
-          {options.map(o => typeof o === 'string'
-            ? <option key={o} value={o}>{o}</option>
-            : <option key={o.value} value={o.value}>{o.label}</option>)}
-        </select>
-        <Icon name="chevronDown" />
-      </div>
-      {error && <ErrorLine id={errId}>{error}</ErrorLine>}
-    </div>
-  );
-}
-
 /**
  * A fieldset of radio cards. `options`: [{ value, title, sub }]. Inputs are
  * real radios (sr-only), so arrow keys and screen readers work natively.

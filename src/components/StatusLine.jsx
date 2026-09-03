@@ -8,7 +8,7 @@ import { PhoneLink } from './ui/Bits.jsx';
  * `et`: append " ET" to the cut-off (first mention in a section, or always for
  * visitors outside Eastern time). `withPhone`: add "Questions? Call …".
  */
-export default function StatusLine({ et = false, withPhone = false, className = '' }) {
+export default function StatusLine({ et = false, withPhone = false, compact = false, className = '' }) {
   const [win, setWin] = useState(() => orderWindow());
   useEffect(() => {
     const t = setInterval(() => setWin(orderWindow()), 60 * 1000);
@@ -18,6 +18,14 @@ export default function StatusLine({ et = false, withPhone = false, className = 
   let sentence = win.sentence;
   if (showEt && !win.holiday) sentence = sentence.replace(win.cutoffLabel, `${win.cutoffLabel} ET`);
   const closing = win.state === 'closing';
+  if (compact) {
+    return (
+      <p className={`statusline ${className}`.trim()}>
+        <span className="dot" aria-hidden="true" />
+        <span>{win.pair} — closes Thu {win.cutoffLabel}{showEt ? ' ET' : ''}</span>
+      </p>
+    );
+  }
   return (
     <p className={`statusline ${className}`.trim()}>
       <span className="dot" aria-hidden="true" />

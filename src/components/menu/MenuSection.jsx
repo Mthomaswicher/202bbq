@@ -1,14 +1,13 @@
-import { useEffect, useState } from 'react';
-import { GROUPS, MENU_ITEMS, TRAY_KEY, itemsInGroup } from '../../data/menu.js';
+import { useEffect, useRef, useState } from 'react';
+import { GROUPS, TRAY_KEY, itemsInGroup } from '../../data/menu.js';
 import { useCart } from '../../context/CartContext.jsx';
-import { useToast } from '../../context/ToastContext.jsx';
-import { money, feedsRange, perPerson, plural } from '../../lib/format.js';
+import { money, feedsRange, perPerson, plural, subtotalLabel } from '../../lib/format.js';
 import { useScrollSpy, focusHeading } from '../../lib/useScrollSpy.js';
 import { SITE } from '../../data/site.js';
 import Picture from '../ui/Picture.jsx';
 import Button from '../ui/Button.jsx';
 import Icon from '../ui/Icon.jsx';
-import { PhoneLink, Tag } from '../ui/Bits.jsx';
+import { Tag } from '../ui/Bits.jsx';
 import { TextField } from '../ui/Field.jsx';
 import StatusLine from '../StatusLine.jsx';
 import { OrderRail } from './OrderLines.jsx';
@@ -53,12 +52,13 @@ function HeadcountHelper() {
   const [typed, setTyped] = useState(headcount && !HEADCOUNTS.includes(headcount) ? String(headcount) : '');
 
   const hint = (() => {
-    if (!headcount) return 'Pick a number and we\'ll suggest how much to order.';
+    if (!headcount) return 'Pick a number and we’ll suggest how much to order.';
+    const people = `${headcount} ${headcount === 1 ? 'person' : 'people'}`;
     if (headcount >= 100) return <>For 100 or more, <a href="#catering" onClick={() => focusHeading('catering')}>get an event quote</a> — we can do drop-off or full service.</>;
-    if (headcount <= 15) return `For ${headcount} people: one half tray of a meat plus one half tray of a side is plenty.`;
-    if (headcount <= 25) return `For ${headcount} people: one full tray of a meat plus a half tray of a side, or two half trays of each.`;
+    if (headcount <= 15) return `For ${people}: 1 half tray of a meat plus 1 half tray of a side is plenty.`;
+    if (headcount <= 25) return `For ${people}: 1 full tray of a meat plus a half tray of a side, or 2 half trays of each.`;
     const fullTrays = Math.max(1, Math.round(headcount / 35));
-    return `For ${headcount} people: ${plural(fullTrays, 'full tray')} of a meat plus ${plural(fullTrays, 'full tray')} of a side is plenty. Two half trays equal one full.`;
+    return `For ${people}: ${plural(fullTrays, 'full tray')} of a meat plus ${plural(fullTrays, 'full tray')} of a side is plenty. 2 half trays equal 1 full.`;
   })();
 
   return (
@@ -75,7 +75,7 @@ function HeadcountHelper() {
         <label className="radio-chip">
           <input type="radio" name="headcount" className="sr-only" value="type" checked={mode === 'type'}
             onChange={() => { setMode('type'); if (typed) setHeadcount(Number(typed)); }} />
-          <span>I'll type it</span>
+          <span>I’ll type it</span>
         </label>
       </div>
       {mode === 'type' && (
@@ -104,8 +104,10 @@ export function TrayKey({ compact = false }) {
 }
 
 /* ---------- Quantity stepper ---------- */
-export function QtyStepper({ item, option, qty, onChange, showInOrder = true }) {
+export function QtyStepper({ item, option, qty, onChange, showInOrder = true, autoFocus = false }) {
   const min = option.minQty ?? 1;
+  const plusRef = useRef(null);
+  useEffect(() => { if (autoFocus) plusRef.current?.focus({ preventScroll: true }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
   const unit = option.unit ? `${option.unit}${qty === 1 ? '' : 's'}` : option.label.toLowerCase();
   const decLabel = qty <= min
     ? `Remove ${item.name}${option.unit ? '' : ` ${option.label.toLowerCase()}`} from your order`
@@ -113,10 +115,10 @@ export function QtyStepper({ item, option, qty, onChange, showInOrder = true }) 
   return (
     <div className="stepper" role="group" aria-label={`${item.name}, ${option.unit ? 'per ' + option.unit : option.label.toLowerCase()}, quantity`}>
       <button type="button" className="btn btn-icon" aria-label={decLabel} onClick={() => onChange(qty <= min ? 0 : qty - 1)}>
-        <Icon name={qty <= min ? 'x' : 'minus'} />
+        <Icon name="minus" />
       </button>
       <output aria-live="polite" aria-atomic="true">{qty}<span className="sr-only"> {unit}</span></output>
-      <button type="button" className="btn btn-icon" aria-label={`Add one ${item.name} ${option.unit ?? option.label.toLowerCase()}`} onClick={() => onChange(qty + 1)}>
+      <button type="button" className="btn btn-icon" aria-label={`Add one ${item.name} ${option.unit ?? option.label.toLowerCase()}`} onClick={() => onChange(qty + 1)} ref={plusRef}>
         <Icon name="plus" />
       </button>
       {showInOrder && <span className="in-order">In your order</span>}
@@ -132,30 +134,44 @@ function OptionLine({ item, option }) {
   const isUnit = Boolean(option.unit);
   const minQty = option.minQty ?? 1;
   const pp = perPerson(option);
+  // Keep the keyboard/screen-reader user’s place when Add turns into a stepper and back.
+  const justAdded = useRef(false);
+  const wantAddFocus = useRef(false);
+  const addRef = useRef(null);
+  useEffect(() => {
+    if (qty === 0 && wantAddFocus.current) { wantAddFocus.current = false; addRef.current?.focus({ preventScroll: true }); }
+  }, [qty]);
 
   let feedsLine;
-  if (isQuote) feedsLine = `${feedsRange(option.feeds)} · market price — we quote before you commit`;
+  if (isQuote) feedsLine = <><span className="nowrap">{feedsRange(option.feeds)}</span> · market price — we quote before you commit</>;
   else if (isUnit) feedsLine = `minimum ${minQty} — we confirm the count with you`;
-  else feedsLine = `${feedsRange(option.feeds)}${pp ? ` · ${pp}` : ''}`;
+  else feedsLine = <><span className="nowrap">{feedsRange(option.feeds)}</span>{pp ? <> · <span className="nowrap">{pp.replace(' a person', '')}</span> a person</> : null}</>;
 
   const priceCell = isQuote
     ? <span className="opt-price is-quote">Market price</span>
     : <span className="opt-price price">{money(option.price)}</span>;
 
+  const onAdd = () => { justAdded.current = true; add(item.id, option.id); };
+  const onStep = n => {
+    if (n < minQty) wantAddFocus.current = true;
+    // The <output aria-live> in the stepper already reads the quantity; announce removals only.
+    setQty(item.id, option.id, n, { announceIt: n < minQty });
+  };
   let action;
   if (qty > 0) {
-    action = <QtyStepper item={item} option={option} qty={qty} onChange={n => setQty(item.id, option.id, n)} />;
+    const focusIt = justAdded.current; justAdded.current = false;
+    action = <QtyStepper item={item} option={option} qty={qty} onChange={onStep} autoFocus={focusIt} />;
   } else if (isQuote) {
     action = (
       <div className="opt-actions">
-        <Button variant="secondary" onClick={() => add(item.id, option.id)} aria-label={`Add ${option.label.toLowerCase()} of ${item.name}, price quoted`}>Add · price quoted</Button>
-        <a href={SITE.phoneHref} className="btn btn-tertiary btn-compact">Call for today's price</a>
+        <Button variant="secondary" onClick={onAdd} ref={addRef} aria-label={`Add ${option.label.toLowerCase()} · price quoted, ${item.name}`}>Add {option.label.toLowerCase()} · price quoted</Button>
+        <a href={SITE.phoneHref} className="btn btn-tertiary btn-compact">Call for this week’s price</a>
       </div>
     );
   } else if (isUnit) {
-    action = <Button onClick={() => add(item.id, option.id)} aria-label={`Add ${minQty} ${item.name.toLowerCase()}, ${money(option.price * minQty)}`}>Add {minQty} {option.unit}s · {money(option.price * minQty)}</Button>;
+    action = <Button onClick={onAdd} ref={addRef} aria-label={`Add ${minQty} ${option.unit}s · ${money(option.price * minQty)}, ${item.name}`}>Add {minQty} {option.unit}s · {money(option.price * minQty)}</Button>;
   } else {
-    action = <Button onClick={() => add(item.id, option.id)} aria-label={`Add ${option.label.toLowerCase()} of ${item.name}, ${money(option.price)}`}>Add {option.label.toLowerCase()} · {money(option.price)}</Button>;
+    action = <Button onClick={onAdd} ref={addRef} aria-label={`Add ${option.label.toLowerCase()} · ${money(option.price)}, ${item.name}`}>Add {option.label.toLowerCase()} · {money(option.price)}</Button>;
   }
 
   return (
@@ -209,9 +225,9 @@ function GroupEndStrip({ group, next }) {
           Next: {next.name} <Icon name="arrowDown" size={20} />
         </a>
       ) : (
-        <span className="group-done">You've seen the whole menu</span>
+        <span className="group-done">You’ve seen the whole menu</span>
       )}
-      <a href="#menu-categories" className="group-all">All categories <Icon name="arrowUp" size={20} /></a>
+      <a href="#menu" className="group-all" onClick={() => focusHeading('menu')}>All categories <Icon name="arrowUp" size={20} /></a>
       {next ? (
         <a href={SITE.phoneHref} className="group-call"><Icon name="phone" size={20} /> Call <span className="phone">{SITE.phone}</span></a>
       ) : (
@@ -242,10 +258,10 @@ function MenuGroup({ group, next }) {
 
 /* ---------- Restore line ---------- */
 function RestoreLine() {
-  const { restoredOld, restoredAt, lineCount, summary, clearLines, dismissRestore } = useCart();
+  const { restoredOld, restoredAt, restoredCount, clearLines, dismissRestore } = useCart();
   if (!restoredOld) return null;
   const when = new Date(restoredAt).toLocaleDateString('en-US', { weekday: 'long', timeZone: SITE.cutoff.tz });
-  const what = summary.trays ? plural(summary.trays, 'tray') : plural(lineCount, 'item');
+  const what = plural(restoredCount, 'tray');
   return (
     <p className="restore-line" role="status">
       <span>We kept the {what} you picked on {when}.</span>
@@ -261,7 +277,7 @@ export default function MenuSection() {
       <div className="container-menu">
         <div className="menu-intro">
           <h2 id="menu-heading" tabIndex={-1}>Order by the tray</h2>
-          <p className="lede">Everything is smoked the night before. Full tray feeds 30–40, half tray feeds 15–20.</p>
+          <p className="lede">Everything is smoked Friday night. Full tray feeds <span className="nowrap">30–40</span>, half tray feeds <span className="nowrap">15–20</span>.</p>
           <StatusLine et withPhone />
           <RestoreLine />
         </div>
@@ -286,7 +302,7 @@ export default function MenuSection() {
 
 /* ---------- Mobile order bar (rendered in App, fixed) ---------- */
 export function OrderBar() {
-  const { lineCount, summary } = useCart();
+  const { lineCount, summary, headcount } = useCart();
   const [orderInView, setOrderInView] = useState(false);
   useEffect(() => {
     const el = document.getElementById('order');
@@ -302,17 +318,17 @@ export function OrderBar() {
   }, [show]);
   if (!show) return null;
   const count = [summary.trays && plural(summary.trays, 'tray'), summary.units && plural(summary.units, summary.unitLabel)].filter(Boolean).join(' + ');
-  const feeds = summary.feedsHi ? ` · feeds ${summary.feedsLo}–${summary.feedsHi}` : '';
+  const plenty = headcount && summary.feedsLo >= headcount ? ` — plenty for ${headcount}` : '';
+  const feeds = summary.feedsHi ? ` · feeds ${summary.feedsLo}–${summary.feedsHi}${plenty}` : '';
   return (
     <a href="#order" className="orderbar" onClick={() => focusHeading('order')}
-      aria-label={`Review your order: ${count}${feeds}, ${money(summary.subtotal)}`}>
+      aria-label={`Review your order: ${count}${feeds}, ${subtotalLabel(summary)}`}>
       <span className="orderbar-text">
         <span className="orderbar-title">Review your order ›</span>
         <span className="orderbar-sub">{count}{feeds}</span>
       </span>
-      <span className="orderbar-total price">{money(summary.subtotal)}</span>
+      <span className="orderbar-total price">{summary.subtotal === 0 && summary.hasQuote ? 'Quote' : subtotalLabel(summary)}</span>
     </a>
   );
 }
 
-export { MENU_ITEMS };

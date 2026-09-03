@@ -13,8 +13,8 @@ const QUOTE = { pricing: 'quote', price: null };
 
 export const GROUPS = [
   { id: 'beef',    short: 'Beef',    name: 'Beef' },
-  { id: 'pork',    short: 'Pork',    name: 'Pork & Sausage', blurb: "Including DC's own half-smokes." },
-  { id: 'chicken', short: 'Chicken', name: 'Chicken', blurb: 'Seasoned with our Hill Rub.' },
+  { id: 'pork',    short: 'Pork',    name: 'Pork & Sausage', blurb: 'Including DC’s own half-smokes.' },
+  { id: 'chicken', short: 'Chicken', name: 'Chicken', blurb: 'Seasoned with our Hill Rub, the house spice blend.' },
   { id: 'seafood', short: 'Seafood', name: 'Seafood & Lamb', blurb: 'Salmon cold-smoked over cherry wood; lamb at market price.' },
   { id: 'sides',   short: 'Sides',   name: 'Sides', blurb: 'Made from scratch. The mac and cheese has brisket in it.' },
 ];
@@ -22,7 +22,7 @@ export const GROUPS = [
 export const MENU_ITEMS = [
   // ---- Beef ----
   { id: 'brisket', group: 'beef', name: 'Brisket', image: 'brisket-slice',
-    desc: 'A whole 17–18 lb brisket smoked overnight over hardwood. Bark for days. Sliced or chopped to order.',
+    desc: 'A whole 17–18 lb brisket smoked overnight over hardwood. A dark, peppery crust. Sliced or chopped to order.',
     tags: ['Signature'], allergens: [],
     options: [FULL(235)] },
   { id: 'brisket-burnt-ends', group: 'beef', name: 'Brisket Burnt Ends', image: null,
@@ -56,11 +56,11 @@ export const MENU_ITEMS = [
     tags: ['Signature'], allergens: [],
     options: [FULL(165), HALF(100)] },
   { id: 'pork-ribs', group: 'pork', name: 'Pork Ribs', image: null,
-    desc: 'St. Louis spare ribs rubbed and smoked until they pass the bend test. Glazed to order.',
+    desc: 'St. Louis spare ribs, rubbed and smoked until they bend and the meat pulls clean from the bone. Glazed to order.',
     tags: [], allergens: [],
     options: [FULL(150), HALF(100)] },
   { id: 'half-smokes', group: 'pork', name: 'Half Smokes', image: null,
-    desc: "DC's own beef-and-pork sausages, smoked until the casing snaps. A Capitol Hill tradition.",
+    desc: 'DC’s own beef-and-pork sausages, smoked until the casing snaps. A DC tradition.',
     tags: ['DC classic'], allergens: [],
     options: [FULL(130), HALF(90)] },
   { id: 'half-smoke-burnt-ends', group: 'pork', name: 'Half Smoke Burnt Ends', image: null,
@@ -92,7 +92,7 @@ export const MENU_ITEMS = [
     tags: [], allergens: ['shellfish'],
     options: [FULL(250)] },
   { id: 'lamb-chops', group: 'seafood', name: 'Lamb Chops', image: null,
-    desc: 'A frenched rack of eight, seasoned with herbs and smoked.',
+    desc: 'A rack of 8 lamb chops, bones trimmed clean, seasoned with herbs and smoked.',
     tags: [], allergens: [],
     options: [FULL(null, QUOTE), HALF(null, QUOTE)] },
 
@@ -109,7 +109,7 @@ export const MENU_ITEMS = [
     desc: 'Buttery, creamy mashed potatoes made with real butter and cream.',
     tags: [], allergens: ['dairy'],
     options: [FULL(130), HALF(100)] },
-  { id: 'kickin-coleslaw', group: 'sides', name: "Kickin' Coleslaw", image: null,
+  { id: 'kickin-coleslaw', group: 'sides', name: 'Kickin’ Coleslaw', image: null,
     desc: 'Creamy vinegar slaw with jalapeño and celery seed. A little heat.',
     tags: [], allergens: ['egg'],
     options: [FULL(120), HALF(85)] },
@@ -125,4 +125,3 @@ const byId = new Map(MENU_ITEMS.map(i => [i.id, i]));
 export const getItem = id => byId.get(id) ?? null;
 export const getOption = (itemId, optionId) => getItem(itemId)?.options.find(o => o.id === optionId) ?? null;
 export const itemsInGroup = groupId => MENU_ITEMS.filter(i => i.group === groupId);
-export const groupOf = item => GROUPS.find(g => g.id === item.group);

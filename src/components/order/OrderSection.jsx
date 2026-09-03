@@ -3,8 +3,8 @@ import { SITE, DEPOSIT_SENTENCE, CANCEL_TERMS, PICKUP_AREA, DELIVERY_FEE_SENTENC
 import { getItem, getOption } from '../../data/menu.js';
 import { useCart } from '../../context/CartContext.jsx';
 import { useToast } from '../../context/ToastContext.jsx';
-import { money, feedsRange, groupPhone, phoneDigits, maskEmail, summarise, plural } from '../../lib/format.js';
-import { makeRef, stampET, nowET, visitorOutsideET, fmtLong } from '../../lib/time.js';
+import { money, feedsRange, groupPhone, phoneDigits, maskEmail, summarise, plural, countLabel, subtotalLabel } from '../../lib/format.js';
+import { makeRef, stampET, stampETFull, nowET, visitorOutsideET, fmtLong } from '../../lib/time.js';
 import { submitToFormspree } from '../../lib/formspree.js';
 import { buildDepositUrl, readDepositReturn, loadRequest, saveRequest, clearRequest } from '../../lib/depositReturn.js';
 import { session, KEYS } from '../../lib/storage.js';
@@ -12,7 +12,7 @@ import { track } from '../../lib/analytics.js';
 import { focusHeading } from '../../lib/useScrollSpy.js';
 import { useOrderWindow } from '../StatusLine.jsx';
 import { OrderLines, OrderTotals } from '../menu/OrderLines.jsx';
-import { TextField, TextArea, RadioCardGroup, ErrorSummary, Notice, focusField } from '../ui/Field.jsx';
+import { TextField, TextArea, RadioCardGroup, ErrorSummary, Notice } from '../ui/Field.jsx';
 import Button from '../ui/Button.jsx';
 import Icon from '../ui/Icon.jsx';
 import { PhoneLink, CopyButton } from '../ui/Bits.jsx';
@@ -23,16 +23,17 @@ const WINDOWS = [
   { value: 'afternoon', title: 'Afternoon', sub: '4–8 pm' },
 ];
 const windowLabel = v => { const w = WINDOWS.find(x => x.value === v); return w ? `${w.title} ${w.sub}` : ''; };
-
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const DEPOSIT_STARTED = '202bbq.depositStarted';
 
 function lineText(l) {
   const item = getItem(l.itemId), option = getOption(l.itemId, l.optionId);
   if (!item || !option) return '';
-  if (option.pricing === 'quote') return `${l.qty}× ${item.name} — ${option.label} (${feedsRange(option.feeds)}) — market price, quote before confirming`;
+  if (option.pricing === 'quote') return `${l.qty}× ${item.name} — ${option.label} (${feedsRange(option.feeds)}) — market price`;
   if (option.unit) return `${l.qty}× ${item.name} — per ${option.unit} (${option.minQty ?? 1} minimum) — ${money(option.price * l.qty)} (${money(option.price)} each)`;
   return `${l.qty}× ${item.name} — ${option.label} (${feedsRange(option.feeds)}) — ${money(option.price * l.qty)}`;
 }
+const linesSummary = lines => summarise(lines.map(l => ({ option: getOption(l.itemId, l.optionId) ?? { feeds: [0, 0], price: 0 }, qty: l.qty })));
 
 /* ---------- read-only recap from a saved request ---------- */
 function RecapLines({ lines }) {
@@ -56,6 +57,8 @@ function RecapLines({ lines }) {
   );
 }
 
+function markDepositStarted(ref) { session.set(DEPOSIT_STARTED, ref); }
+
 /* ---------- deposit block (state A / D-back) ---------- */
 function DepositBlock({ req, onClaimed, onCopied, quiet }) {
   const url = buildDepositUrl(req.ref, req.email);
@@ -69,15 +72,15 @@ function DepositBlock({ req, onClaimed, onCopied, quiet }) {
     <div className="deposit-block">
       {url ? (
         <>
-          <Button href={url} size="lg" mobileFull onClick={() => track('begin_checkout', { currency: 'USD', value: SITE.depositAmount, payment_method: 'stripe', order_ref: req.ref })}>
+          <Button href={url} size="lg" mobileFull onClick={() => { markDepositStarted(req.ref); track('begin_checkout', { currency: 'USD', value: SITE.depositAmount, payment_method: 'stripe', order_ref: req.ref }); }}>
             Pay the ${SITE.depositAmount} deposit
           </Button>
-          <p className="small muted">Card, Apple Pay, Google Pay. Refunded in full if we can't fill your request.</p>
+          <p className="small muted">Card, Apple Pay, Google Pay. Refunded in full if we can’t fill your request.</p>
         </>
       ) : (
         <p>{SITE.owner} will text you a secure payment link, or take Cash App, Venmo or Zelle.</p>
       )}
-      {quiet && <p className="small muted deposit-quiet">Deposit not paid yet — that's fine, you can pay when {SITE.owner} calls.</p>}
+      {quiet && <p className="small deposit-quiet">Deposit not paid yet — that’s fine, you can pay when {SITE.owner} calls.</p>}
       {handles.length > 0 && (
         <div className="handles">
           <p className="small">Or send ${SITE.depositAmount} by:</p>
@@ -85,7 +88,7 @@ function DepositBlock({ req, onClaimed, onCopied, quiet }) {
             {handles.map(h => (
               <li key={h.label} className="copy-row">
                 <span><strong>{h.label}</strong> <code>{h.value}</code></span>
-                <CopyButton text={h.value} onCopied={() => onCopied(`${h.label} copied`)} />
+                <CopyButton text={h.value} onCopied={() => onCopied(`${h.label} copied`)} aria-label={`Copy ${h.label} ${h.value}`} />
               </li>
             ))}
           </ul>
@@ -108,24 +111,27 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
   const { addToast } = useToast();
   const first = (req?.name || '').trim().split(/\s+/)[0];
   const url = buildDepositUrl(req?.ref ?? '', req?.email);
-  const sum = req ? summarise(req.lines.map(l => ({ option: getOption(l.itemId, l.optionId) ?? { feeds: [0, 0], price: 0 }, qty: l.qty }))) : null;
+  const sum = req?.lines ? linesSummary(req.lines) : null;
   const balance = sum ? Math.max(0, sum.subtotal - SITE.depositAmount) : 0;
+  const quoteTail = req?.hasQuote ? ', plus the market-price items we quote' : '';
   const dayLong = req?.day?.long;
   const delivery = req?.method === 'Delivery';
+  const dayPhrase = dayLong ?? null;
 
   const summaryText = req ? [
-    `REQUEST ${req.ref} · ${req.day?.short ?? ''} · ${req.method} · ${req.window ?? ''}`,
+    `REQUEST ${req.ref} · ${req.day?.short ?? 'Day not set'} · ${req.method} · ${req.window ?? ''}`,
     `${req.name} · ${groupPhone(req.phone)}${req.email ? ` · ${req.email}` : ''}`,
     ...req.lines.map(lineText),
-    `Subtotal ${money(req.subtotal)}${sum?.feedsHi ? ` · feeds about ${sum.feedsLo}–${sum.feedsHi}` : ''}`,
-    `Pay the $${SITE.depositAmount} deposit: ${url ?? 'ask ' + SITE.owner}`,
+    `Subtotal ${req.subtotal > 0 ? money(req.subtotal) : 'market price'}${req.hasQuote && req.subtotal > 0 ? ' + market-price items' : ''}${sum?.feedsHi ? ` · feeds about ${sum.feedsLo}–${sum.feedsHi}` : ''}`,
+    `$${SITE.depositAmount} deposit: ${url ?? `${SITE.owner} will text you a payment link`}`,
     `Questions: ${SITE.phone}`,
   ].join('\n') : '';
   const mailto = req?.email ? `mailto:${encodeURIComponent(req.email)}?subject=${encodeURIComponent(`Your 202BBQ request ${req.ref} · ${req.day?.short ?? ''}`)}&body=${encodeURIComponent(summaryText)}` : null;
   const sms = `${SITE.smsHref}?body=${encodeURIComponent(`Hi ${SITE.owner}, about request ${req?.ref ?? ''}`)}`;
+  const stamp = new Date().toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
   const ics = req?.day?.ymd ? `data:text/calendar;charset=utf-8,${encodeURIComponent([
     'BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//202BBQ//EN', 'BEGIN:VEVENT',
-    `UID:${req.ref}@202barbecue.com`, `DTSTART;VALUE=DATE:${req.day.ymd.replace(/-/g, '')}`,
+    `UID:${req.ref}@202barbecue.com`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${req.day.ymd.replace(/-/g, '')}`,
     `SUMMARY:202BBQ ${delivery ? 'delivery' : 'pickup'} — request ${req.ref}`,
     `DESCRIPTION:${summaryText.replace(/\n/g, '\\n')}`, 'END:VEVENT', 'END:VCALENDAR',
   ].join('\r\n'))}` : null;
@@ -140,9 +146,13 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
         <p className="lede">Your deposit went through. {SITE.owner} confirms by phone or email. Questions? Call <PhoneLink location="confirmation" />.</p>
       ) : (
         <>
-          <p className="ref-line mono">
-            Request <strong>{req.ref}</strong>{dayLong && <> · {dayLong}</>} · {req.method} · sent {req.submittedLabel}
-            <CopyButton text={req.ref} label="Copy" onCopied={() => addToast('Reference copied')} className="ref-copy" />
+          <p className="ref-line">
+            <span>Request <strong className="mono">{req.ref}</strong></span>
+            <CopyButton text={req.ref} label="Copy" onCopied={() => addToast('Reference copied')} className="ref-copy" aria-label={`Copy reference ${req.ref}`} />
+          </p>
+          <p className="ref-meta small muted">
+            {dayLong && <><span className="nowrap">{dayLong}</span> · </>}
+            <span className="nowrap">{req.method}</span> · <span className="nowrap">sent {req.submittedLabel}</span>
           </p>
           {paid
             ? <p className="small muted">{req.email ? `Stripe emailed your receipt to ${maskEmail(req.email)}.` : 'Stripe has your receipt.'}</p>
@@ -154,7 +164,7 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
               <span className="step-num" aria-hidden="true">1</span>
               <div>
                 <p className="step-title">We confirm.</p>
-                <p>{SITE.owner} calls or emails you within a few hours (Mon–Thu). Nothing is final until then.</p>
+                <p>{SITE.owner} calls or emails you within a few hours (Mon–Thu). Your trays are reserved once {SITE.owner} confirms.</p>
               </div>
             </li>
             <li>
@@ -163,7 +173,7 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
                 {paid ? (
                   <>
                     <p className="step-title"><Icon name="check" size={20} /> You paid the ${SITE.depositAmount} deposit.</p>
-                    <p>Balance {money(balance)} at {delivery ? 'delivery' : 'pickup'}.</p>
+                    <p>{req.subtotal > 0 ? `Balance ${money(balance)} at ${delivery ? 'delivery' : 'pickup'}${quoteTail}.` : `The balance is due at ${delivery ? 'delivery' : 'pickup'} once we’ve quoted your market-price items.`}</p>
                   </>
                 ) : (
                   <>
@@ -179,8 +189,12 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
                 <p className="step-title">We smoke Friday night.</p>
                 <p>
                   {delivery
-                    ? <>We deliver {dayLong ?? 'on the day we agree'}, between {SITE.fulfilHours.open} and {SITE.fulfilHours.close} — we'll agree the hour with you.</>
-                    : <>Pick up {dayLong ?? 'on the day we agree'} at the time we agree — the address is in your confirmation call or text.</>}
+                    ? (dayPhrase
+                      ? <>We deliver {dayPhrase}, between {SITE.fulfilHours.open} and {SITE.fulfilHours.close} — we’ll agree the hour with you.</>
+                      : <>We deliver on the day and hour we agree, between {SITE.fulfilHours.open} and {SITE.fulfilHours.close}.</>)
+                    : (dayPhrase
+                      ? <>Pick up {dayPhrase} at the time we agree — the address is in your confirmation call or text.</>
+                      : <>Pick up on the day and time we agree — the address is in your confirmation call or text.</>)}
                 </p>
               </div>
             </li>
@@ -188,9 +202,9 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
 
           <h3>Your trays</h3>
           <RecapLines lines={req.lines} />
-          <p className="ordertotals-subtotal"><span>Subtotal</span><span className="price">{money(req.subtotal)}</span></p>
-          {req.hasQuote && <p className="small muted">+ market-price items, quoted on confirmation</p>}
-          {!paid && <p className="small muted">Balance at {delivery ? 'delivery' : 'pickup'}: {money(balance)} after the deposit.</p>}
+          <p className="ordertotals-subtotal"><span>Subtotal</span><span className="price">{req.subtotal > 0 ? money(req.subtotal) : 'Market price'}</span></p>
+          {req.hasQuote && req.subtotal > 0 && <p className="small muted">+ market-price items, quoted on confirmation</p>}
+          {!paid && req.subtotal > 0 && <p className="small muted">Balance at {delivery ? 'delivery' : 'pickup'}: {money(balance)} after the deposit{quoteTail}.</p>}
 
           <ul className="confirm-actions">
             {ics && <li><a className="btn btn-secondary btn-compact" href={ics} download={`202BBQ-${req.ref}.ics`}><Icon name="calendar" size={20} />Add to calendar</a></li>}
@@ -210,12 +224,14 @@ function Confirmation({ req, paid, paidNoReq, quiet, headingRef, onClaimed, onNe
 function ResumeCard({ req, onNew }) {
   const url = buildDepositUrl(req.ref, req.email);
   const when = new Date(req.submittedAt).toLocaleDateString('en-US', { weekday: 'long', timeZone: SITE.cutoff.tz });
-  const trays = req.lines.reduce((s, l) => s + l.qty, 0);
+  const what = countLabel(linesSummary(req.lines)) || 'your trays';
+  const unpaid = !req.deposit || req.deposit.status === 'none';
   return (
     <div className="resume-card">
-      <p>Your request from {when}, <strong className="mono">{req.ref}</strong> ({req.day?.short ?? req.method} · {plural(trays, 'tray')}).</p>
+      <p>Your request from {when}, <strong className="mono">{req.ref}</strong> ({req.day?.short ?? req.method} · {what}), is with {SITE.owner} — he’ll call to confirm.</p>
+      {!unpaid && <p className="small muted">Deposit {req.deposit.status === 'stripe_returned' ? 'paid' : 'sent'} — thank you.</p>}
       <ul className="confirm-actions">
-        {url && <li><Button href={url} size="compact">Pay the ${SITE.depositAmount} deposit</Button></li>}
+        {url && unpaid && <li><Button href={url} size="compact" onClick={() => markDepositStarted(req.ref)}>Pay the ${SITE.depositAmount} deposit</Button></li>}
         <li><PhoneLink button="secondary" size="compact" location="resume" label={`Call ${SITE.phone}`} /></li>
         <li><Button variant="secondary" size="compact" onClick={onNew}>Start a new request</Button></li>
       </ul>
@@ -230,35 +246,51 @@ export default function OrderSection() {
   const win = useOrderWindow();
 
   const [ret] = useState(readDepositReturn);
-  const [req, setReq] = useState(() => loadRequest(ret?.ref));
-  const [phase, setPhase] = useState(() => (ret ? 'paid' : (req && session.get(KEYS.request) ? 'sent' : 'form')));
+  const [req, setReq] = useState(() => loadRequest(ret ? (ret.ref ?? '__none__') : undefined));
+  const [phase, setPhase] = useState(() => {
+    if (ret) return 'paid';
+    if (req?.deposit?.status === 'stripe_returned') return 'paid';
+    if (req && session.get(KEYS.request)) return 'sent';
+    return 'form';
+  });
   const [errors, setErrors] = useState({});
   const [sending, setSending] = useState(false);
   const [sendError, setSendError] = useState('');
   const [notesOpen, setNotesOpen] = useState(Boolean(draft.notes));
+  const [startedRef, setStartedRef] = useState(() => session.get(DEPOSIT_STARTED));
   const headingRef = useRef(null);
   const summaryRef = useRef(null);
   const outsideET = visitorOutsideET();
 
-  // Returned from Stripe: record it, announce it, scroll here.
+  // Returned from Stripe: record it, announce it, scroll here (quiet focus — no ring on a page-load focus).
   useEffect(() => {
     if (!ret) return;
-    const next = { ...(req || { ref: ret.ref, lines: [], subtotal: 0, method: '', name: '' }), deposit: { status: 'stripe_returned', at: Date.now() } };
-    if (req) { setReq(next); saveRequest(next); }
-    track('purchase', { value: SITE.depositAmount, currency: 'USD', order_ref: next.ref });
-    setTimeout(() => { document.getElementById('order')?.scrollIntoView(); headingRef.current?.focus({ preventScroll: true }); }, 50);
+    if (req) { const next = { ...req, deposit: { status: 'stripe_returned', at: Date.now() } }; setReq(next); saveRequest(next); }
+    session.remove(DEPOSIT_STARTED);
+    track('purchase', { value: SITE.depositAmount, currency: 'USD', order_ref: ret.ref ?? req?.ref ?? '' });
+    setTimeout(() => {
+      document.getElementById('order')?.scrollIntoView();
+      const h = headingRef.current;
+      if (h) { h.classList.add('focus-quiet'); h.focus({ preventScroll: true }); h.addEventListener('blur', () => h.classList.remove('focus-quiet'), { once: true }); }
+    }, 50);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Back from Stripe without paying (bfcache restore or a normal reload): show the quiet line.
+  useEffect(() => {
+    const onShow = () => setStartedRef(session.get(DEPOSIT_STARTED));
+    window.addEventListener('pageshow', onShow);
+    return () => window.removeEventListener('pageshow', onShow);
+  }, []);
 
   const isDelivery = draft.method === 'delivery';
   const dayOptions = useMemo(() => ([
-    { value: win.dates[0].ymd, title: win.dates[0].long, sub: win.nextWeekend ? 'Next weekend' : 'This weekend' },
-    { value: win.dates[1].ymd, title: win.dates[1].long, sub: win.nextWeekend ? 'Next weekend' : 'This weekend' },
-    { value: 'unsure', title: 'Not sure — call me', sub: 'We\'ll pick a day together' },
+    ...win.dates.map(d => ({ value: d.ymd, title: d.long, sub: win.holiday ? 'Holiday pickup' : win.nextWeekend ? 'Next weekend' : 'This weekend' })),
+    { value: 'unsure', title: 'Not sure — call me', sub: 'We’ll pick a day together' },
   ]), [win]);
 
   const validate = () => {
     const e = {};
-    if (!draft.day) e['order-day'] = 'Choose Saturday, Sunday, or "Not sure — call me".';
+    if (!draft.day) e['order-day'] = 'Choose Saturday, Sunday, or “Not sure — call me”.';
     if (!draft.window) e['order-window'] = 'Choose a time that works: morning, midday or afternoon.';
     if (!draft.method) e['order-method'] = 'Choose pickup or delivery.';
     if (isDelivery && !draft.address.trim()) e['order-address'] = 'Enter the delivery address, including city.';
@@ -275,7 +307,7 @@ export default function OrderSection() {
     setSendError('');
     if (Object.keys(e).length) {
       document.title = document.title.startsWith('Error: ') ? document.title : `Error: ${document.title}`;
-      setTimeout(() => summaryRef.current?.focus(), 0);
+      setTimeout(() => { summaryRef.current?.scrollIntoView({ block: 'start' }); summaryRef.current?.focus({ preventScroll: true }); }, 0);
       return;
     }
     document.title = document.title.replace(/^Error: /, '');
@@ -285,15 +317,21 @@ export default function OrderSection() {
     const ref = makeRef(now);
     const submittedAt = Date.now();
     const submittedLabel = stampET();
-    const dayInfo = draft.day === 'unsure' ? { ymd: null, short: 'Not sure — call me', long: null } : (win.dates.find(d => d.ymd === draft.day) ?? { ymd: draft.day, short: fmtLong(draft.day), long: fmtLong(draft.day) });
+    const dayInfo = draft.day === 'unsure'
+      ? { ymd: null, short: 'Day not set', long: null }
+      : (win.dates.find(d => d.ymd === draft.day) ?? { ymd: draft.day, short: fmtLong(draft.day), long: fmtLong(draft.day) });
     const method = isDelivery ? 'Delivery' : 'Pickup';
     const lineSnap = lines.map(l => ({ itemId: l.item.id, optionId: l.option.id, qty: l.qty }));
     const trayText = lineSnap.map(lineText).join('\n');
-    const feeds = summary.feedsHi ? `about ${summary.feedsLo}–${summary.feedsHi}` : 'n/a';
+    const feeds = summary.feedsHi ? `about ${summary.feedsLo}–${summary.feedsHi}` : summary.units ? `${summary.units} ${summary.unitLabel}s, no trays` : 'quoted items only';
     const email = customer.email.trim();
-    const subtotalText = summary.hasQuote ? `${money(summary.subtotal)} + market-price items (quote before confirming)` : money(summary.subtotal);
-    const trayCount = summary.trays + summary.units;
-    const depositLine = `Not yet at time of request — look for ${email || customer.name.trim()} in Stripe, or note 202BBQ ${ref} in Cash App/Venmo/Zelle`;
+    const subtotalText = summary.subtotal > 0
+      ? `${money(summary.subtotal)}${summary.hasQuote ? ' + market-price items (quote before confirming)' : ''}`
+      : 'market-price items only (quote before confirming)';
+    const count = countLabel(summary) || 'no trays';
+    const depositLine = SITE.stripeDepositUrl
+      ? `Not yet at time of request — look for ${email || customer.name.trim()} in Stripe, or the note "202BBQ ${ref}" in Cash App/Venmo/Zelle`
+      : `Not yet — text the customer a payment link, or look for the note "202BBQ ${ref}" in Cash App/Venmo/Zelle`;
     const cutoffStatus = win.late ? `AFTER CUT-OFF — this is a request for ${win.pair}` : (win.holiday ? `Holiday rule: ${win.cutoffFull}` : `On time (window closes ${win.cutoffFull})`);
 
     const summaryBlock = [
@@ -307,7 +345,7 @@ export default function OrderSection() {
     ].filter(Boolean).join('\n');
 
     const payload = {
-      _subject: `${win.late ? 'LATE · ' : ''}${summary.hasQuote ? 'QUOTE · ' : ''}Order request ${ref} · ${dayInfo.short} · ${method} · ${plural(trayCount, 'tray')} · ${money(summary.subtotal)}`,
+      _subject: `${win.late ? 'LATE · ' : ''}${summary.hasQuote ? 'QUOTE · ' : ''}Order request ${ref} · ${dayInfo.short} · ${method} · ${count} · ${subtotalLabel(summary)}`,
       ...(email ? { email, _replyto: email } : {}),
       _gotcha: ev.target.elements._gotcha?.value ?? '',
       Summary: summaryBlock,
@@ -318,7 +356,7 @@ export default function OrderSection() {
       ...(isDelivery ? { 'Delivery address': draft.address.trim() } : {}),
       ...(isDelivery && draft.address2.trim() ? { 'Delivery notes': draft.address2.trim() } : {}),
       Trays: trayText,
-      'Tray count': String(trayCount),
+      'Tray count': count,
       Feeds: feeds,
       Subtotal: subtotalText,
       Headcount: headcount ? String(headcount) : 'not given',
@@ -326,7 +364,7 @@ export default function OrderSection() {
       phone: groupPhone(customer.phone),
       Notes: draft.notes.trim() || 'none',
       Deposit: depositLine,
-      'Submitted (ET)': submittedLabel,
+      'Submitted (ET)': stampETFull(),
       'Cut-off status': cutoffStatus,
       Page: `${SITE.url}#order`,
     };
@@ -344,12 +382,14 @@ export default function OrderSection() {
       headcount, deposit: { status: 'none', at: null },
     };
     saveRequest(record);
+    session.remove(DEPOSIT_STARTED);
+    setStartedRef(null);
     setReq(record);
-    track('generate_lead', { currency: 'USD', value: Number(summary.subtotal), lead_type: 'order', fulfillment: method.toLowerCase(), item_count: trayCount, order_ref: ref });
+    track('generate_lead', { currency: 'USD', value: Number(summary.subtotal), lead_type: 'order', fulfillment: method.toLowerCase(), item_count: summary.trays + summary.units, order_ref: ref });
     clearLines();
     setDraft({ day: '', window: '', method: '', address: '', address2: '', notes: '' });
     setPhase('sent');
-    setTimeout(() => headingRef.current?.focus({ preventScroll: true }), 50);
+    setTimeout(() => { document.getElementById('order')?.scrollIntoView(); headingRef.current?.focus({ preventScroll: true }); }, 50);
   };
 
   const onClaimed = () => {
@@ -357,11 +397,12 @@ export default function OrderSection() {
     setReq(next); saveRequest(next);
     addToast(`Thanks — ${SITE.owner} will match it when he confirms.`);
   };
-  const onNew = () => { clearRequest(); setReq(null); setPhase('form'); setTimeout(() => focusHeading('menu'), 0); window.location.hash = '#menu'; };
+  const onNew = () => { clearRequest(); session.remove(DEPOSIT_STARTED); setReq(null); setPhase('form'); window.location.hash = '#menu'; setTimeout(() => focusHeading('menu'), 0); };
 
   const errorList = Object.entries(errors).map(([id, message]) => ({ id, message }));
   const fieldErr = id => errors[id];
   const clearErr = id => setErrors(e => { if (!e[id]) return e; const n = { ...e }; delete n[id]; return n; });
+  const quiet = !ret && req?.deposit?.status === 'none' && startedRef === req?.ref;
 
   return (
     <section id="order" className="section order" aria-labelledby="order-heading">
@@ -370,13 +411,13 @@ export default function OrderSection() {
           <Confirmation req={req} paid paidNoReq={!req?.lines?.length} headingRef={headingRef} onClaimed={onClaimed} onNew={onNew} />
         )}
         {phase === 'sent' && req && (
-          <Confirmation req={req} quiet={ret === null && Boolean(session.get(KEYS.request)) && document.referrer.includes('stripe.com')} headingRef={headingRef} onClaimed={onClaimed} onNew={onNew} />
+          <Confirmation req={req} quiet={quiet} headingRef={headingRef} onClaimed={onClaimed} onNew={onNew} />
         )}
         {phase === 'form' && (
           <div className="order-grid">
             <div className="section-head">
               <h2 id="order-heading" tabIndex={-1} ref={headingRef}>Your order</h2>
-              <p className="lede">Prefer to talk? Call <PhoneLink location="order_intro" /> and we'll take your order in five minutes.</p>
+              <p className="lede">Prefer to talk? Call <PhoneLink location="order_intro" /> and we’ll take your order over the phone.</p>
             </div>
 
             {lineCount > 0 && (
@@ -405,7 +446,9 @@ export default function OrderSection() {
 
                   <RadioCardGroup id="order-day" name="day" legend="Which day?" value={draft.day} onChange={v => { setDraft({ day: v }); clearErr('order-day'); }}
                     options={dayOptions} error={fieldErr('order-day')}
-                    hint={`Requests close Thursday ${win.cutoffLabel} ET. Smoked Friday night.${win.nextWeekend ? " This weekend's smoke is full — these are next weekend's dates." : ''}`} />
+                    hint={win.holiday && SITE.announcement?.text
+                      ? SITE.announcement.text
+                      : `Requests close Thursday ${win.cutoffLabel} ET. Smoked Friday night.${win.nextWeekend ? ' This weekend’s smoke is full — these are next weekend’s dates.' : ''}`} />
 
                   <RadioCardGroup id="order-window" name="window" legend="What time works?" value={draft.window} onChange={v => { setDraft({ window: v }); clearErr('order-window'); }}
                     options={WINDOWS} cols={3} error={fieldErr('order-window')} hint="We confirm the exact time with you." />
@@ -430,21 +473,24 @@ export default function OrderSection() {
                     onChange={v => { setCustomer({ name: v }); clearErr('order-name'); }} error={fieldErr('order-name')} />
                   <TextField id="order-phone" name="phone" label="Phone number" type="tel" autoComplete="tel" inputMode="tel" value={customer.phone}
                     onChange={v => { setCustomer({ phone: v }); clearErr('order-phone'); }} error={fieldErr('order-phone')}
-                    hint={`We'll call or text this number to confirm.${outsideET ? ' (We\'re in Washington, DC — Eastern time.)' : ''}`} />
+                    hint={`We’ll call or text this number to confirm.${outsideET ? ' (We’re in Washington, DC — Eastern time.)' : ''}`} />
                   <TextField id="order-email" name="email" label="Email" optional type="email" autoComplete="email" inputMode="email" value={customer.email}
                     onChange={v => { setCustomer({ email: v }); clearErr('order-email'); }} error={fieldErr('order-email')}
-                    hint="Your Stripe receipt goes here if you pay the deposit online. Skip it and we'll text or call." />
+                    hint="Your receipt goes here if you pay the deposit online. Skip it and we’ll text or call." />
 
                   {notesOpen ? (
                     <TextArea id="order-notes" name="notes" label="Anything we should know?" optional value={draft.notes} onChange={v => setDraft({ notes: v })} maxLength={500}
-                      hint="Allergies, sauce on the side, it's a 70th birthday…" />
+                      hint="Allergies, sauce on the side, it’s a 70th birthday…" />
                   ) : (
                     <p className="order-note-toggle"><button type="button" className="btn btn-tertiary btn-compact" onClick={() => setNotesOpen(true)}><Icon name="plus" size={18} />Add a note</button></p>
                   )}
 
                   <input type="text" name="_gotcha" className="gotcha" tabIndex={-1} aria-hidden="true" autoComplete="off" defaultValue="" />
 
-                  <p className="deposit-sentence-form">{DEPOSIT_SENTENCE}</p>
+                  <p className="deposit-sentence-form">
+                    <span>{DEPOSIT_SENTENCE}</span>
+                    <span className="deposit-phone">Prefer to talk? Call <PhoneLink location="order_deposit" /> and we’ll take it by phone.</span>
+                  </p>
                   {sendError && <Notice kind="error" role="alert">{sendError.split(SITE.phone)[0]}<a href={SITE.phoneHref} className="phone">{SITE.phone}</a>{sendError.split(SITE.phone)[1] ?? ''}</Notice>}
                   <Button type="submit" size="lg" mobileFull busy={sending}>Send my order request</Button>
                 </form>

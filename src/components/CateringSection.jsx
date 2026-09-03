@@ -12,17 +12,18 @@ import { Section, PhoneLink } from './ui/Bits.jsx';
 
 const TYPES = [
   { value: 'full-service', title: 'Full-service catering', sub: 'We set up and serve' },
-  { value: 'drop-off',     title: 'Drop-off for a big event', sub: '100+ people' },
+  { value: 'drop-off',     title: 'Trays for a big event', sub: '100+ people, we drop off' },
   { value: 'custom',       title: 'A custom order', sub: 'Something not on the menu' },
   { value: 'question',     title: 'A question', sub: 'Anything else' },
 ];
 const STYLES = [
   { value: 'drop-off', title: 'Drop-off', sub: 'We drop trays and set up, you serve' },
-  { value: 'buffet',   title: 'Buffet setup', sub: 'Trays, chafers and serving gear on site' },
+  { value: 'buffet',   title: 'Buffet setup', sub: 'Trays, warming dishes and serving gear on site' },
   { value: 'full',     title: 'Full service', sub: 'We cook, serve and clean up' },
 ];
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const label = (list, v) => list.find(x => x.value === v)?.title ?? '';
+const NOUN = { 'full-service': 'full-service catering', 'drop-off': 'drop-off order', custom: 'custom order', question: null };
 
 function nextBusinessDay(ymd) {
   let d = addDays(ymd, 1);
@@ -52,7 +53,7 @@ export default function CateringSection() {
     const e = {};
     if (!f.type) e['ev-type'] = 'Choose what you are planning.';
     if (!isQuestion && !f.when.trim()) e['ev-when'] = 'Tell us when the event is — a date, or roughly when.';
-    if (!isQuestion && !f.guests.trim()) e['ev-guests'] = 'Tell us roughly how many people, or type "not sure".';
+    if (!isQuestion && !f.guests.trim()) e['ev-guests'] = 'Tell us roughly how many people, or type “not sure”.';
     if (!isQuestion && !f.where.trim()) e['ev-where'] = 'Tell us the city or ZIP code.';
     if (askStyle && !f.style) e['ev-style'] = 'Choose a service style.';
     if (!customer.name.trim()) e['ev-name'] = 'Enter your full name.';
@@ -66,24 +67,27 @@ export default function CateringSection() {
     ev.preventDefault();
     const e = validate();
     setErrors(e); setSendError('');
-    if (Object.keys(e).length) { setTimeout(() => summaryRef.current?.focus(), 0); return; }
+    if (Object.keys(e).length) { document.title = document.title.startsWith('Error: ') ? document.title : `Error: ${document.title}`; setTimeout(() => { summaryRef.current?.scrollIntoView({ block: 'start' }); summaryRef.current?.focus({ preventScroll: true }); }, 0); return; }
+    document.title = document.title.replace(/^Error: /, '');
     setSending(true);
     const email = customer.email.trim();
     const payload = {
-      _subject: `Event request · ${label(TYPES, f.type)} · ${f.guests.trim() || 'n/a'} people · ${customer.name.trim()}`,
+      _subject: isQuestion
+        ? `Question from ${customer.name.trim()}`
+        : `Event request · ${label(TYPES, f.type)} · ${f.guests.trim() ? `${f.guests.trim()} people` : 'headcount not given'} · ${customer.name.trim()}`,
       ...(email ? { email, _replyto: email } : {}),
       _gotcha: ev.target.elements._gotcha?.value ?? '',
       Summary: [
         `EVENT REQUEST · ${label(TYPES, f.type)}`,
         `${customer.name.trim()} · ${groupPhone(customer.phone)}${email ? ` · ${email}` : ''}`,
-        `When: ${f.when.trim() || 'n/a'} · People: ${f.guests.trim() || 'n/a'} · Where: ${f.where.trim() || 'n/a'}${askStyle ? ` · Style: ${label(STYLES, f.style)}` : ''}`,
+        isQuestion ? null : `When: ${f.when.trim() || 'not given'} · People: ${f.guests.trim() || 'not given'} · Where: ${f.where.trim() || 'not given'}${askStyle ? ` · Style: ${label(STYLES, f.style)}` : ''}`,
         `Details: ${f.details.trim()}`,
         `Sent ${stampET()}`,
-      ].join('\n'),
+      ].filter(Boolean).join('\n'),
       Type: label(TYPES, f.type),
-      When: f.when.trim() || 'n/a',
-      People: f.guests.trim() || 'n/a',
-      Where: f.where.trim() || 'n/a',
+      ...(f.when.trim() ? { When: f.when.trim() } : {}),
+      ...(f.guests.trim() ? { People: f.guests.trim() } : {}),
+      ...(f.where.trim() ? { Where: f.where.trim() } : {}),
       ...(askStyle ? { 'Service style': label(STYLES, f.style) } : {}),
       name: customer.name.trim(),
       phone: groupPhone(customer.phone),
@@ -95,7 +99,7 @@ export default function CateringSection() {
     setSending(false);
     if (!result.ok) { setSendError(result.error); return; }
     track('generate_lead', { lead_type: 'catering', event_type: f.type, guests: Number(f.guests) || 0 });
-    setDone({ type: label(TYPES, f.type), when: f.when.trim(), guests: f.guests.trim(), replyBy: fmtLong(nextBusinessDay(nowET().ymd)) });
+    setDone({ type: f.type, when: f.when.trim(), guests: f.guests.trim(), replyBy: fmtLong(nextBusinessDay(nowET().ymd)) });
     setTimeout(() => doneRef.current?.focus(), 50);
   };
 
@@ -104,15 +108,15 @@ export default function CateringSection() {
       lede={`From 20 guests to 500. Drop-off trays, buffet setup, or full service with our smoker on site. We serve ${SITE.serviceArea}.`}
       headExtra={(
         <ul className="proof catering-proof">
-          {proof && <li>Catered a 70-guest grand opening — "guests went back for seconds"</li>}
-          <li>Menus built around the tray list above</li>
+          {proof && <li>Catered a 70-guest grand opening — “many went back for seconds”</li>}
+          <li>Menus built around the <a href="#menu">tray menu</a></li>
           {SITE.eventNoticeHours && <li>{SITE.eventNoticeHours} hours' notice</li>}
         </ul>
       )}>
       {done ? (
         <div className="form-done" tabIndex={-1} ref={doneRef}>
           <h3>Got it{customer.name ? `, ${customer.name.trim().split(/\s+/)[0]}` : ''}.</h3>
-          <p>{SITE.owner} will reply by {done.replyBy} with a quote for your {done.type.toLowerCase()}{done.guests ? ` for ${done.guests} people` : ''}{done.when ? ` (${done.when})` : ''}. Or call <PhoneLink location="catering_done" />.</p>
+          <p>{SITE.owner} will reply by {done.replyBy}{NOUN[done.type] ? ` with a quote for your ${NOUN[done.type]}` : ''}{done.guests ? ` for ${done.guests} people` : ''}{done.when ? ` (${done.when})` : ''}. Or call <PhoneLink location="catering_done" />.</p>
           <Button variant="secondary" size="compact" onClick={() => { setDone(null); setF({ type: '', when: '', guests: '', where: '', style: '', details: '' }); }}>Send another</Button>
         </div>
       ) : (
@@ -121,16 +125,16 @@ export default function CateringSection() {
           <RadioCardGroup id="ev-type" name="ev-type" legend="What are you planning?" value={f.type} onChange={v => { set({ type: v }); clearErr('ev-type'); }} options={TYPES} cols={2} error={errors['ev-type']} />
           {!isQuestion && (
             <>
-              <TextField id="ev-when" name="ev-when" label="When is it?" value={f.when} onChange={v => { set({ when: v }); clearErr('ev-when'); }} error={errors['ev-when']} hint='A date, or roughly when — "mid-October" is fine.' autoComplete="off" />
-              <TextField id="ev-guests" name="ev-guests" label="How many people?" value={f.guests} onChange={v => { set({ guests: v }); clearErr('ev-guests'); }} error={errors['ev-guests']} hint='A rough number is fine, or "not sure".' inputMode="numeric" autoComplete="off" />
+              <TextField id="ev-when" name="ev-when" label="When is it?" value={f.when} onChange={v => { set({ when: v }); clearErr('ev-when'); }} error={errors['ev-when']} hint='A date, or roughly when — “mid-October” is fine.' autoComplete="off" />
+              <TextField id="ev-guests" name="ev-guests" label="How many people?" value={f.guests} onChange={v => { set({ guests: v }); clearErr('ev-guests'); }} error={errors['ev-guests']} hint='A rough number is fine, or “not sure”.' inputMode="numeric" autoComplete="off" />
               <TextField id="ev-where" name="ev-where" label="Where?" value={f.where} onChange={v => { set({ where: v }); clearErr('ev-where'); }} error={errors['ev-where']} hint="City or ZIP code." autoComplete="postal-code" />
             </>
           )}
           {askStyle && (
-            <RadioCardGroup id="ev-style" name="ev-style" legend="Service style" value={f.style} onChange={v => { set({ style: v }); clearErr('ev-style'); }} options={STYLES} cols={3} error={errors['ev-style']} />
+            <RadioCardGroup id="ev-style" name="ev-style" legend="How should we serve it?" value={f.style} onChange={v => { set({ style: v }); clearErr('ev-style'); }} options={STYLES} cols={3} error={errors['ev-style']} />
           )}
           <TextField id="ev-name" name="name" label="Full name" autoComplete="name" value={customer.name} onChange={v => { setCustomer({ name: v }); clearErr('ev-name'); }} error={errors['ev-name']} />
-          <TextField id="ev-phone" name="phone" label="Phone number" type="tel" autoComplete="tel" inputMode="tel" value={customer.phone} onChange={v => { setCustomer({ phone: v }); clearErr('ev-phone'); }} error={errors['ev-phone']} hint="We'll call this number." />
+          <TextField id="ev-phone" name="phone" label="Phone number" type="tel" autoComplete="tel" inputMode="tel" value={customer.phone} onChange={v => { setCustomer({ phone: v }); clearErr('ev-phone'); }} error={errors['ev-phone']} hint="We’ll call this number." />
           <TextField id="ev-email" name="email" label="Email" optional type="email" autoComplete="email" inputMode="email" value={customer.email} onChange={v => { setCustomer({ email: v }); clearErr('ev-email'); }} error={errors['ev-email']} />
           <TextArea id="ev-details" name="details" label={isQuestion ? 'Your question' : 'Tell us about it'} value={f.details} onChange={v => { set({ details: v }); clearErr('ev-details'); }} error={errors['ev-details']} maxLength={1000}
             hint={isQuestion ? undefined : 'Menu ideas, dietary needs, timing, the venue — whatever you know so far.'} />

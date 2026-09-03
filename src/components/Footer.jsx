@@ -61,7 +61,7 @@ export default function Footer() {
         </div>
       </div>
       <div className="container footer-bottom">
-        <p className="legal">© {year} 202BBQ · Washington, DC</p>
+        <p className="legal">{`© ${year} 202BBQ · Washington, DC`}</p>
         <ThemeSwitch />
       </div>
     </footer>

@@ -43,7 +43,7 @@ export const EVENTS = [
     address: '920 Girard St NE, Washington, DC 20017',
     url: 'https://rightproperbrewing.com',
     linkLabel: 'Visit Right Proper',
-    desc: 'Round two of the collab: craft beer inside, smoked meats outside.',
+    desc: 'Round two with Right Proper: craft beer inside, smoked meats outside.',
     partner: 'right-proper',
   },
   {
@@ -57,7 +57,7 @@ export const EVENTS = [
     address: '920 Girard St NE, Washington, DC 20017',
     url: 'https://rightproperbrewing.com',
     linkLabel: 'Visit Right Proper',
-    desc: 'The first date of the Right Proper collab.',
+    desc: 'Our first date at Right Proper.',
     partner: 'right-proper',
   },
   {

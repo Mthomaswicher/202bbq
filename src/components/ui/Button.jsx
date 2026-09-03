@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import Icon from './Icon.jsx';
 
 const VARIANTS = {
@@ -11,9 +12,9 @@ const VARIANTS = {
  * <Button> renders a real <button> (default type="button") or, with `href`, an <a>.
  * Label rule: verb + object, sentence case; put the price inside when the price is the decision.
  */
-export default function Button({
+const Button = forwardRef(function Button({
   variant = 'primary', size, full, mobileFull, icon, iconRight, busy, href, className = '', children, type, ...rest
-}) {
+}, ref) {
   const cls = [
     'btn', VARIANTS[variant] ?? VARIANTS.primary,
     size === 'lg' && 'btn-lg', size === 'compact' && 'btn-compact',
@@ -28,6 +29,7 @@ export default function Button({
     </>
   );
 
-  if (href) return <a href={href} className={cls} {...rest}>{content}</a>;
-  return <button type={type ?? 'button'} className={cls} aria-busy={busy || undefined} {...rest}>{content}</button>;
-}
+  if (href) return <a href={href} className={cls} ref={ref} {...rest}>{content}</a>;
+  return <button type={type ?? 'button'} className={cls} aria-busy={busy || undefined} ref={ref} {...rest}>{content}</button>;
+});
+export default Button;

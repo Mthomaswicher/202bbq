@@ -111,8 +111,8 @@ export function orderWindow(now = nowET()) {
   let sentence;
   switch (state) {
     case 'closing':     sentence = `Ordering closes tonight at ${cutoffLabel} for ${pair}`; break;
-    case 'closed-late': sentence = `This weekend's requests closed at ${cutoffLabel}. Taking requests for next weekend, ${pair}`; break;
-    case 'smoking':     sentence = `Taking requests for next weekend, ${pair} — smoking this weekend's trays now`; break;
+    case 'closed-late': sentence = `This weekend’s requests closed at ${cutoffLabel}. Taking requests for next weekend, ${pair}`; break;
+    case 'smoking':     sentence = `Taking requests for next weekend, ${pair} — this weekend’s trays are spoken for`; break;
     case 'weekend':     sentence = `Taking requests for next weekend, ${pair} — closes Thu ${cutoffLabel}`; break;
     default:            sentence = `Ordering open for ${pair} — closes Thu ${cutoffLabel}`;
   }
@@ -143,9 +143,20 @@ export function visitorOutsideET() {
   try { return Intl.DateTimeFormat().resolvedOptions().timeZone !== TZ; } catch { return false; }
 }
 
-/** "Thu Sep 3, 2026, 2:14 pm ET" */
+const stampFmt = new Intl.DateTimeFormat('en-US', { timeZone: TZ, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+function stampParts(d) {
+  const p = Object.fromEntries(stampFmt.formatToParts(d).map(x => [x.type, x.value]));
+  return { ...p, ampm: String(p.dayPeriod || '').toLowerCase() };
+}
+/** "Thu Sep 3, 4:26 pm ET" — the on-screen style (no year, lower-case meridian). */
 export function stampET(d = new Date()) {
-  return d.toLocaleString('en-US', { timeZone: TZ, weekday: 'short', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' }) + ' ET';
+  const p = stampParts(d);
+  return `${p.weekday} ${p.month} ${p.day}, ${p.hour}:${p.minute} ${p.ampm} ET`;
+}
+/** "Thu Sep 3, 2026, 4:26 pm ET" — for the email. */
+export function stampETFull(d = new Date()) {
+  const p = stampParts(d);
+  return `${p.weekday} ${p.month} ${p.day}, ${p.year}, ${p.hour}:${p.minute} ${p.ampm} ET`;
 }
 
 /** Request reference: 202-YYMMDD-XXXX, date part in ET, charset [A-Z0-9-] only (Stripe drops anything else). */

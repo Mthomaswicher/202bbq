@@ -76,12 +76,12 @@ export function Stars({ rating, outOf = 5 }) {
 }
 
 /** Copies text; announces via the provided callback. */
-export function CopyButton({ text, label = 'Copy', onCopied, className = '' }) {
+export function CopyButton({ text, label = 'Copy', onCopied, className = '', ...rest }) {
   const copy = async () => {
     try { await navigator.clipboard.writeText(text); onCopied?.(); } catch { /* clipboard blocked; nothing to do */ }
   };
   return (
-    <button type="button" className={`btn btn-secondary btn-compact ${className}`.trim()} onClick={copy}>
+    <button type="button" className={`btn btn-secondary btn-compact ${className}`.trim()} onClick={copy} {...rest}>
       <Icon name="copy" size={18} /><span>{label}</span>
     </button>
   );

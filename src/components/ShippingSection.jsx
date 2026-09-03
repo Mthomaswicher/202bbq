@@ -39,7 +39,7 @@ export default function ShippingSection() {
 
   return (
     <section id="shipping" className="section shipping" aria-labelledby="shipping-heading">
-      <p className="band bridge"><span className="container">Not in DC? {P.name} ship nationwide.</span></p>
+      <p className="band bridge"><span className="container">Not in DC? {P.name} ship anywhere in the US.</span></p>
       <div className="container">
         <div className="shipping-grid">
           <div className="shipping-text">
@@ -59,14 +59,14 @@ export default function ShippingSection() {
             <div className="packs">
               {P.packs.map(pack => (
                 <div key={pack.id} className="pack">
-                  {pack.tag && <span className="pack-tag">{pack.tag} — {Math.round((1 - pack.price / (P.packs[0].price * (parseInt(pack.label, 10) / parseInt(P.packs[0].label, 10)))) * 100)}% less per softball</span>}
-                  <a href={buyUrl(pack)} className="btn btn-primary btn-lg btn-full" onClick={e => onBuy(e, pack)}>
+                  {pack.tag && <span className="pack-tag">{pack.tag} — save {money(P.packs[0].price * (parseInt(pack.label, 10) / parseInt(P.packs[0].label, 10)) - pack.price)}</span>}
+                  <a href={buyUrl(pack)} className={`btn ${pack.tag ? 'btn-primary' : 'btn-secondary'} btn-lg btn-full`} onClick={e => onBuy(e, pack)}>
                     Buy {pack.label} · {money(pack.price)}
                   </a>
                 </div>
               ))}
             </div>
-            <p className="small muted">You'll confirm the quantity and enter your delivery address on the next screen (Stripe). Card, Apple Pay or Google Pay.</p>
+            <p className="small muted">You’ll confirm the quantity and enter your delivery address on the next screen (Stripe). Card, Apple Pay or Google Pay.</p>
             <p className="small">Questions? Call <PhoneLink location="shipping" />.</p>
           </div>
         </div>

@@ -5,7 +5,7 @@
 export const OXTAIL_SOFTBALLS = {
   id: 'oxtail-softballs',
   name: 'Oxtail Softballs',
-  desc: 'Our oxtails, slow-smoked until they fall off the bone, packed into softball-sized portions, vacuum-sealed and shipped frozen. Reheat in under 20 minutes.',
+  desc: 'Our oxtails, slow-smoked until they fall off the bone, packed into softball-sized portions, vacuum-sealed and shipped frozen.',
   flavours: [
     { id: 'candy-red',    name: 'Candy Red',    line: 'Sweet, sticky, classic barbecue.' },
     { id: 'caribbean',    name: 'Caribbean',    line: 'Allspice, thyme and a little heat.' },
@@ -23,7 +23,7 @@ export const OXTAIL_SOFTBALLS = {
     shipDays: null,        // e.g. 'Ships Monday–Wednesday'
     transitDays: null,     // e.g. 2
     weightPerBall: null,   // e.g. '6 oz'
-    freeShipping: true,
+    freeShipping: null,    // true once the owner confirms; a flat rate is an open question
   },
   image: null,             // images.json key once a real photo is shot
 };

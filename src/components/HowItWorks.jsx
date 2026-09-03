@@ -9,8 +9,8 @@ const WEEK = [
   { d: 'Wed', label: 'Order' },
   { d: 'Thu', label: 'Order by 9 pm' },
   { d: 'Fri', label: 'We smoke overnight' },
-  { d: 'Sat', label: 'Pick up or delivery' },
-  { d: 'Sun', label: 'Pick up or delivery' },
+  { d: 'Sat', label: 'Pickup or delivery' },
+  { d: 'Sun', label: 'Pickup or delivery' },
 ];
 const DOW_TO_INDEX = [6, 0, 1, 2, 3, 4, 5]; // JS Sunday=0 → our Mon-first index
 
@@ -39,7 +39,7 @@ export default function HowItWorks() {
           <span className="step-num" aria-hidden="true">1</span>
           <div>
             <h3 className="step-title">Pick your trays.</h3>
-            <p>A full tray feeds 30–40, a half feeds 15–20. Not sure how much? Use the helper above the menu, or call <PhoneLink location="how" />.</p>
+            <p>A full tray feeds 30–40, a half feeds 15–20. Not sure how much? Use the <a href="#menu">headcount helper</a>, or call <PhoneLink location="how" />.</p>
           </div>
         </li>
         <li>
@@ -53,7 +53,7 @@ export default function HowItWorks() {
           <span className="step-num" aria-hidden="true">3</span>
           <div>
             <h3 className="step-title">Hold it with a ${SITE.depositAmount} deposit — now, or after {SITE.owner} confirms.</h3>
-            <p>Card, Apple Pay or Google Pay through Stripe, or Cash App, Venmo or Zelle. Refunded in full if we can't fill your request. The balance is due at pickup or delivery.</p>
+            <p>Card, Apple Pay or Google Pay through Stripe, or Cash App, Venmo or Zelle. Refunded in full if we can’t fill your request. The balance is due at pickup or delivery.</p>
           </div>
         </li>
         <li>

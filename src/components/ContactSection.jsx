@@ -6,15 +6,14 @@ import { Section } from './ui/Bits.jsx';
 
 export default function ContactSection() {
   return (
-    <Section id="contact" title="Contact" className="contact" grid lede="Call, text, email or follow. A real person answers.">
+    <Section id="contact" title="Contact" className="contact" grid lede={`Call, text${SITE.email ? ', email' : ''} or follow. ${SITE.owner} picks up.`}>
       <ul className="contact-card">
         <li>
           <Icon name="phone" />
-          <div>
+          <div className="contact-links">
             <a href={SITE.phoneHref} className="phone" onClick={() => track('contact', { method: 'phone', location: 'contact' })}>Call {SITE.phone}</a>
-            {' · '}
-            <a href={SITE.smsHref} onClick={() => track('contact', { method: 'sms', location: 'contact' })}>Text</a>
-            {SITE.callHours && <span className="small muted"> · {SITE.callHours}</span>}
+            <a href={SITE.smsHref} onClick={() => track('contact', { method: 'sms', location: 'contact' })}>Text {SITE.phone}</a>
+            {SITE.callHours && <span className="small muted">{SITE.callHours}</span>}
           </div>
         </li>
         {SITE.email && (

@@ -14,7 +14,8 @@ const MANIFEST = path.join(ROOT, 'src/data/images.json');
 // name → { src, widths, formats }
 const IMAGES = {
   'brisket-slice': { src: 'assets/photos/hero-brisket.jpg', widths: [480, 800, 1200, 1600] },
-  'brisket-board': { src: 'assets/photos/hero-ribs.jpg',    widths: [480, 800, 1024] },
+  // The board shot carries an old white watermark bottom-right; crop it out at the source.
+  'brisket-board': { src: 'assets/photos/hero-ribs.jpg',    widths: [480, 800, 1024], crop: { left: 0, top: 0, width: 1024, height: 1190 } },
   'chicken-egg':   { src: 'assets/photos/hero-chicken.jpg', widths: [480, 800, 1200, 1600] },
   'pork-butt':     { src: 'assets/photos/hero-pork.jpg',    widths: [480, 800, 1024] },
   'pitmaster':     { src: 'assets/photos/about-photo.jpg',         widths: [480, 600] },
@@ -35,7 +36,8 @@ const manifest = {};
 
 for (const [name, cfg] of Object.entries(IMAGES)) {
   const input = path.join(ROOT, cfg.src);
-  const base = sharp(input).rotate(); // applies EXIF orientation, strips metadata
+  let base = sharp(input).rotate(); // applies EXIF orientation, strips metadata
+  if (cfg.crop) base = sharp(await base.toBuffer()).extract(cfg.crop);
   const meta = await base.metadata();
   const { width: srcW, height: srcH } = await base.clone().toBuffer({ resolveWithObject: true }).then(r => r.info);
   const formats = cfg.formats ?? DEFAULT_FORMATS;

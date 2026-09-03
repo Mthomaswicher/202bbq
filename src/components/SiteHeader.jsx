@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { SITE } from '../data/site.js';
 import { useCart } from '../context/CartContext.jsx';
-import { money, countLabel } from '../lib/format.js';
+import { countLabel, subtotalLabel } from '../lib/format.js';
 import { useScrollSpy, focusHeading } from '../lib/useScrollSpy.js';
 import { track } from '../lib/analytics.js';
 import { LogoMark, LogoLockup } from './Logo.jsx';
@@ -21,11 +21,13 @@ const LINKS = [
   { id: 'reviews', label: 'Reviews', from: 1024 },
 ];
 const SPY = ['menu', 'how-it-works', 'order', 'catering', 'shipping', 'reviews', 'about', 'events', 'faq', 'contact'];
+// The sticky chrome height, read from the same token the page scrolls by (stable reference: one observer).
+const headerInset = () => parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
 
 export default function SiteHeader({ hasUpcomingEvents }) {
   const { lineCount, summary } = useCart();
   const [scrolled, setScrolled] = useState(false);
-  const active = useScrollSpy(SPY, { topInset: () => (window.innerWidth >= 1024 ? 72 : 56) + 48 });
+  const active = useScrollSpy(SPY, { topInset: headerInset });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -62,12 +64,12 @@ export default function SiteHeader({ hasUpcomingEvents }) {
           </a>
           {lineCount > 0 && (
             <a href="#order" className="btn btn-primary btn-compact your-order" onClick={() => focusHeading('order')}
-              aria-label={`Your order, ${countLabel(summary)}, ${money(summary.subtotal)}`}>
+              aria-label={`Your order, ${countLabel(summary)}, ${subtotalLabel(summary)}`}>
               <span>Your order</span>
               <span className="sep" aria-hidden="true">·</span>
-              <span className="num">{summary.trays + summary.units}</span>
+              <span className="num">{summary.trays}{summary.units ? `+${summary.units}` : ''}</span>
               <span className="sep" aria-hidden="true">·</span>
-              <span className="price">{money(summary.subtotal)}</span>
+              <span className="price">{subtotalLabel(summary)}</span>
             </a>
           )}
         </div>

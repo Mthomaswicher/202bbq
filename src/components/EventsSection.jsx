@@ -21,7 +21,7 @@ function EventRow({ e, past }) {
         {e.time && <span>{e.time}</span>}
       </div>
       <div className="event-body">
-        <h4>{e.title}</h4>
+        <h3 className="event-title">{e.title}<span className="sr-only">, {dateLabel(e)}</span></h3>
         <p className="event-place">{e.venue}{e.address ? ` · ${e.address}` : ''}</p>
         {e.desc && <p>{e.desc}</p>}
         {e.url && !past && <a href={e.url} target="_blank" rel="noopener noreferrer" className="event-link">{e.linkLabel ?? 'More'} <Icon name="external" size={18} /></a>}
@@ -38,11 +38,11 @@ export default function EventsSection() {
       {upcoming.length > 0 ? (
         <ul className="event-list">{upcoming.map(e => <EventRow key={e.id} e={e} />)}</ul>
       ) : (
-        <p className="events-empty">No popups on the calendar right now. We post dates on Instagram first — <a href={SITE.instagramUrl} target="_blank" rel="noopener noreferrer">@{SITE.instagram}</a>.</p>
+        <p className="events-empty">No market or pop-up dates on the calendar right now. We post dates on Instagram first — <a href={SITE.instagramUrl} target="_blank" rel="noopener noreferrer">@{SITE.instagram}</a>.</p>
       )}
       {past.length > 0 && (
         <details className="disclosure events-past">
-          <summary className="btn btn-secondary"><Icon name="chevronDown" size={22} /> Past popups ({past.length})</summary>
+          <summary className="btn btn-secondary"><Icon name="chevronDown" size={22} /> Past dates ({past.length})</summary>
           <ul className="event-list past">{past.map(e => <EventRow key={e.id} e={e} past />)}</ul>
         </details>
       )}

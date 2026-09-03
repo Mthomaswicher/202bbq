@@ -73,6 +73,9 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
   box-shadow: var(--focus-ring);
 }
 
+/* page-load programmatic focus (Stripe return): no ring — it would read as an error */
+.focus-quiet:focus { outline: none; box-shadow: none; }
+
 /* ---- utilities ---- */
 .sr-only {
   position: absolute !important;

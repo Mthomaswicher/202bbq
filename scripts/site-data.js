@@ -64,7 +64,7 @@ export function siteData() {
       aggregateRating: { '@type': 'AggregateRating', ratingValue: avg.toFixed(1), reviewCount: reviews.length, bestRating: 5, worstRating: 1 },
       review: reviews.map(r => ({ '@type': 'Review', author: { '@type': 'Person', name: r.name }, datePublished: r.date, reviewBody: r.text, reviewRating: { '@type': 'Rating', ratingValue: r.rating, bestRating: 5, worstRating: 1 } })),
     } : {}),
-    acceptsReservations: 'False',
+    acceptsReservations: false,
   };
 
   const organization = {
@@ -113,8 +113,9 @@ export function siteData() {
     <div style="max-width:720px;margin:2rem auto;padding:1.25rem;font-family:Georgia,serif;line-height:1.6;color:#1E1A16;background:#F4ECE0;font-size:18px;">
       <h1>202BBQ — ${esc(SITE.tagline)}</h1>
       <p>DC-born small-batch barbecue by the tray, smoked every Friday night. A full tray feeds 30–40, a half tray 15–20. Order requests Monday–Thursday; pickup in Northeast DC or delivery across ${esc(SITE.serviceArea)} on Saturday and Sunday.</p>
+      <p>Requests close Thursday 9 pm ET. A $${SITE.depositAmount} deposit holds your trays; the rest is due at pickup or delivery.</p>
       <p><strong>Call or text <a href="${SITE.phoneHref}">${esc(SITE.phone)}</a></strong> to order by phone. Instagram: <a href="${SITE.instagramUrl}">@${esc(SITE.instagram)}</a>.</p>
-      ${GROUPS.map(g => `<h2>${esc(g.name)}</h2><ul>${MENU_ITEMS.filter(i => i.group === g.id).map(i => `<li>${esc(i.name)} — ${i.options.map(o => o.pricing === 'quote' ? `${esc(o.label)} market price` : o.unit ? `$${o.price} per ${esc(o.unit)}` : `${esc(o.label)} $${o.price}`).join(' · ')}</li>`).join('')}</ul>`).join('')}
+      ${GROUPS.map(g => `<h2>${esc(g.name)}</h2><ul>${MENU_ITEMS.filter(i => i.group === g.id).map(i => `<li>${esc(i.name)} — ${i.options.map(o => o.pricing === 'quote' ? `${esc(o.label)} market price` : o.unit ? `$${o.price} per ${esc(o.unit)}${o.minQty ? ` (${o.minQty} minimum)` : ''}` : `${esc(o.label)} $${o.price}`).join(' · ')}</li>`).join('')}</ul>`).join('')}
       <p><em>Turn on JavaScript to place an order online, or call ${esc(SITE.phone)}.</em></p>
     </div>
   </noscript>`;

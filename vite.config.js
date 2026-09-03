@@ -13,7 +13,7 @@ function siteDataPlugin() {
     transformIndexHtml(html) {
       const { jsonLd, noscript } = siteData();
       return html
-        .replace('<!--JSONLD-->', jsonLd.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</script>`).join('\n  '))
+        .replace('<!--JSONLD-->', jsonLd.map(o => `<script type="application/ld+json">${JSON.stringify(o).replace(/</g, '\\u003c')}</script>`).join('\n  '))
         .replace('<!--NOSCRIPT-->', noscript);
     },
     generateBundle() {

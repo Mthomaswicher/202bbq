@@ -39,7 +39,7 @@
   height: 44px; font-size: var(--fs-small); font-weight: 600; color: var(--ink); text-decoration: none; border-radius: var(--r-pill);
 }
 .catnav li:nth-child(n+4) a { grid-column: span 3; }
-.catnav a > span { display: flex; align-items: center; justify-content: center; width: 100%; height: 36px; padding: 0 10px; border: var(--border-chip); border-radius: var(--r-pill); white-space: nowrap; background: var(--paper); }
+.catnav a > span { display: flex; align-items: center; justify-content: center; width: 100%; min-width: 0; height: 36px; padding: 0 6px; border: var(--border-chip); border-radius: var(--r-pill); overflow-wrap: anywhere; background: var(--paper); }
 .catnav a > span .full { display: none; }
 .catnav a:hover > span { background: var(--inset); }
 .catnav a[aria-current] > span { background: var(--rust); color: var(--on-rust); border-color: var(--rust); font-weight: 700; }
@@ -81,7 +81,6 @@
 .traykey.compact { margin-top: 12px; }
 
 /* ---- groups ---- */
-.menu-group { scroll-margin-top: var(--chrome-top); }
 .group-head { padding-top: var(--s-6); padding-bottom: var(--s-2); }
 .group-head h3 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 10px; }
 .group-count { font-family: var(--font-body); font-size: var(--fs-small); font-weight: 500; color: var(--smoke); }
@@ -121,7 +120,11 @@
 @media (min-width: 1024px) {
   .row { padding: var(--s-5) 0; }
   .row-photo { width: 96px; }
-  .opt { grid-template-columns: minmax(160px, 1fr) minmax(24px, 1fr) auto auto; grid-template-areas: "label lead price action"; column-gap: 12px; }
+  .opt { grid-template-columns: minmax(200px, 1fr) minmax(24px, 1fr) 5ch 208px; grid-template-areas: "label lead price action"; column-gap: 12px; }
+  .opt-price { justify-self: end; }
+  .opt-action { min-width: 0; }
+  .opt-action .stepper { flex-wrap: wrap; width: 152px; }
+  .stepper .in-order { flex-basis: 100%; margin: 4px 0 0; }
   .opt-label { align-self: start; }
   .opt-leader { display: block; grid-area: lead; align-self: start; margin-top: 14px; border-bottom: 2px dotted var(--line-mid); }
   .opt-price { grid-area: price; align-self: start; margin-top: 1px; }
@@ -129,7 +132,9 @@
 }
 
 /* ---- group end strip ---- */
-.group-end { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; padding: 16px 0; border-top: var(--rule); }
+.group-end { display: flex; flex-wrap: wrap; gap: 4px 12px; align-items: center; padding: 12px 0; border-top: var(--rule); }
+.group-end .group-next { flex-basis: 100%; }
+@media (min-width: 640px) { .group-end { gap: 8px 24px; } .group-end .group-next { flex-basis: auto; } }
 .group-end a, .group-end span { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: var(--fs-button); font-weight: 600; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 2px; }
 .group-end span.group-done { text-decoration: none; color: var(--smoke); }
 .group-end a:hover { text-decoration-thickness: 3px; }
@@ -138,7 +143,7 @@
 
 /* ---- order rail (desktop) ---- */
 .orderrail-panel { background: var(--surface); border: var(--rule); border-radius: var(--r-3); padding: var(--s-5); display: grid; gap: var(--s-4); }
-.orderrail-title { font-size: var(--fs-h4); }
+.orderrail-title { font-family: var(--font-display); font-variation-settings: 'SOFT' 40; font-weight: 600; font-size: var(--fs-h4); line-height: var(--lh-h4); }
 .orderrail-status { font-size: var(--fs-small); }
 .orderrail-empty p { color: var(--smoke); }
 .orderrail-phone { max-width: none; }
@@ -147,6 +152,9 @@
 .orderlines { display: grid; gap: 0; border-top: var(--rule-soft); }
 .orderline { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; column-gap: 12px; padding: 14px 0; border-bottom: var(--rule-soft); align-items: start; }
 .orderline-thumb { width: 48px; aspect-ratio: 1 / 1 !important; }
+@media (max-width: 359.98px) { .orderline-thumb { display: none; } }
+.orderline.restore { grid-template-columns: minmax(0, 1fr) auto; align-items: center; background: var(--inset); padding: 10px 12px; border-radius: var(--r-2); }
+.restore-actions { display: inline-flex; gap: 4px; align-items: center; }
 .orderline-main { display: grid; gap: 4px; min-width: 0; }
 .orderline-name { font-weight: 600; }
 .orderline-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-top: 8px; }
@@ -159,16 +167,17 @@
 
 /* ---- order bar (mobile, fixed) ---- */
 .orderbar {
-  position: fixed; left: 16px; right: 16px; bottom: calc(12px + env(safe-area-inset-bottom)); z-index: var(--z-orderbar);
+  /* sized from left/right only (never margin:auto) so no content can push it past the viewport; centred and capped at 560px on wide screens */
+  position: fixed; left: max(16px, calc(50% - 280px)); right: max(16px, calc(50% - 280px)); bottom: calc(12px + env(safe-area-inset-bottom)); z-index: var(--z-orderbar);
   display: flex; align-items: center; gap: 10px; height: var(--orderbar-h); padding: 0 14px 0 16px;
   background: var(--rust); color: var(--on-rust); border-radius: var(--r-3); box-shadow: var(--elev-bar); text-decoration: none;
   animation: orderbar-in var(--dur-base) var(--ease-out) both;
 }
 .orderbar:hover { background: var(--rust-pressed); }
 .orderbar-text { flex: 1; min-width: 0; display: grid; gap: 1px; }
-.orderbar-title { font-size: var(--fs-button); font-weight: 700; line-height: 1.2; white-space: nowrap; }
+.orderbar-title { font-size: var(--fs-button); font-weight: 700; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .orderbar-sub { font-size: var(--fs-small); line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; opacity: .95; }
-.orderbar-total { font-size: var(--fs-button); font-weight: 700; line-height: 1; }
+.orderbar-total { flex: none; font-size: var(--fs-button); font-weight: 700; line-height: 1; }
 @keyframes orderbar-in { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
 body.has-orderbar main { padding-bottom: calc(var(--orderbar-h) + 36px); }
 @media (min-width: 1024px) { .orderbar { display: none; } body.has-orderbar main { padding-bottom: 0; } }
